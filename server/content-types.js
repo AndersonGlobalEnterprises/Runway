@@ -29,7 +29,28 @@ export function resolveTemplateId(contentTypeId, fallbackId) {
   return fallbackId || "";
 }
 
+export function getDefaultDeliveryMode(contentTypeId) {
+  const ct = getContentType(contentTypeId);
+  return ct?.defaultDeliveryMode || "video";
+}
+
+export function resolveDeliveryMode(contentTypeId, override) {
+  if (override && ["post", "video", "hybrid"].includes(override)) return override;
+  return getDefaultDeliveryMode(contentTypeId);
+}
+
+export function deliveryIncludesVideo(mode) {
+  return mode === "video" || mode === "hybrid";
+}
+
+export function deliveryIncludesPost(mode) {
+  return mode === "post" || mode === "hybrid";
+}
+
 export function buildCreatomateModifications(edit, contentTypeId) {
+  const mode = resolveDeliveryMode(contentTypeId, edit.deliveryMode);
+  if (!deliveryIncludesVideo(mode)) return {};
+
   const ct = getContentType(contentTypeId);
   const mods = {
     "Hook-Text": edit.onScreenHook || edit.hook || "",

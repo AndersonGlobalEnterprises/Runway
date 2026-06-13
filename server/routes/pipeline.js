@@ -22,8 +22,8 @@ import {
   recordScriptEdit,
   aiAvailable,
 } from "../ai.js";
-import { listContentTypes, buildCreatomateModifications } from "../content-types.js";
-import { buildEditState, applyEditPatch, saveFlightEditMeta } from "../edit.js";
+import { listContentTypes, buildCreatomateModifications, deliveryIncludesPost, deliveryIncludesVideo, getDefaultDeliveryMode } from "../content-types.js";
+import { buildEditState, applyEditPatch, saveFlightEditMeta, resolveFlightDeliveryMode } from "../edit.js";
 import { createRender, creatomateAvailable } from "../creatomate.js";
 import { getWeeklyFlightPlan, getPublishHints, strategyAvailable } from "../strategy.js";
 
@@ -87,12 +87,23 @@ router.get("/client/summary", async (_req, res) => {
   );
   const hold = flights.filter((f) => ["Queued", "Research Complete", "Error"].includes(f.status));
 
+  const activeManifest = manifest.filter((f) => f.status !== "Queued");
+  let posts = 0;
+  let videos = 0;
+  for (const f of activeManifest) {
+    const mode = resolveFlightDeliveryMode(f);
+    if (deliveryIncludesPost(mode)) posts += 1;
+    if (deliveryIncludesVideo(mode)) videos += 1;
+  }
+
   res.json({
     client: config.clientName,
     company: config.company,
     tier: config.tier,
     squawk: config.squawk,
-    videos: manifest.filter((f) => f.status !== "Queued").length,
+    videos,
+    posts,
+    pieces: posts + videos,
     topics: hold.length,
     platforms: config.destinations?.length || 0,
     pipeline: online ? "online" : "offline",
@@ -282,6 +293,7 @@ router.get("/flights/:id/publish-hints", async (req, res) => {
   const hints = await getPublishHints({
     contentType: state.edit.contentType,
     platforms: state.edit.platforms,
+    deliveryMode: state.edit.deliveryMode,
   });
   res.json({ hints, available: strategyAvailable() });
 });
@@ -306,17 +318,18 @@ router.post("/flights/queue", async (req, res) => {
       } else {
         const local = getLocalFlights();
         const ct = t.contentType || "myth-bust";
+        const deliveryMode = getDefaultDeliveryMode(ct);
         const row = normaliseRow(
           {
             topic: t.topic,
             status: "Queued",
             product: t.product || getConfig().product,
-            notes: JSON.stringify({ contentType: ct, tone: t.tone, length: t.length }),
+            notes: JSON.stringify({ contentType: ct, deliveryMode, tone: t.tone, length: t.length }),
             created_at: new Date().toISOString(),
           },
           local.length
         );
-        saveFlightEditMeta(row.id, { contentType: ct, tone: t.tone, length: t.length });
+        saveFlightEditMeta(row.id, { contentType: ct, deliveryMode, tone: t.tone, length: t.length });
         local.unshift(row);
         saveLocalFlights(local);
         results.push({ topic: t.topic, status: "queued", via: "local", id: row.id });
@@ -411,6 +424,11 @@ router.post("/flights/:id/rewrite", async (req, res) => {
     hook: req.body?.hook ?? flight.hook,
     fullScript: req.body?.fullScript ?? flight.fullScript,
     caption: req.body?.caption ?? flight.caption,
+    linkedInPost: req.body?.linkedInPost,
+    facebookPost: req.body?.facebookPost,
+    xPost: req.body?.xPost,
+    contentType: req.body?.contentType,
+    deliveryMode: req.body?.deliveryMode,
     action: req.body?.action || "custom",
     customPrompt: req.body?.prompt,
   });
@@ -424,17 +442,33 @@ router.post("/flights/:id/generate", async (req, res) => {
   const topic = req.body?.topic || flight?.topic;
   if (!topic) return res.status(400).json({ error: "topic required" });
 
-  const script = await generateScript({ topic, notes: req.body?.notes || flight?.notes });
+  const script = await generateScript({
+    topic,
+    notes: req.body?.notes || flight?.notes,
+    contentType: req.body?.contentType,
+    deliveryMode: req.body?.deliveryMode,
+  });
   res.json({ script, ai: aiAvailable() });
 });
 
 router.post("/flights/:id/approve", async (req, res) => {
   const gate = req.body?.gate || "video";
-  const status = gate === "script" ? "Script Ready" : "Approved";
+  let status = "Approved";
+  if (gate === "script") status = "Script Ready";
+  else if (gate === "post") status = "Post Ready";
+  else if (gate === "video") status = "Approved";
 
   const { flights } = await loadFlights();
   const flight = findFlight(flights, req.params.id);
   if (!flight) return res.status(404).json({ error: "Flight not found" });
+
+  const mode = resolveFlightDeliveryMode(flight);
+  if (gate === "post" && deliveryIncludesPost(mode)) {
+    status = mode === "post" ? "Approved" : "Post Ready";
+  }
+  if (gate === "video" && !deliveryIncludesVideo(mode)) {
+    return res.status(400).json({ error: "This flight is post-only — clear the post instead." });
+  }
 
   await updateFlightStatus({
     product: flight.product,

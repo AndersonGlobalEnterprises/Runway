@@ -1674,7 +1674,7 @@ h3 { font-size: 1.125rem; }
 
 .stat-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-4);
   margin-bottom: var(--space-4);
 }

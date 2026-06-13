@@ -1,17 +1,22 @@
 {
-  "version": 1,
+  "version": 2,
   "product": "Inspect",
   "company": "First Flight Roofing",
   "fields": {
     "script": [
       { "id": "hook", "label": "Hook", "type": "text", "maxLength": 80, "sheetKey": "hook", "required": true },
-      { "id": "fullScript", "label": "Full script", "type": "textarea", "maxLength": 1200, "sheetKey": "full_script", "required": true },
-      { "id": "caption", "label": "Caption", "type": "textarea", "maxLength": 220, "sheetKey": "caption" },
+      { "id": "fullScript", "label": "Full script", "type": "textarea", "maxLength": 1200, "sheetKey": "full_script", "requiredFor": ["video", "hybrid"] },
+      { "id": "caption", "label": "Caption", "type": "textarea", "maxLength": 2200, "sheetKey": "caption" },
       { "id": "hashtags", "label": "Hashtags", "type": "text", "maxLength": 120, "sheetKey": "hashtags" },
       { "id": "ctaLine", "label": "Spoken CTA", "type": "text", "maxLength": 100, "defaultFrom": "brand.cta" },
       { "id": "tone", "label": "Tone", "type": "select", "options": ["direct", "educational", "urgent"], "default": "direct" },
       { "id": "length", "label": "Target length", "type": "select", "options": ["30s", "45s", "60s"], "default": "30s" },
       { "id": "contentType", "label": "Content type", "type": "select", "optionsFrom": "contentTypes", "required": true }
+    ],
+    "post": [
+      { "id": "linkedInPost", "label": "LinkedIn post", "type": "textarea", "maxLength": 3000, "sheetKey": "linkedin_post" },
+      { "id": "facebookPost", "label": "Facebook post", "type": "textarea", "maxLength": 5000, "sheetKey": "facebook_post" },
+      { "id": "xPost", "label": "X post", "type": "textarea", "maxLength": 280, "sheetKey": "x_post" }
     ],
     "video": [
       { "id": "onScreenHook", "label": "On-screen hook", "type": "text", "creatomateKey": "Hook-Text", "syncFrom": "hook" },
@@ -21,39 +26,88 @@
       { "id": "templateVariant", "label": "Layout", "type": "select", "optionsFrom": "contentTypes", "mapsTo": "creatomateTemplateId" }
     ],
     "publish": [
-      { "id": "platforms", "label": "Destinations", "type": "multiselect", "options": ["Instagram", "TikTok", "YouTube", "LinkedIn"], "sheetKey": "platforms" },
+      { "id": "deliveryMode", "label": "Deliver as", "type": "select", "options": ["post", "video", "hybrid"], "default": "video" },
+      { "id": "platforms", "label": "Destinations", "type": "multiselect", "options": ["Instagram", "TikTok", "YouTube", "LinkedIn", "Facebook", "X"], "sheetKey": "platforms" },
       { "id": "scheduledAt", "label": "Departure time", "type": "datetime", "sheetKey": "scheduled_at" },
-      { "id": "postFormat", "label": "Post as", "type": "select", "options": ["reel", "short", "feed", "story"], "default": "reel" }
+      { "id": "postFormat", "label": "Video format", "type": "select", "options": ["reel", "short", "feed", "story"], "default": "reel", "forModes": ["video", "hybrid"] }
     ]
   },
   "contentTypes": [
     {
       "id": "myth-bust",
-      "label": "Myth bust",
-      "description": "Correct a common homeowner misconception with a bold opener.",
+      "label": "Myth bust · video",
+      "description": "Correct a common homeowner misconception — short-form video.",
+      "defaultDeliveryMode": "video",
       "creatomateTemplateId": "REPLACE_WITH_REAL_TEMPLATE_ID",
       "defaultLength": "30s",
       "defaultTone": "direct",
       "defaultPostFormat": "reel",
       "recommendedPlatforms": ["TikTok", "Instagram", "YouTube"],
-      "strategyTags": ["myth-bust", "education", "hook-heavy"],
-      "videoDefaults": {
-        "Bg-Preset": "inspection-generic"
-      }
+      "strategyTags": ["myth-bust", "education", "hook-heavy", "video"],
+      "videoDefaults": { "Bg-Preset": "inspection-generic" }
     },
     {
       "id": "storm-tip",
-      "label": "Storm tip",
-      "description": "Seasonal urgency — storm prep, damage signs, inspection CTA.",
+      "label": "Storm tip · video",
+      "description": "Seasonal urgency — storm prep, damage signs, inspection CTA (video).",
+      "defaultDeliveryMode": "video",
       "creatomateTemplateId": "REPLACE_WITH_REAL_TEMPLATE_ID",
       "defaultLength": "45s",
       "defaultTone": "urgent",
       "defaultPostFormat": "reel",
       "recommendedPlatforms": ["Instagram", "TikTok", "LinkedIn"],
-      "strategyTags": ["storm", "seasonal", "cta-forward"],
-      "videoDefaults": {
-        "Bg-Preset": "storm-damage"
-      }
+      "strategyTags": ["storm", "seasonal", "cta-forward", "video"],
+      "videoDefaults": { "Bg-Preset": "storm-damage" }
+    },
+    {
+      "id": "myth-bust-post",
+      "label": "Myth bust · post",
+      "description": "Same myth-bust angle as a text post for LinkedIn, Facebook, or X.",
+      "defaultDeliveryMode": "post",
+      "creatomateTemplateId": "",
+      "defaultLength": "30s",
+      "defaultTone": "direct",
+      "defaultPostFormat": "feed",
+      "recommendedPlatforms": ["LinkedIn", "Facebook", "X"],
+      "strategyTags": ["myth-bust", "education", "post"]
+    },
+    {
+      "id": "storm-tip-post",
+      "label": "Storm tip · post",
+      "description": "Seasonal urgency copy — no video render required.",
+      "defaultDeliveryMode": "post",
+      "creatomateTemplateId": "",
+      "defaultLength": "45s",
+      "defaultTone": "urgent",
+      "defaultPostFormat": "feed",
+      "recommendedPlatforms": ["LinkedIn", "Facebook", "X"],
+      "strategyTags": ["storm", "seasonal", "post"]
+    },
+    {
+      "id": "myth-bust-both",
+      "label": "Myth bust · post + video",
+      "description": "One topic — channel-specific post copy and a matching short video.",
+      "defaultDeliveryMode": "hybrid",
+      "creatomateTemplateId": "REPLACE_WITH_REAL_TEMPLATE_ID",
+      "defaultLength": "30s",
+      "defaultTone": "direct",
+      "defaultPostFormat": "reel",
+      "recommendedPlatforms": ["LinkedIn", "Instagram", "Facebook", "X"],
+      "strategyTags": ["myth-bust", "education", "hybrid"],
+      "videoDefaults": { "Bg-Preset": "inspection-generic" }
+    },
+    {
+      "id": "storm-tip-both",
+      "label": "Storm tip · post + video",
+      "description": "Urgent seasonal topic as both a text post and a rendered video.",
+      "defaultDeliveryMode": "hybrid",
+      "creatomateTemplateId": "REPLACE_WITH_REAL_TEMPLATE_ID",
+      "defaultLength": "45s",
+      "defaultTone": "urgent",
+      "defaultPostFormat": "reel",
+      "recommendedPlatforms": ["LinkedIn", "Instagram", "Facebook", "X"],
+      "strategyTags": ["storm", "seasonal", "hybrid"],
+      "videoDefaults": { "Bg-Preset": "storm-damage" }
     }
   ],
   "creatomateElementNames": {
@@ -69,6 +123,7 @@
     { "from": "ctaLine", "to": "onScreenCta", "unless": "videoFieldsOverridden" },
     { "from": "brand.primaryColor", "to": "primaryColor" },
     { "from": "brand.logoUrl", "to": "logoUrl" },
-    { "from": "contentType", "to": "templateVariant" }
+    { "from": "contentType", "to": "templateVariant" },
+    { "from": "caption", "to": "linkedInPost", "unless": "postFieldsOverridden", "whenMode": ["post", "hybrid"] }
   ]
 }

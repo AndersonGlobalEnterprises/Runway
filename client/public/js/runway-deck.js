@@ -1,6 +1,6 @@
 (() => {
   const STEPS = ['Queued', 'Research Complete', 'Script Ready', 'Audio Ready', 'Video Ready', 'Approved', 'Published'];
-  const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'LinkedIn'];
+  const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'LinkedIn', 'Facebook', 'X'];
 
   const state = {
     view: 'overview',
@@ -169,7 +169,7 @@
     {
       target: '.stat-grid',
       title: 'Welcome to your flight deck',
-      body: 'These three numbers tell you what\'s happening this week — videos in motion, topics on hold, and live destinations.',
+      body: 'These four numbers track posts and videos equally — what\'s on manifest, topics on hold, and live destinations.',
     },
     {
       target: '#btn-request-topics',
@@ -179,12 +179,12 @@
     {
       target: '.dashboard-nav__item[data-view="taxi"]',
       title: 'Taxi tracks',
-      body: 'Every video in production lives here. Click any flight card to open the editor — script, video, publish.',
+      body: 'Every flight in production lives here. Click any card to open the editor — script, post, video, and publish.',
     },
     {
       target: '.drawer-tabs',
-      title: 'Three clearance gates',
-      body: 'Script → Video → Publish. Nothing advances until you approve each stage. You\'re the air traffic controller.',
+      title: 'Four clearance gates',
+      body: 'Script → Post → Video → Publish. Posts and video carry equal weight. Nothing advances until you clear each stage.',
     },
     {
       target: '.dashboard-nav__item[data-view="strategy"]',
@@ -268,6 +268,7 @@
       const el = document.getElementById(id);
       if (el && val != null) el.textContent = val;
     };
+    set('stat-posts', s.posts);
     set('stat-videos', s.videos);
     set('stat-topics', s.topics);
     set('stat-platforms', s.platforms);
@@ -294,7 +295,7 @@
     if (depEl) {
       depEl.innerHTML = departures.length
         ? departures.map(flightRow).join('')
-        : '<p class="empty-copy">After you Clear video, set a departure time on the Publish tab.</p>';
+        : '<p class="empty-copy">After you clear post or video, set a departure time on the Publish tab.</p>';
     }
 
     const holdEl = $('#hold-list');
@@ -412,7 +413,7 @@
             <span class="tag">${plan.available ? 'Perplexity' : 'Built-in'}</span></div>
           <div class="panel__body">
             <p style="margin-bottom:16px;">${esc(plan.summary)}</p>
-            ${(plan.posts || []).map((p) => `<div class="strategy-post"><strong>${esc(p.day)} ${esc(p.time)}</strong> · ${esc(p.platform)} · ${esc(p.contentType)}<br>
+            ${(plan.posts || []).map((p) => `<div class="strategy-post"><strong>${esc(p.day)} ${esc(p.time)}</strong> · ${esc(p.platform)} · ${esc(p.format || 'post')} · ${esc(p.contentType)}<br>
               <span style="color:var(--text-muted)">${esc(p.topicIdea)}</span><br><em style="font-size:0.8125rem">${esc(p.rationale)}</em></div>`).join('')}
             ${(plan.warnings || []).length ? `<div class="strategy-hints" style="margin-top:16px"><strong>Warnings</strong><ul>${plan.warnings.map((w) => `<li>${esc(w)}</li>`).join('')}</ul></div>` : ''}
           </div></div>`;
@@ -434,7 +435,7 @@
     $$('.deck-view').forEach((v) => { v.hidden = v.dataset.view !== state.view; });
     const titles = {
       overview: ['Overview', 'Taxi tracks, manifest, and weekly departures at a glance.'],
-      taxi: ['Taxi tracks', 'Click any flight to edit script, video, and publish settings.'],
+      taxi: ['Taxi tracks', 'Click any flight to edit script, post, video, and publish settings.'],
       brand: ['Voice & brand', 'Brand brief and AI memory.'],
       manifest: ['Manifest', 'Scheduled departures — click to edit.'],
       strategy: ['Flight plan', 'Weekly strategy — when, how, and what to post.'],
@@ -451,6 +452,40 @@
   }
 
   // ── Drawer ────────────────────────────────────────────────────────────────
+
+  function updateDrawerDeliveryMode(mode) {
+    const m = mode || $('#field-delivery')?.value || 'video';
+    const showPost = m === 'post' || m === 'hybrid';
+    const showVideo = m === 'video' || m === 'hybrid';
+
+    $$('.drawer-tab[data-drawer-tab="post"]').forEach((el) => { el.hidden = !showPost; });
+    $$('.drawer-tab[data-drawer-tab="video"]').forEach((el) => { el.hidden = !showVideo; });
+
+    const btnPost = $('#btn-approve-post');
+    const btnVideo = $('#btn-approve-video');
+    if (btnPost) btnPost.hidden = !showPost;
+    if (btnVideo) btnVideo.hidden = !showVideo;
+
+    const formatWrap = $('#field-format-wrap');
+    if (formatWrap) formatWrap.hidden = !showVideo;
+
+    const scriptField = $('#field-script')?.closest('.script-field');
+    const lengthField = $('#field-length')?.closest('.script-field');
+    if (scriptField) scriptField.hidden = m === 'post';
+    if (lengthField) lengthField.hidden = m === 'post';
+
+    if (!showPost && state.drawerTab === 'post') setDrawerTab('script');
+    if (!showVideo && state.drawerTab === 'video') setDrawerTab(showPost ? 'post' : 'script');
+  }
+
+  function applyScriptToForm(script) {
+    $('#field-hook').value = script.hook || '';
+    $('#field-script').value = script.full_script || script.fullScript || '';
+    $('#field-caption').value = script.caption || '';
+    if (script.linkedInPost != null) $('#field-linkedin').value = script.linkedInPost || '';
+    if (script.facebookPost != null) $('#field-facebook').value = script.facebookPost || '';
+    if (script.xPost != null) $('#field-x').value = script.xPost || '';
+  }
 
   function setDrawerTab(tab) {
     state.drawerTab = tab;
@@ -490,8 +525,13 @@
     $('#field-color').value = e.primaryColor || '#1e40af';
     $('#field-logo').value = e.logoUrl || '';
     $('#field-scheduled').value = toDatetimeLocal(e.scheduledAt);
+    $('#field-delivery').value = e.deliveryMode || 'video';
     $('#field-format').value = e.postFormat || 'reel';
+    $('#field-linkedin').value = e.linkedInPost || '';
+    $('#field-facebook').value = e.facebookPost || '';
+    $('#field-x').value = e.xPost || '';
     renderPlatformChips();
+    updateDrawerDeliveryMode(e.deliveryMode);
     const videoUrl = e.videoUrl || e.previewVideoUrl;
     const wrap = $('#video-preview-wrap');
     const vid = $('#drawer-video');
@@ -504,7 +544,7 @@
       previews.innerHTML = [
         e.audioUrl ? `<a href="${esc(e.audioUrl)}" target="_blank">Listen to voice</a>` : '',
         videoUrl ? `<a href="${esc(videoUrl)}" target="_blank">Open video</a>` : '',
-      ].filter(Boolean).join('') || '<span class="empty-copy">Previews appear after voice and video stages.</span>';
+      ].filter(Boolean).join('') || '<span class="empty-copy">Previews appear after voice and video stages (post-only flights skip this).</span>';
     }
   }
 
@@ -534,7 +574,11 @@
       templateVariant: $('#field-template').value,
       platforms: state.platformSelection,
       scheduledAt: fromDatetimeLocal($('#field-scheduled').value),
+      deliveryMode: $('#field-delivery').value,
       postFormat: $('#field-format').value,
+      linkedInPost: $('#field-linkedin').value.trim(),
+      facebookPost: $('#field-facebook').value.trim(),
+      xPost: $('#field-x').value.trim(),
     };
   }
 
@@ -602,6 +646,9 @@
       $('#field-hook').value = script.hook || '';
       $('#field-script').value = script.full_script || script.fullScript || '';
       $('#field-caption').value = script.caption || '';
+      if (script.linkedInPost != null) $('#field-linkedin').value = script.linkedInPost || '';
+      if (script.facebookPost != null) $('#field-facebook').value = script.facebookPost || '';
+      if (script.xPost != null) $('#field-x').value = script.xPost || '';
       toast('Rewrite ready — save when happy', 'ok');
     } catch (e) { toast(e.message, 'err'); }
   }
@@ -750,11 +797,16 @@
       const f = state.selectedFlight;
       if (!f) return;
       try {
-        const { script } = await api(`/flights/${encodeURIComponent(f.id)}/generate`, { method: 'POST', body: JSON.stringify({ topic: f.topic }) });
-        $('#field-hook').value = script.hook || '';
-        $('#field-script').value = script.full_script || script.fullScript || '';
-        $('#field-caption').value = script.caption || '';
-        toast('Script generated', 'ok');
+        const { script } = await api(`/flights/${encodeURIComponent(f.id)}/generate`, {
+          method: 'POST',
+          body: JSON.stringify({
+            topic: f.topic,
+            contentType: $('#field-content-type').value,
+            deliveryMode: $('#field-delivery').value,
+          }),
+        });
+        applyScriptToForm(script);
+        toast('Content generated', 'ok');
       } catch (e) { toast(e.message, 'err'); }
     });
     $('#btn-render-preview')?.addEventListener('click', () => renderVideo(true));
@@ -768,6 +820,36 @@
         await api(`/flights/${encodeURIComponent(f.id)}/approve`, { method: 'POST', body: JSON.stringify({ gate: 'script' }) });
         toast('Script cleared', 'ok');
         markCheck('script');
+        closeDrawer();
+        await refreshAll();
+      } catch (e) { toast(e.message, 'err'); }
+    });
+
+    $('#field-content-type')?.addEventListener('change', () => {
+      const ct = state.contentTypes.find((t) => t.id === $('#field-content-type').value);
+      if (ct?.defaultDeliveryMode) {
+        $('#field-delivery').value = ct.defaultDeliveryMode;
+        updateDrawerDeliveryMode(ct.defaultDeliveryMode);
+      }
+    });
+
+    $('#field-delivery')?.addEventListener('change', () => updateDrawerDeliveryMode($('#field-delivery').value));
+
+    ['field-linkedin', 'field-facebook', 'field-x'].forEach((id) => {
+      document.getElementById(id)?.addEventListener('input', () => {
+        const note = $('#post-sync-note');
+        if (note) note.textContent = 'Post fields customized — no longer auto-syncing from Caption.';
+      });
+    });
+
+    $('#btn-approve-post')?.addEventListener('click', async () => {
+      const f = state.selectedFlight;
+      if (!f) return;
+      try {
+        await saveEdit('post');
+        await api(`/flights/${encodeURIComponent(f.id)}/approve`, { method: 'POST', body: JSON.stringify({ gate: 'post' }) });
+        toast('Post cleared', 'ok');
+        markCheck('publish');
         closeDrawer();
         await refreshAll();
       } catch (e) { toast(e.message, 'err'); }

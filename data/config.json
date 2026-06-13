@@ -5,7 +5,7 @@
   "slug": "age-flowops",
   "squawk": "RWY-0001",
   "product": "Inspect",
-  "destinations": ["Instagram", "TikTok", "YouTube", "LinkedIn"],
+  "destinations": ["Instagram", "TikTok", "YouTube", "LinkedIn", "Facebook", "X"],
   "n8n": {
     "baseUrl": "https://age.app.n8n.cloud",
     "statusPath": "/webhook/hce-status",
