@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import Stripe from "stripe";
 import { getConfig } from "./db.js";
+import { createClientService } from "./onboard.js";
 import pipelineRouter from "./routes/pipeline.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -81,6 +82,11 @@ app.get("/runway-dashboard.html", requireAuth, (_req, res) => {
   res.sendFile(path.join(publicDir, "runway-dashboard.html"));
 });
 
+app.get("/runway-intake.html", requireAuth, (req, res) => {
+  if (!req.session?.user?.isOwner) return res.redirect("/runway-dashboard.html");
+  res.sendFile(path.join(publicDir, "runway-intake.html"));
+});
+
 app.get("/runway_login.html", (_req, res) => {
   res.redirect(301, "/runway-login.html");
 });
@@ -153,6 +159,54 @@ app.post("/api/runway/checkout", async (req, res) => {
       metadata: { tier, product: cfg.product || "Runway" },
     });
     res.json({ url: checkoutSession.url });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// --- Admin: onboard a new client (owner only — spins up Render service) ---
+app.post("/api/runway/admin/onboard", async (req, res) => {
+  if (!req.session?.user?.isOwner) return res.status(403).json({ error: "Owner access required" });
+  try {
+    const {
+      clientEmail, clientPassword, clientName, company, website,
+      tier, product, destinations, voiceId, templateId,
+      cta, color, audience, tone, logoUrl, phrasesUse, phrasesAvoid,
+    } = req.body || {};
+
+    if (!clientEmail || !clientPassword || !company) {
+      return res.status(400).json({ error: "clientEmail, clientPassword and company are required" });
+    }
+
+    const slug = company.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 28);
+    const serviceName = `runway-${slug}`;
+    const squawk = `RWY-${String(Math.floor(1000 + Math.random() * 9000))}`;
+
+    const STRIPE_KEYS = [
+      "STRIPE_RUNWAY_PRICE_STARTER_FOUNDING","STRIPE_RUNWAY_PRICE_STARTER",
+      "STRIPE_RUNWAY_PRICE_GROWTH_FOUNDING","STRIPE_RUNWAY_PRICE_GROWTH",
+      "STRIPE_RUNWAY_PRICE_SCALE","STRIPE_RUNWAY_PRICE_AGENCY",
+    ];
+    const stripePrices = Object.fromEntries(
+      STRIPE_KEYS.filter(k => process.env[k]).map(k => [k, process.env[k]])
+    );
+
+    const result = await createClientService({
+      name: serviceName, clientEmail, clientPassword,
+      tier: tier || "starter", company,
+      clientName: clientName || company,
+      voiceId: voiceId || "", cta: cta || "",
+      color: color || "#1e40af", audience: audience || "",
+      tone: tone || "direct", product: product || "Inspect",
+      destinations: Array.isArray(destinations) ? destinations : ["Instagram","TikTok","YouTube","LinkedIn"],
+      logoUrl: logoUrl || "", website: website || "", squawk,
+      phrasesUse:   Array.isArray(phrasesUse)   ? phrasesUse   : [],
+      phrasesAvoid: Array.isArray(phrasesAvoid) ? phrasesAvoid : [],
+      templateId: templateId || "856453b5-c707-488e-a8ae-0dc7d47a90bc",
+      stripePrices,
+    });
+
+    res.json({ ok: true, squawk, ...result, loginEmail: clientEmail, loginPassword: clientPassword });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

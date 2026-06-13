@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>New Client Intake — AGE Runway</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/runway.css" />
+  <link rel="stylesheet" href="/css/runway-aviation.css" />
+  <style>
+    .intake-shell { max-width: 780px; margin: 0 auto; padding: var(--space-8) var(--space-5) var(--space-10); }
+    .intake-header { margin-bottom: var(--space-8); }
+    .intake-header h1 { font-family: var(--font-display); font-size: 2rem; margin: var(--space-2) 0 var(--space-2); }
+    .intake-section { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: var(--space-6); margin-bottom: var(--space-5); }
+    .intake-section__title { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--amber); margin: 0 0 var(--space-5); }
+    .field-grid { display: grid; gap: var(--space-4); }
+    .field-grid--2 { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 600px) { .field-grid--2 { grid-template-columns: 1fr; } }
+    .form-field label { display: block; font-size: .8rem; font-weight: 500; color: var(--text-2); margin-bottom: var(--space-1); }
+    .form-field input, .form-field select, .form-field textarea {
+      width: 100%; background: var(--surface-1); border: 1px solid var(--border);
+      border-radius: 8px; padding: .6rem .8rem; color: var(--text-1);
+      font-family: var(--font-body); font-size: .9rem; box-sizing: border-box;
+    }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+      outline: none; border-color: var(--amber);
+    }
+    .form-field textarea { resize: vertical; min-height: 72px; }
+    .destinations-grid { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-1); }
+    .dest-check { display: flex; align-items: center; gap: .4rem; font-size: .85rem; cursor: pointer; }
+    .dest-check input { width: auto; }
+    .intake-actions { display: flex; align-items: center; gap: var(--space-4); margin-top: var(--space-6); }
+    .kit-card { background: var(--surface-2); border: 1px solid var(--amber); border-radius: 12px; padding: var(--space-6); margin-top: var(--space-6); display: none; }
+    .kit-card h3 { font-family: var(--font-display); color: var(--amber); margin: 0 0 var(--space-4); }
+    .kit-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-2) 0; border-bottom: 1px solid var(--border); font-size: .9rem; }
+    .kit-row:last-child { border-bottom: none; }
+    .kit-row__label { color: var(--text-2); font-family: var(--font-mono); font-size: .75rem; }
+    .kit-row__val { font-weight: 500; font-family: var(--font-mono); font-size: .8rem; }
+    .kit-copy { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-2); font-size: .7rem; padding: 2px 8px; cursor: pointer; font-family: var(--font-mono); }
+    .kit-copy:hover { border-color: var(--amber); color: var(--amber); }
+    .kit-message { background: var(--surface-1); border-radius: 8px; padding: var(--space-4); margin-top: var(--space-4); font-size: .85rem; line-height: 1.6; white-space: pre-wrap; }
+    #deploy-error { color: #f87171; font-size: .85rem; margin-top: var(--space-3); display: none; }
+    #deploy-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hint { font-size: .75rem; color: var(--text-3); margin-top: 4px; }
+  </style>
+</head>
+<body class="runway-site cockpit">
+  <div class="intake-shell">
+
+    <div class="intake-header">
+      <a href="/runway-dashboard.html" class="instrument-label" style="color:var(--amber);text-decoration:none;">← Back to dashboard</a>
+      <h1>New Client Intake</h1>
+      <p style="color:var(--text-2);">Fill in the client's details. Runway will spin up their dedicated service and send you the welcome kit.</p>
+    </div>
+
+    <form id="intake-form">
+
+      <!-- SECTION 1: Contact -->
+      <div class="intake-section">
+        <p class="intake-section__title">01 — Contact</p>
+        <div class="field-grid field-grid--2">
+          <div class="form-field">
+            <label for="clientName">Contact name</label>
+            <input id="clientName" name="clientName" type="text" placeholder="John Smith" required />
+          </div>
+          <div class="form-field">
+            <label for="company">Company name <span style="color:#f87171">*</span></label>
+            <input id="company" name="company" type="text" placeholder="Smith Roofing LLC" required />
+          </div>
+          <div class="form-field">
+            <label for="clientEmail">Client login email <span style="color:#f87171">*</span></label>
+            <input id="clientEmail" name="clientEmail" type="email" placeholder="john@smithroofing.com" required />
+          </div>
+          <div class="form-field">
+            <label for="clientPassword">Temp password <span style="color:#f87171">*</span></label>
+            <input id="clientPassword" name="clientPassword" type="text" placeholder="Runway2026!" required />
+            <p class="hint">Client changes this on first login</p>
+          </div>
+          <div class="form-field">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="url" placeholder="https://smithroofing.com" />
+          </div>
+          <div class="form-field">
+            <label for="tier">Tier</label>
+            <select id="tier" name="tier">
+              <option value="starter_founding">Starter Founding</option>
+              <option value="starter">Starter</option>
+              <option value="growth_founding">Growth Founding</option>
+              <option value="growth" selected>Growth</option>
+              <option value="scale">Scale</option>
+              <option value="agency">Agency</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Brand -->
+      <div class="intake-section">
+        <p class="intake-section__title">02 — Brand</p>
+        <div class="field-grid">
+          <div class="form-field">
+            <label for="audience">Who do they serve?</label>
+            <input id="audience" name="audience" type="text" placeholder="Homeowners in storm-prone markets, primarily 35–60 y/o" />
+          </div>
+          <div class="field-grid field-grid--2">
+            <div class="form-field">
+              <label for="tone">Brand tone</label>
+              <select id="tone" name="tone">
+                <option value="direct">Direct &amp; confident</option>
+                <option value="educational">Educational</option>
+                <option value="urgent">Urgent</option>
+                <option value="professional">Professional</option>
+                <option value="casual">Casual &amp; friendly</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="color">Brand color</label>
+              <input id="color" name="color" type="color" value="#1e40af" style="height:42px;padding:4px 8px;cursor:pointer;" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="cta">Default CTA (spoken at end of every video)</label>
+            <input id="cta" name="cta" type="text" placeholder="Call us for a free inspection at smithroofing.com" />
+          </div>
+          <div class="field-grid field-grid--2">
+            <div class="form-field">
+              <label for="phrasesUse">Phrases to USE (comma-separated)</label>
+              <input id="phrasesUse" name="phrasesUse" type="text" placeholder="storm damage, free inspection, licensed" />
+            </div>
+            <div class="form-field">
+              <label for="phrasesAvoid">Phrases to AVOID (comma-separated)</label>
+              <input id="phrasesAvoid" name="phrasesAvoid" type="text" placeholder="cheap, discount, game-changer" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="logoUrl">Logo URL (PNG/SVG on a CDN — optional)</label>
+            <input id="logoUrl" name="logoUrl" type="url" placeholder="https://smithroofing.com/logo.png" />
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: Content Setup -->
+      <div class="intake-section">
+        <p class="intake-section__title">03 — Content Setup</p>
+        <div class="field-grid">
+          <div class="form-field">
+            <label for="product">Primary product / content track</label>
+            <select id="product" name="product">
+              <option value="Inspect">AGE Inspect (roofing)</option>
+              <option value="Talksmith">Talksmith (courses &amp; coaching)</option>
+              <option value="Interview Prep">Interview Prep</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Social destinations</label>
+            <div class="destinations-grid">
+              <label class="dest-check"><input type="checkbox" name="destinations" value="Instagram" checked /> Instagram</label>
+              <label class="dest-check"><input type="checkbox" name="destinations" value="TikTok" checked /> TikTok</label>
+              <label class="dest-check"><input type="checkbox" name="destinations" value="YouTube" checked /> YouTube</label>
+              <label class="dest-check"><input type="checkbox" name="destinations" value="LinkedIn" /> LinkedIn</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: Technical -->
+      <div class="intake-section">
+        <p class="intake-section__title">04 — Technical (fill after voice sample)</p>
+        <div class="field-grid field-grid--2">
+          <div class="form-field">
+            <label for="voiceId">ElevenLabs Voice ID</label>
+            <input id="voiceId" name="voiceId" type="text" placeholder="wZ8EkhKgiJFrE7MfMfUc" />
+            <p class="hint">Create from their voice sample at elevenlabs.io → Voices</p>
+          </div>
+          <div class="form-field">
+            <label for="templateId">Creatomate Template ID</label>
+            <input id="templateId" name="templateId" type="text" placeholder="856453b5-c707-488e-a8ae-0dc7d47a90bc" />
+            <p class="hint">Leave blank to use the default Quick Promo template</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="intake-actions">
+        <button type="submit" id="deploy-btn" class="btn btn--primary" style="display:flex;align-items:center;gap:.6rem;">
+          <span id="deploy-spinner" class="spinner"></span>
+          <span id="deploy-label">Deploy client service</span>
+        </button>
+        <span style="color:var(--text-3);font-size:.85rem;">Takes ~2 min to go live</span>
+      </div>
+
+      <p id="deploy-error"></p>
+    </form>
+
+    <!-- Welcome Kit -->
+    <div class="kit-card" id="kit-card">
+      <h3>✈ Client service deployed</h3>
+      <div id="kit-rows"></div>
+      <div class="kit-message" id="kit-message"></div>
+      <button type="button" class="btn btn--ghost" style="margin-top:var(--space-4);" onclick="copyKit()">Copy welcome message</button>
+    </div>
+
+  </div>
+
+  <script>
+    const form = document.getElementById("intake-form");
+    const btn  = document.getElementById("deploy-btn");
+    const lbl  = document.getElementById("deploy-label");
+    const spin = document.getElementById("deploy-spinner");
+    const err  = document.getElementById("deploy-error");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      spin.style.display = "block";
+      lbl.textContent = "Deploying…";
+      err.style.display = "none";
+
+      const data = Object.fromEntries(new FormData(form));
+      data.destinations = [...form.querySelectorAll('[name="destinations"]:checked')].map(el => el.value);
+      data.phrasesUse   = data.phrasesUse   ? data.phrasesUse.split(",").map(s => s.trim()).filter(Boolean)   : [];
+      data.phrasesAvoid = data.phrasesAvoid ? data.phrasesAvoid.split(",").map(s => s.trim()).filter(Boolean) : [];
+
+      try {
+        const res = await fetch("/api/runway/admin/onboard", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) throw new Error(json.error || "Deploy failed");
+        showKit(data, json);
+      } catch (e) {
+        err.textContent = e.message;
+        err.style.display = "block";
+        btn.disabled = false;
+        spin.style.display = "none";
+        lbl.textContent = "Deploy client service";
+      }
+    });
+
+    function showKit(input, result) {
+      spin.style.display = "none";
+      lbl.textContent = "Deployed ✓";
+
+      const rows = [
+        ["Dashboard URL", result.url],
+        ["Login email",   result.loginEmail],
+        ["Temp password", result.loginPassword],
+        ["Squawk code",   result.squawk],
+        ["Render service", result.dashboardUrl],
+      ];
+
+      document.getElementById("kit-rows").innerHTML = rows.map(([label, val]) => `
+        <div class="kit-row">
+          <span class="kit-row__label">${label}</span>
+          <span class="kit-row__val">${val || "—"}</span>
+          <button class="kit-copy" onclick="copy('${(val||"").replace(/'/g,"\\'")}')">copy</button>
+        </div>`).join("");
+
+      const msg = buildWelcomeMessage(input, result);
+      document.getElementById("kit-message").textContent = msg;
+      document.getElementById("kit-card").style.display = "block";
+      document.getElementById("kit-card").scrollIntoView({ behavior: "smooth" });
+      window._kitMessage = msg;
+    }
+
+    function buildWelcomeMessage(input, result) {
+      return `Hi ${input.clientName || input.company},
+
+Your Runway flight deck is live and ready.
+
+🔗 Dashboard: ${result.url}
+📧 Login: ${result.loginEmail}
+🔑 Password: ${result.loginPassword}
+✈ Squawk: ${result.squawk}
+
+Here's how to get started:
+1. Log in at the link above
+2. Head to Brand & Strategy — fill in your brand brief
+3. Drop your first 3–5 topics in the Hold queue
+4. I'll take it from there — script → voice → video → published
+
+You have clearance. Let's fly.
+
+— Omar Anderson, AGE Runway`;
+    }
+
+    function copy(text) {
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+
+    function copyKit() {
+      if (window._kitMessage) navigator.clipboard.writeText(window._kitMessage).catch(() => {});
+    }
+  </script>
+</body>
+</html>

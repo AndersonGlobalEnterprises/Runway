@@ -79,7 +79,33 @@ function writeJson(name, data) {
 }
 
 export function getConfig() {
-  return readJson("config.json", DEFAULT_CONFIG);
+  const base = readJson("config.json", DEFAULT_CONFIG);
+  return applyEnvOverrides(base);
+}
+
+function applyEnvOverrides(cfg) {
+  const e = process.env;
+  const out = structuredClone(cfg);
+  if (e.CLIENT_COMPANY)       out.company = e.CLIENT_COMPANY;
+  if (e.CLIENT_NAME)          out.clientName = e.CLIENT_NAME;
+  if (e.CLIENT_TIER)          out.tier = e.CLIENT_TIER;
+  if (e.CLIENT_SLUG)          out.slug = e.CLIENT_SLUG;
+  if (e.CLIENT_SQUAWK)        out.squawk = e.CLIENT_SQUAWK;
+  if (e.CLIENT_PRODUCT)       out.product = e.CLIENT_PRODUCT;
+  if (e.CLIENT_DESTINATIONS)  out.destinations = e.CLIENT_DESTINATIONS.split(",").map(s => s.trim());
+  if (!out.integrations) out.integrations = {};
+  if (e.CLIENT_VOICE_ID)      out.integrations.voiceId = e.CLIENT_VOICE_ID;
+  if (e.CLIENT_TEMPLATE_ID)   out.integrations.creatomateTemplateId = e.CLIENT_TEMPLATE_ID;
+  if (!out.brand) out.brand = {};
+  if (e.CLIENT_CTA)           out.brand.cta = e.CLIENT_CTA;
+  if (e.CLIENT_COLOR)         out.brand.primaryColor = e.CLIENT_COLOR;
+  if (e.CLIENT_AUDIENCE)      out.brand.audience = e.CLIENT_AUDIENCE;
+  if (e.CLIENT_TONE)          out.brand.tone = e.CLIENT_TONE;
+  if (e.CLIENT_LOGO_URL)      out.brand.logoUrl = e.CLIENT_LOGO_URL;
+  if (e.CLIENT_WEBSITE)       out.brand.website = e.CLIENT_WEBSITE;
+  if (e.CLIENT_PHRASES_USE)   out.brand.phrasesUse = e.CLIENT_PHRASES_USE.split(",").map(s => s.trim());
+  if (e.CLIENT_PHRASES_AVOID) out.brand.phrasesAvoid = e.CLIENT_PHRASES_AVOID.split(",").map(s => s.trim());
+  return out;
 }
 
 export function saveConfig(partial) {
