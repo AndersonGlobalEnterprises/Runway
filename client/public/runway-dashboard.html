@@ -25,7 +25,7 @@
         <div class="dashboard-profile__avatar" id="client-avatar">DC</div>
         <div>
           <div class="dashboard-profile__name" id="client-name">Demo Client</div>
-          <div class="dashboard-profile__company" id="client-company">First Flight Roofing</div>
+          <div class="dashboard-profile__company" id="client-company"></div>
           <span class="tier-badge" id="client-tier-badge">Growth plan</span>
           <span class="tier-badge" id="owner-badge" hidden style="border-color:rgba(251,191,36,0.4);color:#fbbf24;background:rgba(251,191,36,0.08);">Owner</span>
         </div>
@@ -90,6 +90,7 @@
       <!-- Overview -->
       <section class="deck-view" data-view="overview">
         <div class="stat-grid">
+          <div class="stat-card cockpit-bezel"><strong id="stat-posts">0</strong><span>Posts on manifest this week</span></div>
           <div class="stat-card cockpit-bezel"><strong id="stat-videos">0</strong><span>Videos on manifest this week</span></div>
           <div class="stat-card cockpit-bezel"><strong id="stat-topics">0</strong><span>Topics on hold</span></div>
           <div class="stat-card cockpit-bezel"><strong id="stat-platforms">0</strong><span>Destinations live</span></div>
@@ -204,6 +205,7 @@
 
       <div class="drawer-tabs" role="tablist">
         <button type="button" class="drawer-tab is-active" data-drawer-tab="script">Script</button>
+        <button type="button" class="drawer-tab" data-drawer-tab="post">Post</button>
         <button type="button" class="drawer-tab" data-drawer-tab="video">Video</button>
         <button type="button" class="drawer-tab" data-drawer-tab="publish">Publish</button>
       </div>
@@ -221,7 +223,7 @@
           <select id="field-content-type" class="deck-select deck-select--full"></select></div>
         <div class="script-field"><label for="field-hook">Hook</label><input id="field-hook" type="text" maxlength="80" /></div>
         <div class="script-field"><label for="field-script">Full script</label><textarea id="field-script" rows="8" maxlength="1200"></textarea></div>
-        <div class="script-field"><label for="field-caption">Caption</label><textarea id="field-caption" rows="3" maxlength="220"></textarea></div>
+        <div class="script-field"><label for="field-caption">Caption</label><textarea id="field-caption" rows="3" maxlength="2200"></textarea></div>
         <div class="script-field"><label for="field-hashtags">Hashtags</label><input id="field-hashtags" type="text" maxlength="120" placeholder="#roofing #stormdamage" /></div>
         <div class="script-field"><label for="field-cta">Spoken CTA</label><input id="field-cta" type="text" maxlength="100" /></div>
         <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
@@ -230,6 +232,13 @@
           <div class="script-field"><label for="field-length">Length</label>
             <select id="field-length" class="deck-select deck-select--full"><option value="30s">30s</option><option value="45s">45s</option><option value="60s">60s</option></select></div>
         </div>
+      </div>
+
+      <div class="drawer-panel" data-drawer-panel="post" hidden>
+        <p class="empty-copy" id="post-sync-note">Post copy syncs from Caption unless you edit here. LinkedIn, Facebook, and X each get channel-fit text.</p>
+        <div class="script-field"><label for="field-linkedin">LinkedIn post</label><textarea id="field-linkedin" rows="6" maxlength="3000"></textarea></div>
+        <div class="script-field"><label for="field-facebook">Facebook post</label><textarea id="field-facebook" rows="6" maxlength="5000"></textarea></div>
+        <div class="script-field"><label for="field-x">X post</label><textarea id="field-x" rows="3" maxlength="280"></textarea></div>
       </div>
 
       <div class="drawer-panel" data-drawer-panel="video" hidden>
@@ -251,16 +260,23 @@
 
       <div class="drawer-panel" data-drawer-panel="publish" hidden>
         <div id="publish-hints" class="strategy-hints"></div>
+        <div class="script-field"><label for="field-delivery">Deliver as</label>
+          <select id="field-delivery" class="deck-select deck-select--full">
+            <option value="post">Text post only</option>
+            <option value="video">Video only</option>
+            <option value="hybrid">Post + video (same topic)</option>
+          </select></div>
         <div class="script-field"><label>Destinations</label>
           <div class="chip-input-row" id="field-platforms"></div></div>
         <div class="script-field"><label for="field-scheduled">Departure time</label><input id="field-scheduled" type="datetime-local" /></div>
-        <div class="script-field"><label for="field-format">Post as</label>
+        <div class="script-field" id="field-format-wrap"><label for="field-format">Video format</label>
           <select id="field-format" class="deck-select deck-select--full"><option value="reel">Reel</option><option value="short">Short</option><option value="feed">Feed</option><option value="story">Story</option></select></div>
       </div>
 
       <div class="drawer-actions">
         <button type="button" class="btn btn--primary" id="btn-save-edit">Save changes</button>
         <button type="button" class="btn btn--secondary" id="btn-approve-script">Clear script</button>
+        <button type="button" class="btn btn--secondary" id="btn-approve-post">Clear post</button>
         <button type="button" class="btn btn--secondary" id="btn-approve-video">Clear video</button>
         <button type="button" class="btn btn--primary" id="btn-publish-now">Depart now</button>
       </div>
@@ -304,9 +320,9 @@
       </div>
       <div class="help-drawer__body">
         <div class="help-phase"><span class="help-phase__num">01</span><div><strong>Pre-flight</strong><p>Queue topics (one per line) in "Request topics." Each topic becomes a flight on the manifest.</p></div></div>
-        <div class="help-phase"><span class="help-phase__num">02</span><div><strong>Research & script</strong><p>The pipeline researches the topic and drafts a script in your voice. Open the flight → Script tab to review. Click <em>Clear script</em> to approve — nothing records until you do.</p></div></div>
-        <div class="help-phase"><span class="help-phase__num">03</span><div><strong>Voice & video</strong><p>After script is cleared, ElevenLabs clones your voice and Creatomate renders the branded video. Preview it in the Video tab before clearing.</p></div></div>
-        <div class="help-phase"><span class="help-phase__num">04</span><div><strong>Cruise</strong><p>Set a departure time on the Publish tab and select destinations. Hit <em>Depart now</em> or let the scheduled time trigger it.</p></div></div>
+        <div class="help-phase"><span class="help-phase__num">02</span><div><strong>Research & script</strong><p>The pipeline researches the topic and drafts copy in your voice. Open the flight → Script tab to review. Click <em>Clear script</em> to approve — post-only flights skip voice and video.</p></div></div>
+        <div class="help-phase"><span class="help-phase__num">03</span><div><strong>Post & video (equal weight)</strong><p>Edit channel-specific post copy on the Post tab. For video flights, preview the render on the Video tab. Hybrid flights use both tabs from one topic.</p></div></div>
+        <div class="help-phase"><span class="help-phase__num">04</span><div><strong>Cruise</strong><p>Choose <em>Deliver as</em> on the Publish tab — text post, video, or both. Set a departure time, select destinations, then <em>Depart now</em>.</p></div></div>
         <div class="help-phase"><span class="help-phase__num">05</span><div><strong>Weekly rhythm</strong><p>Check Flight plan for AI-generated topic ideas and posting cadence. 10 minutes a week keeps the pipeline full.</p></div></div>
         <hr style="border-color:var(--border);margin:20px 0;">
         <h3 style="font-size:0.875rem;margin-bottom:12px;">What you edit vs. what Runway automates</h3>
