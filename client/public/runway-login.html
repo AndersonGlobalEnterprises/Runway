@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flight Deck Login — AGE Runway</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/runway.css" />
+  <link rel="stylesheet" href="/css/runway-aviation.css" />
+</head>
+<body class="runway-site cockpit">
+
+  <div class="auth-page auth-page--cockpit cockpit-shell">
+    <aside class="auth-aside">
+      <a href="/" class="brand brand--lg">
+        <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
+        <span class="brand__lights"><span></span><span></span><span></span></span>
+      </a>
+      <div class="auth-aside__headline">
+        <p class="eyebrow instrument-label instrument-label--amber">RWY 01 · FLIGHT DECK ACCESS</p>
+        <h1>Request cockpit entry.</h1>
+        <p>Your mission control — weekly manifest, taxi tracks, and scheduled departures in one instrument panel.</p>
+        <div class="cockpit-runway-mini" aria-hidden="true">
+          <div class="cockpit-runway-mini__line"></div>
+          <svg class="cockpit-runway-mini__plane" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 22h28l36-2 4 4-36 2H4v-4z" fill="#cbd5e1"/>
+            <path d="M32 20V9l8 11H32z" fill="#94a3b8"/>
+          </svg>
+        </div>
+        <div class="auth-pipeline" style="margin-top:var(--space-5);">
+          <p class="instrument-label" style="margin-bottom:var(--space-3);">TAXI ROUTE</p>
+          <div class="flow-line">
+            <div class="flow-node is-active"><div class="flow-node__box">MNFST</div></div>
+            <div class="flow-connector"></div>
+            <div class="flow-node"><div class="flow-node__box">SCR</div></div>
+            <div class="flow-connector"></div>
+            <div class="flow-node"><div class="flow-node__box">VOX</div></div>
+            <div class="flow-connector"></div>
+            <div class="flow-node"><div class="flow-node__box">DEP</div></div>
+          </div>
+        </div>
+      </div>
+      <p class="instrument-label">AGE · SECURE CHANNEL · <span class="instrument-label--green">COCKPIT ONLINE</span></p>
+    </aside>
+
+    <main class="auth-main">
+      <div class="auth-card cockpit-bezel cockpit-bezel--amber">
+        <p class="instrument-label instrument-label--amber">SQUAWK: RWY-AUTH</p>
+        <h2>Enter Flight Deck</h2>
+        <p class="auth-card__sub">Use the email linked to your Runway clearance.</p>
+        <p id="form-notice" hidden class="form-notice"></p>
+        <form method="POST" action="/api/runway/login">
+          <div class="form-field">
+            <label for="email" class="instrument-label">CALLSIGN · EMAIL</label>
+            <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@company.com" />
+          </div>
+          <div class="form-field">
+            <label for="password" class="instrument-label">ACCESS CODE</label>
+            <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="Enter your password" />
+          </div>
+          <div class="form-row">
+            <label><input type="checkbox" name="remember" style="margin-right:6px;" />Remember this terminal</label>
+            <a href="/runway-forgot.html">Lost access code?</a>
+          </div>
+          <button type="submit" class="btn btn--primary btn--full">Clear for entry</button>
+        </form>
+        <p class="auth-footer">
+          No clearance yet? <a href="/runway-pricing.html">Request clearance</a><br>
+          Demo: <code style="color:var(--text-muted);">demo@agerunway.com</code> / <code style="color:var(--text-muted);">runway123</code>
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/runway.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: age-runway
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DEMO_LOGIN
+        value: "true"

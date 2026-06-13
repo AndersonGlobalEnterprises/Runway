@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AGE Runway — Cleared for Takeoff</title>
+  <meta name="description" content="Done-for-you AI content for B2B operators. Voice clone, scripts, video, and publishing — handled every week." />
+  <meta property="og:title" content="AGE Runway — Your AI Content Pipeline" />
+  <meta property="og:description" content="Record once. Publish all week. Done-for-you content for roofing, local service, and expert operators." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/runway.css" />
+  <link rel="stylesheet" href="/css/runway-flagship.css" />
+  <link rel="stylesheet" href="/css/runway-aviation.css?v=6" />
+</head>
+<body class="runway-site runway-flagship">
+
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <div class="takeoff-scene" id="takeoff-scene" aria-hidden="true">
+    <div class="takeoff-scene__sky"></div>
+    <div class="takeoff-runway">
+      <div class="takeoff-runway__surface">
+        <div class="takeoff-runway__centerline"></div>
+        <div class="takeoff-runway__lights">
+          <span class="runway-light"></span><span class="runway-light"></span><span class="runway-light"></span>
+          <span class="runway-light"></span><span class="runway-light"></span><span class="runway-light"></span>
+          <span class="runway-light"></span><span class="runway-light"></span>
+        </div>
+      </div>
+    </div>
+    <div class="takeoff-hud">
+      <span class="takeoff-hud__phase" id="takeoff-phase">CLR: STANDBY</span>
+      <span id="takeoff-alt">ALT 0 FT</span>
+    </div>
+  </div>
+
+  <div class="takeoff-plane-wrap" id="takeoff-plane-wrap" aria-hidden="true">
+    <svg class="takeoff-plane" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M4 22h28l36-2 4 4-36 2H4v-4z" fill="#e2e8f0"/>
+      <path d="M32 20V9l8 11H32z" fill="#cbd5e1"/>
+      <path d="M12 24l8 10 6-10H12z" fill="#94a3b8"/>
+      <ellipse cx="18" cy="22" rx="3" ry="2" fill="#60a5fa" opacity="0.95"/>
+    </svg>
+  </div>
+
+  <header class="site-header site-header--flagship">
+    <a href="/" class="brand load-seq load-seq--1" aria-label="AGE Runway home">
+      <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
+      <span class="brand__lights"><span></span><span></span><span></span></span>
+    </a>
+    <nav class="site-nav load-seq load-seq--2" aria-label="Primary">
+      <a href="#scroll-story" class="site-nav__link">Product</a>
+      <a href="/runway-pricing.html">Pricing</a>
+    </nav>
+    <div class="header-actions load-seq load-seq--2">
+      <a href="/runway-login.html" class="btn btn--ghost">Flight Deck</a>
+      <button type="button" class="btn btn--primary btn--magnetic btn--clearance" id="btn-clearance-header"><span class="btn__label">Request clearance</span></button>
+    </div>
+  </header>
+
+  <main>
+    <div class="takeoff-zone" id="takeoff-zone">
+    <!-- Cinematic hero -->
+    <section class="hero hero--flagship">
+      <div class="hero__grid">
+        <div class="hero__copy">
+          <div class="proof-pill load-seq load-seq--2">
+            <span class="proof-pill__dot"></span>
+            <span class="atc-label">WHEELS-UP 48H</span> First manifest · B2B operators
+          </div>
+          <p class="eyebrow load-seq load-seq--3">Anderson Global Enterprises · RWY 01</p>
+          <h1 class="load-seq load-seq--3">
+            Your brand.
+            <span class="line-2 text-gradient">Cleared for takeoff.</span>
+          </h1>
+          <p class="lead load-seq load-seq--4">Record once. We handle taxi, rotation, and weekly publishing — your voice on every channel, on autopilot.</p>
+          <div class="hero__actions load-seq load-seq--4">
+            <button type="button" class="btn btn--primary btn--lg btn--magnetic btn--clearance" id="btn-clearance"><span class="btn__label">Request clearance</span></button>
+            <a href="#scroll-story" class="btn btn--secondary btn--lg">Follow the flight plan</a>
+          </div>
+          <div class="hero__atc-row load-seq load-seq--5">
+            <span class="atc-stat">MNFST:<strong data-count="8">0</strong>/WK</span>
+            <span class="atc-stat">Q:<strong data-count="12">0</strong> TOPICS</span>
+            <span class="atc-stat">DEST:<strong data-count="3">0</strong> LIVE</span>
+            <span class="atc-stat">DEP:<strong> MON 0900Z</strong></span>
+          </div>
+        </div>
+
+        <div class="hero__visual hero__visual--bleed load-seq load-seq--5" data-parallax>
+          <div class="float-chip float-chip--1"><strong>8</strong> on manifest</div>
+          <div class="float-chip float-chip--2"><strong>MON 0900Z</strong> next dep</div>
+
+          <div class="deck-preview deck-preview--interactive">
+            <div class="deck-preview__chrome">
+              <div class="deck-preview__dots"><span></span><span></span><span></span></div>
+              <span class="deck-preview__label atc-label"><span class="tag tag--live" style="border:none;padding:0;"><span class="tag__dot tag__dot--pulse"></span></span> COCKPIT · ONLINE</span>
+            </div>
+            <div class="deck-preview__tabs">
+              <button type="button" class="deck-tab is-active" data-panel="panel-overview">Overview</button>
+              <button type="button" class="deck-tab" data-panel="panel-pipeline">Taxi</button>
+              <button type="button" class="deck-tab" data-panel="panel-publish">Manifest</button>
+              <button type="button" class="deck-tab" data-panel="panel-queue">Hold</button>
+            </div>
+            <div class="deck-preview__body">
+              <div class="deck-preview__sidebar">
+                <div class="deck-preview__nav-item is-active"></div>
+                <div class="deck-preview__nav-item"></div>
+                <div class="deck-preview__nav-item"></div>
+                <div class="deck-preview__nav-item"></div>
+              </div>
+              <div class="deck-preview__main">
+                <div id="panel-overview" class="deck-panel is-active">
+                  <div class="deck-preview__stat-row">
+                    <div class="deck-preview__stat"><strong data-count="8">0</strong><span>MNFST / WK</span></div>
+                    <div class="deck-preview__stat"><strong data-count="12">0</strong><span>HOLD · topics</span></div>
+                    <div class="deck-preview__stat"><strong data-count="3">0</strong><span>DEST · live</span></div>
+                  </div>
+                  <div class="deck-preview__queue">
+                    <div class="deck-preview__row">
+                      <span class="deck-preview__row-title">Roof inspection myths</span>
+                      <span class="deck-preview__platform">IG·TT·YT</span>
+                      <span class="deck-preview__status">RDY</span>
+                    </div>
+                    <div class="deck-preview__row">
+                      <span class="deck-preview__row-title">Storm damage red flags</span>
+                      <span class="deck-preview__platform">LI·IG</span>
+                      <span class="deck-preview__status">RND</span>
+                    </div>
+                  </div>
+                </div>
+                <div id="panel-pipeline" class="deck-panel">
+                  <div class="deck-preview__flow">
+                    <div class="flow-line">
+                      <div class="flow-node is-active"><div class="flow-node__box">Tpc</div></div>
+                      <div class="flow-connector"></div>
+                      <div class="flow-node"><div class="flow-node__box">Scr</div></div>
+                      <div class="flow-connector"></div>
+                      <div class="flow-node"><div class="flow-node__box">Vox</div></div>
+                      <div class="flow-connector"></div>
+                      <div class="flow-node"><div class="flow-node__box">Vid</div></div>
+                      <div class="flow-connector"></div>
+                      <div class="flow-node"><div class="flow-node__box">Pub</div></div>
+                    </div>
+                  </div>
+                  <p class="atc-stat" style="margin-top:12px;">TRACK: Inspect · 4 active · STABLE</p>
+                </div>
+                <div id="panel-publish" class="deck-panel">
+                  <div class="deck-preview__queue">
+                    <div class="deck-preview__row"><span class="deck-preview__row-title">Mon 9:00 · Roof myths</span><span class="deck-preview__status">RDY</span></div>
+                    <div class="deck-preview__row"><span class="deck-preview__row-title">Wed 9:00 · Storm assess</span><span class="deck-preview__status">RND</span></div>
+                    <div class="deck-preview__row"><span class="deck-preview__row-title">Fri 9:00 · Re-roof signs</span><span class="deck-preview__status">SCR</span></div>
+                  </div>
+                </div>
+                <div id="panel-queue" class="deck-panel">
+                  <div class="deck-panel--empty">
+                    <p class="atc-label">HOLD · Q EMPTY</p>
+                    <p style="margin-top:8px;">No topics on manifest.</p>
+                    <button type="button" class="btn btn--secondary">Request manifest</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scroll narrative -->
+    <section class="scroll-story" id="scroll-story">
+      <div class="scroll-story__track">
+        <div class="scroll-story__sticky">
+          <div class="scroll-story__inner">
+            <div class="scroll-story__copy">
+              <p class="scroll-story__stage-label" id="story-label">PHASE 01 · PRE-FLIGHT</p>
+              <h2 id="story-title">Voice locked in.</h2>
+              <p class="scroll-story__desc" id="story-desc">One 5–10 minute sample. Brand voice, tone, and posting destinations configured once.</p>
+              <div class="altitude-meter">ALT <strong id="story-alt">0</strong> FT · <span id="story-phase-hud">PRE-FLIGHT</span></div>
+              <div class="scroll-story__progress" aria-hidden="true">
+                <span class="scroll-story__dot is-active"></span>
+                <span class="scroll-story__dot"></span>
+                <span class="scroll-story__dot"></span>
+                <span class="scroll-story__dot"></span>
+                <span class="scroll-story__dot"></span>
+                <span class="scroll-story__hint" id="story-hint">Scroll ↓ · flight phases</span>
+              </div>
+              <a href="#product" class="scroll-story__skip">Skip to gate →</a>
+            </div>
+            <div class="scroll-story__visual">
+              <div class="story-node is-active"><div class="story-node__icon">01</div><div class="story-node__title">Pre-flight</div><div class="story-node__meta">VOICE · BRAND · DEST</div></div>
+              <div class="story-node"><div class="story-node__icon">02</div><div class="story-node__title">Taxi</div><div class="story-node__meta">SCRIPT · RESEARCH · DRAFT</div></div>
+              <div class="story-node"><div class="story-node__icon">03</div><div class="story-node__title">Rotation</div><div class="story-node__meta">CLONE · RENDER · BRAND</div></div>
+              <div class="story-node"><div class="story-node__icon">04</div><div class="story-node__title">Climb</div><div class="story-node__meta">IG · TT · LI · YT</div></div>
+              <div class="story-node"><div class="story-node__icon">05</div><div class="story-node__title">Cruise</div><div class="story-node__meta">FLIGHT DECK · MONITOR</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div><!-- /takeoff-zone -->
+
+    <!-- Asymmetric audience -->
+    <section class="section section--break" id="product">
+      <div class="container">
+        <div class="section-intro reveal">
+          <div>
+            <p class="eyebrow"><span class="chevron-mark">›</span> Operators</p>
+            <h2>Built for businesses that ship.</h2>
+          </div>
+          <p class="lead">Your crew stays in the field. Your brand stays in the feed.</p>
+        </div>
+        <div class="audience-flagship">
+          <article class="audience-card audience-card--large reveal">
+            <div class="audience-card__icon">◈</div>
+            <h3>Roofing companies</h3>
+            <p>Inspection insights and homeowner FAQs — weekly authority content without a media team or an editor on payroll.</p>
+            <div class="audience-card__metrics">
+              <span class="audience-card__metric">+3 posts/wk</span>
+              <span class="audience-card__metric">0 hrs editing</span>
+              <span class="audience-card__metric">48h launch</span>
+            </div>
+          </article>
+          <article class="audience-card reveal reveal-delay-1">
+            <div class="audience-card__icon">◈</div>
+            <h3>Local service</h3>
+            <p>HVAC, plumbing, restoration — top-of-mind while crews stay in the field.</p>
+            <div class="audience-card__metrics"><span class="audience-card__metric">Multi-platform</span></div>
+          </article>
+          <article class="audience-card reveal reveal-delay-2">
+            <div class="audience-card__icon">◈</div>
+            <h3>Expert creators</h3>
+            <p>Inbound rhythm without becoming a full-time content operator.</p>
+            <div class="audience-card__metrics"><span class="audience-card__metric">Your voice</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Case study -->
+    <section class="section section--alt">
+      <div class="container reveal">
+        <p class="eyebrow"><span class="chevron-mark">›</span> First Flight</p>
+        <div class="case-study">
+          <div class="case-study__media">
+            <div class="case-study__metric-stack">
+              <div class="case-metric"><strong data-count="12">0</strong><span>Videos / month · from zero</span></div>
+              <div class="case-metric"><strong data-count="6">0</strong><span>Weeks to full pipeline</span></div>
+              <div class="case-metric"><strong data-count="0">0</strong><span>Hours editing / week</span></div>
+            </div>
+          </div>
+          <div class="case-study__content">
+            <blockquote>“We went from <em>debating whether to post</em> to showing up every week. Runway is a content ops team — without the overhead.”</blockquote>
+            <p class="case-study__client">First Flight Roofing · Growth tier · placeholder for real client</p>
+            <a href="/runway-pricing.html" class="btn btn--secondary mt-6">Book first flight</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flight deck -->
+    <section class="section" id="flight-deck">
+      <div class="container pipeline-stage pipeline-stage--overlap">
+        <div class="reveal">
+          <p class="eyebrow"><span class="chevron-mark">›</span> Flight Deck</p>
+          <h2>Mission control for your content.</h2>
+          <p class="lead">Three tracks. One portal. Zero tool-hopping.</p>
+          <a href="/runway-login.html" class="btn btn--primary mt-6">Enter Flight Deck</a>
+        </div>
+        <div class="pipeline-diagram reveal reveal-delay-2">
+          <div class="pipeline-diagram__track">
+            <div class="pipeline-lane" style="--fill: 85%">
+              <div class="pipeline-lane__head"><span class="pipeline-lane__name">Inspect</span><span class="pipeline-lane__status atc-label">TRK-01 · 4 active</span></div>
+              <div class="pipeline-lane__bar">
+                <div class="pipeline-lane__segment"><span style="width:100%"></span></div>
+                <div class="pipeline-lane__segment"><span style="width:100%"></span></div>
+                <div class="pipeline-lane__segment"><span style="width:60%"></span></div>
+                <div class="pipeline-lane__segment"><span></span></div>
+                <div class="pipeline-lane__segment"><span></span></div>
+              </div>
+              <div class="pipeline-lane__stages"><span>RSH</span><span>SCR</span><span>VOX</span><span>VID</span><span>PUB</span></div>
+            </div>
+            <div class="pipeline-lane" style="--fill: 70%">
+              <div class="pipeline-lane__head"><span class="pipeline-lane__name">Talksmith</span><span class="pipeline-lane__status atc-label">TRK-02 · processing</span></div>
+              <div class="pipeline-lane__bar">
+                <div class="pipeline-lane__segment"><span style="width:100%"></span></div>
+                <div class="pipeline-lane__segment"><span style="width:100%"></span></div>
+                <div class="pipeline-lane__segment"><span style="width:40%"></span></div>
+                <div class="pipeline-lane__segment"><span></span></div>
+                <div class="pipeline-lane__segment"><span></span></div>
+              </div>
+              <div class="pipeline-lane__stages"><span>RSH</span><span>SCR</span><span>VOX</span><span>VID</span><span>PUB</span></div>
+            </div>
+            <div class="pipeline-lane" style="--fill: 40%">
+              <div class="pipeline-lane__head"><span class="pipeline-lane__name">Interview Prep</span><span class="pipeline-lane__status atc-label">TRK-03 · idle</span></div>
+              <div class="pipeline-lane__bar">
+                <div class="pipeline-lane__segment"><span style="width:100%"></span></div>
+                <div class="pipeline-lane__segment"><span></span></div>
+                <div class="pipeline-lane__segment"><span></span></div>
+                <div class="pipeline-lane__segment"><span></span></div>
+                <div class="pipeline-lane__segment"><span></span></div>
+              </div>
+              <div class="pipeline-lane__stages"><span>RSH</span><span>SCR</span><span>VOX</span><span>VID</span><span>PUB</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section section--tight">
+      <div class="container">
+        <div class="cta-band reveal">
+          <div>
+            <p class="eyebrow"><span class="chevron-mark">›</span> Clearance granted</p>
+            <h2 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:800;text-transform:uppercase;">Ready for takeoff?</h2>
+            <p class="lead" style="margin-top:8px;font-size:0.9375rem;">Starter to Scale. Founding rates for early operators.</p>
+          </div>
+          <a href="/runway-pricing.html" class="btn btn--primary btn--lg btn--clearance" id="btn-clearance-footer"><span class="btn__label">Request clearance</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__grid">
+      <div>
+        <a href="/" class="brand brand--lg">
+          <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
+          <span class="brand__lights"><span></span><span></span><span></span></span>
+        </a>
+        <p class="site-footer__meta">© Anderson Global Enterprises · <span class="atc-label">AGE-RWY-2026</span></p>
+      </div>
+      <div class="footer-links">
+        <a href="/runway-pricing.html">Pricing</a>
+        <a href="/runway-login.html">Portal</a>
+        <a href="mailto:support@ageflowops.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/runway.js?v=6"></script>
+</body>
+</html>

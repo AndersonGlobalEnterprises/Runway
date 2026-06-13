@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pricing — AGE Runway</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/runway.css" />
+  <link rel="stylesheet" href="/css/runway-flagship.css" />
+  <link rel="stylesheet" href="/css/runway-aviation.css" />
+  <style>
+    .pricing-hero { padding: var(--space-8) 0 var(--space-7); text-align: center; }
+    .pricing-hero .lead { margin-inline: auto; }
+    .checkout-form {
+      margin-top: var(--space-5);
+      padding: var(--space-5);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-inset);
+      display: none;
+    }
+    .checkout-form.is-open { display: block; }
+    .checkout-form .form-field { margin-bottom: var(--space-3); }
+    .checkout-msg {
+      margin-top: var(--space-4);
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      min-height: 1.2em;
+    }
+    .checkout-msg.is-error { color: #fca5a5; }
+  </style>
+</head>
+<body class="runway-site runway-flagship">
+
+  <header class="site-header">
+    <a href="/" class="brand">
+      <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
+      <span class="brand__lights"><span></span><span></span><span></span></span>
+    </a>
+    <nav class="site-nav">
+      <a href="/#product">Product</a>
+      <a href="/runway-pricing.html" class="is-active">Pricing</a>
+    </nav>
+    <div class="header-actions">
+      <a href="/runway-login.html" class="btn btn--ghost">Flight Deck</a>
+      <a href="#tiers" class="btn btn--primary">Select class</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="pricing-hero">
+      <div class="container">
+        <p class="eyebrow instrument-label instrument-label--amber">CLEARANCE · FLIGHT CLASSES</p>
+        <h1>Pick your altitude.</h1>
+        <p class="lead">Every class includes voice clone, script generation, video rendering, and scheduled departures. Choose the manifest volume that matches your growth stage.</p>
+      </div>
+    </section>
+
+    <section class="section section--tight" id="tiers">
+      <div class="container">
+        <div class="pricing-grid">
+          <article class="tier-card">
+            <p class="tier-card__name">Starter · Solo class</p>
+            <p class="tier-card__price">$497<span>/mo</span></p>
+            <p class="tier-card__desc">For a single brand getting consistent weekly content live on one primary platform.</p>
+            <ul>
+              <li>8 short-form videos per month</li>
+              <li>1 connected platform</li>
+              <li>Voice clone + brand templates</li>
+              <li>Flight Deck portal access</li>
+            </ul>
+            <button type="button" class="btn btn--secondary btn--full" data-tier="starter">Clear Solo class</button>
+          </article>
+
+          <article class="tier-card tier-card--featured">
+            <p class="tier-card__name">Growth · Crew class · Most popular</p>
+            <p class="tier-card__price">$797<span>/mo</span></p>
+            <p class="tier-card__desc">For operators scaling reach across multiple channels with higher output volume.</p>
+            <ul>
+              <li>16 short-form videos per month</li>
+              <li>3 connected platforms</li>
+              <li>Priority topic queue</li>
+              <li>Multi-track pipeline (Inspect, Talksmith, Interview Prep)</li>
+            </ul>
+            <button type="button" class="btn btn--primary btn--full" data-tier="growth">Clear Crew class</button>
+          </article>
+
+          <article class="tier-card">
+            <p class="tier-card__name">Scale · Fleet class</p>
+            <p class="tier-card__price">$1,297<span>/mo</span></p>
+            <p class="tier-card__desc">For brands treating content as a core acquisition channel across five platforms.</p>
+            <ul>
+              <li>30 short-form videos per month</li>
+              <li>5 connected platforms</li>
+              <li>Dedicated onboarding</li>
+              <li>Custom posting calendar</li>
+            </ul>
+            <button type="button" class="btn btn--secondary btn--full" data-tier="scale">Clear Fleet class</button>
+          </article>
+        </div>
+
+        <div class="compare-table-wrap reveal">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Compare plans</th>
+                <th>Starter</th>
+                <th class="is-featured">Growth</th>
+                <th>Scale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Videos / month</td>
+                <td>8</td>
+                <td class="is-featured">16</td>
+                <td>30</td>
+              </tr>
+              <tr>
+                <td>Platforms</td>
+                <td>1</td>
+                <td class="is-featured">3</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>Pipeline tracks</td>
+                <td>1</td>
+                <td class="is-featured">3</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>Flight Deck portal</td>
+                <td>✓</td>
+                <td class="is-featured">✓</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>Priority queue</td>
+                <td>—</td>
+                <td class="is-featured">✓</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>Dedicated onboarding</td>
+                <td>—</td>
+                <td class="is-featured">—</td>
+                <td>✓</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="checkout-form panel panel--elevated" id="checkout-form">
+          <div class="panel__header">
+            <span class="panel__title">File your flight plan</span>
+            <span class="tag" id="selected-tier-label">Growth</span>
+          </div>
+          <div class="panel__body">
+            <form id="checkout">
+              <input type="hidden" name="tier" id="tier-input" value="growth" />
+              <div class="form-field">
+                <label for="name">Full name</label>
+                <input id="name" name="name" type="text" required placeholder="Your name" />
+              </div>
+              <div class="form-field">
+                <label for="email">Work email</label>
+                <input id="email" name="email" type="email" required placeholder="you@company.com" />
+              </div>
+              <div class="form-field">
+                <label for="company">Company (optional)</label>
+                <input id="company" name="company" type="text" placeholder="Your company" />
+              </div>
+              <button type="submit" class="btn btn--primary btn--full">Request clearance · checkout</button>
+              <p class="checkout-msg" id="checkout-msg"></p>
+            </form>
+          </div>
+        </div>
+
+        <p class="text-center mt-6" style="font-size:0.8125rem;color:var(--text-faint);">
+          Founding rates available for early clients. <a href="mailto:support@ageflowops.com" style="color:var(--accent);">Contact us</a> for Agency ($1,997/mo) and custom volume.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__grid">
+      <div>
+        <a href="/" class="brand brand--lg">
+          <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
+          <span class="brand__lights"><span></span><span></span><span></span></span>
+        </a>
+        <p class="site-footer__meta">© Anderson Global Enterprises</p>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/runway-login.html">Flight Deck</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/runway.js"></script>
+  <script>
+    const tierLabels = { starter: 'Starter · $497/mo', growth: 'Growth · $797/mo', scale: 'Scale · $1,297/mo' };
+    const formWrap = document.getElementById('checkout-form');
+    const tierInput = document.getElementById('tier-input');
+    const tierLabel = document.getElementById('selected-tier-label');
+    const msg = document.getElementById('checkout-msg');
+
+    document.querySelectorAll('[data-tier]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tier = btn.dataset.tier;
+        tierInput.value = tier;
+        tierLabel.textContent = tierLabels[tier] || tier;
+        formWrap.classList.add('is-open');
+        formWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+
+    document.getElementById('checkout').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'checkout-msg';
+      msg.textContent = 'Processing…';
+      const fd = new FormData(e.target);
+      try {
+        const res = await fetch('/api/runway/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(fd)),
+        });
+        const data = await res.json();
+        if (data.url) {
+          location.href = data.url;
+          return;
+        }
+        msg.className = 'checkout-msg is-error';
+        msg.textContent = data.error || 'Checkout unavailable. Contact support@ageflowops.com to book manually.';
+      } catch {
+        msg.className = 'checkout-msg is-error';
+        msg.textContent = 'Network error. Try again or email support@ageflowops.com.';
+      }
+    });
+  </script>
+</body>
+</html>

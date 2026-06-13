@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome to Runway — You're In</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/runway.css" />
+  <style>
+    .success-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+    }
+    .success-card {
+      width: min(520px, 100%);
+      text-align: center;
+      padding: var(--space-7) var(--space-6);
+    }
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto var(--space-5);
+      border-radius: 50%;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      background: rgba(34, 197, 94, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #86efac;
+      font-size: 1.25rem;
+    }
+    .steps { text-align: left; margin: var(--space-6) 0; display: grid; gap: var(--space-4); }
+    .step { display: flex; gap: var(--space-4); font-size: 0.875rem; color: var(--text-secondary); }
+    .step-num {
+      width: 28px; height: 28px; flex-shrink: 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600; color: var(--accent);
+    }
+  </style>
+</head>
+<body class="runway-site">
+
+  <div class="success-page">
+    <article class="panel panel--elevated success-card">
+      <div class="success-icon">✓</div>
+      <span class="tag tag--live" id="tier-pill" style="margin-bottom:var(--space-4);">Runway</span>
+      <h1 style="font-size:1.75rem;margin-bottom:var(--space-3);">You're in — welcome to Runway</h1>
+      <p class="lead" style="margin-inline:auto;font-size:0.9375rem;">Payment confirmed. Your AI content pipeline is being configured. Check your email for next steps.</p>
+
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span><span><strong style="color:var(--text);">Check your email</strong> — welcome message and onboarding call link.</span></div>
+        <div class="step"><span class="step-num">2</span><span><strong style="color:var(--text);">Record a voice sample</strong> — 5–10 minutes of natural speech for cloning.</span></div>
+        <div class="step"><span class="step-num">3</span><span><strong style="color:var(--text);">Send seed topics</strong> — 3–5 ideas to kick off your first batch.</span></div>
+        <div class="step"><span class="step-num">4</span><span><strong style="color:var(--text);">First video in 48 hours</strong> — once voice and topics are in, production starts.</span></div>
+      </div>
+
+      <a href="/runway-login.html" class="btn btn--primary btn--full">Go to Flight Deck</a>
+      <p class="auth-footer" style="margin-top:var(--space-5);">
+        <a href="/runway-pricing.html">View plan details</a> ·
+        <a href="mailto:support@ageflowops.com">Contact support</a>
+      </p>
+    </article>
+  </div>
+
+  <script>
+    const tier = new URLSearchParams(location.search).get('tier') || '';
+    const labels = {
+      starter: 'Starter · $497/mo',
+      growth: 'Growth · $797/mo',
+      scale: 'Scale · $1,297/mo',
+    };
+    if (labels[tier]) document.getElementById('tier-pill').textContent = labels[tier];
+  </script>
+</body>
+</html>

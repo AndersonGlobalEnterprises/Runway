@@ -1,0 +1,17 @@
+{
+  "name": "age-runway",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node server/index.js",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^5.0.1",
+    "express-session": "^1.18.1"
+  }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reset Access — AGE Runway</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/runway.css" />
+  <style>
+    .auth-page--center { grid-template-columns: 1fr; }
+    .auth-page--center .auth-main { min-height: 100vh; }
+  </style>
+</head>
+<body class="runway-site">
+
+  <div class="auth-page auth-page--center">
+    <main class="auth-main">
+      <div class="auth-card">
+        <a href="/" class="brand" style="margin-bottom:var(--space-6);">
+          <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
+          <span class="brand__lights"><span></span><span></span><span></span></span>
+        </a>
+        <h2>Reset your access</h2>
+        <p class="auth-card__sub">Enter the email on your Runway subscription. We’ll send a secure reset link.</p>
+
+        <form method="POST" action="/api/runway/forgot">
+          <div class="form-field">
+            <label for="email">Work email</label>
+            <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@company.com" />
+          </div>
+          <button type="submit" class="btn btn--primary btn--full">Send reset link</button>
+        </form>
+
+        <p class="auth-footer">
+          <a href="/runway-login.html">← Back to login</a> ·
+          <a href="mailto:support@ageflowops.com">Contact support</a>
+        </p>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

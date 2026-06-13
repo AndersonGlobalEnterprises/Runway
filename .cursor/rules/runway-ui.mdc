@@ -1,0 +1,50 @@
+---
+description: Premium AGE Runway site design brief — marketing + portal + Flight Deck
+globs: client/public/**, client/public/css/**, server/**
+alwaysApply: false
+---
+
+# AGE Runway — Premium Site Design Brief
+
+## Brand & product
+
+- **Name:** AGE Runway (Runway)
+- **Company:** Anderson Global Enterprises (AGE)
+- **Audience:** B2B operators — roofing owners, local service founders, expert creators
+- **Product:** Done-for-you AI content pipeline (voice → script → video → publish)
+- **Vibe:** Premium ops tool — Stripe, Linear, Vercel — not AI gimmick sites
+
+## Visual direction
+
+- Clean, minimalist, confident. No AI slop (neon blobs, particles, robot imagery).
+- **Colors:** Charcoal base (`--bg-base`), one primary accent (blue `#3B82F6`), one supporting accent (teal `#14B8A6`), used sparingly.
+- **Typography:** Space Grotesk headings, Inter body. Precise, calm, confident.
+- **Layout:** Grid-based, generous spacing, distinct section panels, subtle hover states only.
+- **Imagery:** Abstract pipeline diagrams, modular cards, system flows — not generic AI art.
+
+## Pages
+
+| File | Purpose |
+|------|---------|
+| `index.html` | Primary marketing landing |
+| `runway-pricing.html` | 3-tier pricing + checkout form |
+| `runway-login.html` | Portal login |
+| `runway-forgot.html` | Password reset |
+| `runway-dashboard.html` | Flight Deck (authenticated) |
+| `runway-success.html` | Post-checkout welcome |
+| `css/runway.css` | Shared design system |
+| `js/runway.js` | Shared interactions |
+
+## Anti-patterns
+
+- No over-decorated gradients, spinning globes, or blurry blobs
+- No merging Talksmith Studio styling into Runway
+- Portal = client-facing; ops tooling stays internal
+- Copy: confident B2B SaaS tone, not consumer AI hype
+
+## Definition of done
+
+- Matches flight-deck visual system across marketing + portal
+- Desktop-first, graceful mobile degradation
+- Placeholders designed for real client data later
+- Backend hooks via `/api/runway/*` stubs

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flight Deck — AGE Runway</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/runway.css" />
+  <link rel="stylesheet" href="/css/runway-aviation.css" />
+</head>
+<body class="cockpit">
+
+  <div class="dashboard dashboard--cockpit cockpit-shell">
+    <aside class="dashboard-sidebar">
+      <a href="/" class="brand">
+        <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
+        <span class="brand__lights"><span></span><span></span><span></span></span>
+      </a>
+
+      <div class="dashboard-profile cockpit-bezel" style="padding:var(--space-4);margin-top:var(--space-4);">
+        <div class="dashboard-profile__avatar" id="client-avatar">DC</div>
+        <div>
+          <div class="dashboard-profile__name" id="client-name">Demo Client</div>
+          <div class="dashboard-profile__company">First Flight Roofing</div>
+          <span class="tier-badge">Growth · Crew class</span>
+        </div>
+      </div>
+
+      <nav class="dashboard-nav" aria-label="Flight Deck">
+        <p class="dashboard-nav__label instrument-label instrument-label--amber">INSTRUMENTS</p>
+        <a href="#" class="dashboard-nav__item is-active"><span class="dashboard-nav__dot"></span>Overview</a>
+        <a href="#" class="dashboard-nav__item"><span class="dashboard-nav__dot"></span>Taxi tracks</a>
+        <a href="#" class="dashboard-nav__item"><span class="dashboard-nav__dot"></span>Voice & brand</a>
+        <a href="#" class="dashboard-nav__item"><span class="dashboard-nav__dot"></span>Manifest</a>
+        <a href="#" class="dashboard-nav__item"><span class="dashboard-nav__dot"></span>Billing</a>
+      </nav>
+
+      <div class="dashboard-sidebar__footer instrument-label">
+        CLEARANCE ACTIVE
+        <strong class="instrument-label--green">REN Apr 12, 2026</strong>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div>
+          <p class="instrument-label instrument-label--amber">COCKPIT · RWY-01</p>
+          <h1>FLIGHT DECK</h1>
+          <p>Taxi status and weekly departures at a glance.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span class="tag tag--live"><span class="tag__dot tag__dot--pulse"></span>Pipeline online</span>
+          <button type="button" class="btn btn--primary">Request manifest</button>
+        </div>
+      </header>
+
+      <div class="cockpit-status-bar" aria-label="ATC status">
+        <span>PHASE: <strong>CRUISE</strong></span>
+        <span>ALT: <strong>10,000 FT</strong></span>
+        <span>TRK: <strong>3 ACTIVE</strong></span>
+        <span>NXT DEP: <strong>MON 0900Z</strong></span>
+        <span>SQUAWK: <strong>RWY-7426</strong></span>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card cockpit-bezel"><strong id="stat-videos">8</strong><span>MNFST · VID / WK</span></div>
+        <div class="stat-card cockpit-bezel"><strong id="stat-topics">12</strong><span>HOLD · TOPICS</span></div>
+        <div class="stat-card cockpit-bezel"><strong id="stat-platforms">3</strong><span>DEST · LIVE</span></div>
+      </div>
+
+      <div class="panel panel--elevated cockpit-bezel" style="margin-bottom:var(--space-4);">
+        <div class="panel__header">
+          <span class="panel__title">WEEKLY MANIFEST</span>
+          <span class="tag">CAL · 7D</span>
+        </div>
+        <div class="panel__body">
+          <div class="week-timeline">
+            <div class="week-timeline__day">Mon</div>
+            <div class="week-timeline__day">Tue</div>
+            <div class="week-timeline__day">Wed</div>
+            <div class="week-timeline__day">Thu</div>
+            <div class="week-timeline__day">Fri</div>
+            <div class="week-timeline__day">Sat</div>
+            <div class="week-timeline__day">Sun</div>
+            <div class="week-timeline__slot has-post" title="Roof inspection myths">DEP</div>
+            <div class="week-timeline__slot"></div>
+            <div class="week-timeline__slot has-post" title="Storm damage assessment">DEP</div>
+            <div class="week-timeline__slot"></div>
+            <div class="week-timeline__slot has-post" title="Re-roof vs repair">DEP</div>
+            <div class="week-timeline__slot"></div>
+            <div class="week-timeline__slot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel panel--elevated cockpit-bezel">
+          <div class="panel__header">
+            <span class="panel__title">NEXT DEPARTURES</span>
+            <span class="tag">SCHED</span>
+          </div>
+          <div class="panel__body">
+            <div class="schedule-list">
+              <div class="schedule-item">
+                <span class="schedule-item__time">MON 0900Z</span>
+                <div>
+                  <div class="schedule-item__title">Roof inspection myths homeowners believe</div>
+                  <div class="schedule-item__meta">IG · TT · YT · RDY FOR T/O</div>
+                </div>
+                <span class="tag tag--live"><span class="tag__dot"></span>CLEARED</span>
+              </div>
+              <div class="schedule-item">
+                <span class="schedule-item__time">WED 0900Z</span>
+                <div>
+                  <div class="schedule-item__title">What a proper storm damage assessment looks like</div>
+                  <div class="schedule-item__meta">LI · IG · ROTATION</div>
+                </div>
+                <span class="tag">RENDER</span>
+              </div>
+              <div class="schedule-item">
+                <span class="schedule-item__time">FRI 0900Z</span>
+                <div>
+                  <div class="schedule-item__title">3 signs you need a re-roof, not a repair</div>
+                  <div class="schedule-item__meta">TT · YT · TAXI</div>
+                </div>
+                <span class="tag">SCRIPT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:var(--space-4);">
+          <div class="panel cockpit-bezel">
+            <div class="panel__header"><span class="panel__title">TAXI TRACKS</span></div>
+            <div class="panel__body">
+              <div class="track-list">
+                <div class="track-row"><span class="track-row__name">Inspect</span><span class="track-row__status">TRK-01 · 4 on taxi · STABLE</span></div>
+                <div class="track-row"><span class="track-row__name">Talksmith</span><span class="track-row__status is-queue">TRK-02 · ROTATION · 2 active</span></div>
+                <div class="track-row"><span class="track-row__name">Interview Prep</span><span class="track-row__status">TRK-03 · HOLD · awaiting manifest</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel cockpit-bezel">
+            <div class="panel__header"><span class="panel__title">HOLD QUEUE</span></div>
+            <div class="panel__body">
+              <div class="empty-state" id="topics-empty" hidden>
+                <h4>HOLD · Q EMPTY</h4>
+                <p>Send 3–5 seed topics to load the next manifest.</p>
+                <button type="button" class="btn btn--secondary btn--full">Request manifest</button>
+              </div>
+              <div class="schedule-list" id="topics-list">
+                <div class="schedule-item" style="grid-template-columns:1fr auto;">
+                  <div><div class="schedule-item__title">Hail damage vs normal wear</div><div class="schedule-item__meta">HOLD · TRK-01 Inspect</div></div>
+                  <span class="tag">PENDING</span>
+                </div>
+                <div class="schedule-item" style="grid-template-columns:1fr auto;">
+                  <div><div class="schedule-item__title">Insurance claim timeline tips</div><div class="schedule-item__meta">HOLD · TRK-02 Talksmith</div></div>
+                  <span class="tag">PENDING</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel cockpit-bezel">
+            <div class="panel__header"><span class="panel__title">AIRCRAFT DATA</span></div>
+            <div class="panel__body">
+              <div class="account-summary">
+                <div class="account-row"><span>Class</span><span>Growth · Crew</span></div>
+                <div class="account-row"><span>Renewal</span><span>Apr 12, 2026</span></div>
+                <div class="account-row"><span>Destinations</span><span>IG · TT · YT</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid dashboard-grid--full">
+        <div class="panel cockpit-bezel">
+          <div class="panel__header"><span class="panel__title">SYSTEMS CHECK</span></div>
+          <div class="panel__body">
+            <div class="track-list" style="flex-direction:row;flex-wrap:wrap;gap:8px;">
+              <span class="tag tag--live"><span class="tag__dot tag__dot--pulse"></span>Voice model · GREEN</span>
+              <span class="tag tag--live"><span class="tag__dot"></span>Script engine · STABLE</span>
+              <span class="tag">Video renderer · Q:2</span>
+              <span class="tag tag--live"><span class="tag__dot"></span>Instagram · LINKED</span>
+              <span class="tag tag--live"><span class="tag__dot"></span>TikTok · LINKED</span>
+              <span class="tag tag--live"><span class="tag__dot"></span>YouTube Shorts · LINKED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (async function loadSummary() {
+      try {
+        const res = await fetch('/api/runway/client/summary', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.videos != null) document.getElementById('stat-videos').textContent = data.videos;
+        if (data.topics != null) document.getElementById('stat-topics').textContent = data.topics;
+        if (data.platforms != null) document.getElementById('stat-platforms').textContent = data.platforms;
+        if (data.client) {
+          document.getElementById('client-name').textContent = data.client;
+          const initials = data.client.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+          document.getElementById('client-avatar').textContent = initials;
+        }
+      } catch (_) {}
+    })();
+  </script>
+</body>
+</html>
