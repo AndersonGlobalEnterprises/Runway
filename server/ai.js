@@ -1,7 +1,8 @@
 import { appendApprovedHook, appendMemorySignal, getConfig } from "./db.js";
+import { getContentType, resolveDeliveryMode, deliveryIncludesPost, deliveryIncludesVideo } from "./content-types.js";
 
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5-20251001";
-const GEMINI_MODEL    = process.env.GEMINI_MODEL    || "gemini-1.5-flash";
+const GEMINI_MODEL    = process.env.GEMINI_MODEL    || "gemini-2.0-flash";
 
 function activeProvider() {
   if (process.env.AI_PROVIDER === "gemini" && process.env.GEMINI_API_KEY) return "gemini";
@@ -85,23 +86,39 @@ async function geminiGenerate(system, user) {
   return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
 }
 
-export async function generateScript({ topic, notes }) {
-  const system = `You write short-form social video scripts for B2B operators. Return JSON only with keys: hook, full_script, caption. No markdown fences.\n\n${brandContext()}`;
-  const user = `Topic: ${topic}\nNotes: ${notes || "none"}\n\nWrite a 45-60 second script. Hook under 12 words. Caption under 220 chars with hashtags.`;
+function resolveMode({ contentType, deliveryMode }) {
+  const ct = contentType ? getContentType(contentType) : null;
+  return resolveDeliveryMode(ct?.id || contentType || "myth-bust", deliveryMode);
+}
+
+function generationPrompt(mode, topic, notes) {
+  const postKeys = deliveryIncludesPost(mode)
+    ? "linkedInPost (up to 800 chars), facebookPost (up to 500 chars), xPost (max 280 chars), "
+    : "";
+  const scriptKeys = deliveryIncludesVideo(mode) ? "full_script (45-60 sec spoken), " : "";
+  return `Topic: ${topic}\nNotes: ${notes || "none"}\nDelivery: ${mode}\n\nReturn JSON only with keys: hook, ${scriptKeys}caption, ${postKeys}hashtags. Hook under 12 words. Caption under 2200 chars. No markdown fences.`;
+}
+
+export async function generateScript({ topic, notes, contentType, deliveryMode }) {
+  const mode = resolveMode({ contentType, deliveryMode });
+  const kind = mode === "post" ? "social posts" : mode === "hybrid" ? "social posts and short-form video scripts" : "short-form social video scripts";
+  const system = `You write ${kind} for B2B operators. Return JSON only. No markdown fences.\n\n${brandContext()}`;
+  const user = generationPrompt(mode, topic, notes);
 
   const text = await callAI(system, user);
   if (text) {
     try {
       return JSON.parse(text.replace(/^```json\s*|\s*```$/g, ""));
     } catch {
-      return { hook: topic.slice(0, 80), full_script: text, caption: topic.slice(0, 180) };
+      return fallbackScript(topic, mode);
     }
   }
 
-  return fallbackScript(topic);
+  return fallbackScript(topic, mode);
 }
 
-export async function rewriteScript({ hook, fullScript, caption, action, customPrompt }) {
+export async function rewriteScript({ hook, fullScript, caption, linkedInPost, facebookPost, xPost, action, customPrompt, deliveryMode, contentType }) {
+  const mode = resolveMode({ contentType, deliveryMode });
   const actions = {
     shorter: "Make it shorter and punchier. Keep the same message.",
     direct: "Make it more direct and confident. Less fluff.",
@@ -112,15 +129,18 @@ export async function rewriteScript({ hook, fullScript, caption, action, customP
   };
 
   const instruction = actions[action] || actions.custom;
-  const system = `You edit social video scripts. Return JSON with keys: hook, full_script, caption. No markdown.\n\n${brandContext()}`;
-  const user = `Instruction: ${instruction}\n\nCurrent hook: ${hook || ""}\n\nScript:\n${fullScript || ""}\n\nCaption: ${caption || ""}`;
+  const postBlock = deliveryIncludesPost(mode)
+    ? `\nLinkedIn: ${linkedInPost || ""}\nFacebook: ${facebookPost || ""}\nX: ${xPost || ""}`
+    : "";
+  const system = `You edit social content. Return JSON with keys: hook, full_script, caption${deliveryIncludesPost(mode) ? ", linkedInPost, facebookPost, xPost" : ""}. No markdown.\n\n${brandContext()}`;
+  const user = `Instruction: ${instruction}\n\nCurrent hook: ${hook || ""}\n\nScript:\n${fullScript || ""}\n\nCaption: ${caption || ""}${postBlock}`;
 
   const text = await callAI(system, user);
   if (text) {
     try {
       return JSON.parse(text.replace(/^```json\s*|\s*```$/g, ""));
     } catch {
-      return { hook, full_script: text, caption };
+      return { hook, full_script: text, caption, linkedInPost, facebookPost, xPost };
     }
   }
 
@@ -128,6 +148,9 @@ export async function rewriteScript({ hook, fullScript, caption, action, customP
     hook: hook || "",
     full_script: (fullScript || "").slice(0, Math.max(200, (fullScript || "").length - 80)),
     caption: caption || "",
+    linkedInPost: linkedInPost || "",
+    facebookPost: facebookPost || "",
+    xPost: xPost || "",
   };
 }
 
@@ -154,13 +177,22 @@ export function recordScriptEdit({ before, after, topic }) {
   return getConfig().memory;
 }
 
-function fallbackScript(topic) {
+function fallbackScript(topic, mode = "video") {
   const cfg = getConfig();
   const cta = cfg.brand?.cta || "Book a free inspection";
+  const hook = "Think you know roof damage? Let's fix that.";
+  const full_script = deliveryIncludesVideo(mode)
+    ? `Most homeowners miss the early signs of roof damage — and that gets expensive fast.\n\nHere's what to look for after a storm: lifted shingles, granules in the gutters, and soft spots when you walk the perimeter.\n\nIf you're not sure, don't guess. ${cta}.`
+    : "";
+  const caption = `${topic.slice(0, 120)} #roofing #stormdamage #${(cfg.company || "local").replace(/\s+/g, "")}`;
+  const postBody = `Most homeowners miss early roof damage signs after storms.\n\nLook for lifted shingles, granules in gutters, and soft spots along the edge.\n\n${cta}`;
   return {
-    hook: `Think you know roof damage? Let's fix that.`,
-    full_script: `Most homeowners miss the early signs of roof damage — and that gets expensive fast.\n\nHere's what to look for after a storm: lifted shingles, granules in the gutters, and soft spots when you walk the perimeter.\n\nIf you're not sure, don't guess. ${cta}.`,
-    caption: `${topic.slice(0, 120)} #roofing #stormdamage #${(cfg.company || "local").replace(/\s+/g, "")}`,
+    hook,
+    full_script,
+    caption,
+    linkedInPost: deliveryIncludesPost(mode) ? postBody : undefined,
+    facebookPost: deliveryIncludesPost(mode) ? postBody : undefined,
+    xPost: deliveryIncludesPost(mode) ? postBody.slice(0, 280) : undefined,
   };
 }
 
