@@ -7,15 +7,17 @@ services:
     startCommand: npm start
     healthCheckPath: /
     envVars:
-      # Auto-set — no action needed
+      # Auto-set
       - key: NODE_ENV
         value: production
       - key: SESSION_SECRET
         generateValue: true
       - key: ANTHROPIC_MODEL
         value: claude-haiku-4-5-20251001
+      - key: N8N_QUEUE_ENABLED
+        value: "true"
 
-      # Owner mode — pre-filled for Omar's own deployment
+      # Owner mode (non-sensitive)
       - key: DEMO_LOGIN
         value: "false"
       - key: OWNER_MODE
@@ -23,10 +25,24 @@ services:
       - key: OWNER_EMAIL
         value: omaranderson107@gmail.com
 
-      # Secrets — Render will prompt you to type these in
+      # Secrets — paste from .env file when Render prompts, or use Render dashboard
       - key: OWNER_PASSWORD
         sync: false
       - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_RUNWAY_PRICE_STARTER_FOUNDING
+        sync: false
+      - key: STRIPE_RUNWAY_PRICE_STARTER
+        sync: false
+      - key: STRIPE_RUNWAY_PRICE_GROWTH_FOUNDING
+        sync: false
+      - key: STRIPE_RUNWAY_PRICE_GROWTH
+        sync: false
+      - key: STRIPE_RUNWAY_PRICE_SCALE
+        sync: false
+      - key: STRIPE_RUNWAY_PRICE_AGENCY
         sync: false
       - key: CREATOMATE_API_KEY
         sync: false
