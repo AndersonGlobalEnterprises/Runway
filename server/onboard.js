@@ -41,6 +41,8 @@ export async function createClientService(opts) {
     { key: "CLIENT_PHRASES_AVOID", value: (phrasesAvoid || []).join(",") },
     { key: "CLIENT_TEMPLATE_ID",   value: templateId || "856453b5-c707-488e-a8ae-0dc7d47a90bc" },
     { key: "ANTHROPIC_API_KEY",    value: process.env.ANTHROPIC_API_KEY  || "" },
+    { key: "GEMINI_API_KEY",       value: process.env.GEMINI_API_KEY     || "" },
+    { key: "AI_PROVIDER",          value: process.env.AI_PROVIDER        || "anthropic" },
     { key: "STRIPE_SECRET_KEY",    value: process.env.STRIPE_SECRET_KEY  || "" },
     { key: "CREATOMATE_API_KEY",   value: process.env.CREATOMATE_API_KEY || "" },
   ];

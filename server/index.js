@@ -120,6 +120,41 @@ app.post("/api/runway/forgot", (_req, res) => {
   res.redirect("/runway-login.html?reset=sent");
 });
 
+app.post("/api/runway/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("connect.sid");
+    res.redirect("/runway-login.html");
+  });
+});
+
+// Admin: list all client services (owner only)
+app.get("/api/runway/admin/clients", async (req, res) => {
+  if (!req.session?.user?.isOwner) return res.status(403).json({ error: "Owner access required" });
+  const apiKey = process.env.RENDER_API_KEY;
+  if (!apiKey) return res.json({ clients: [] });
+  try {
+    const r = await fetch("https://api.render.com/v1/services?limit=100", {
+      headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json" },
+    });
+    const data = await r.json();
+    const clients = (Array.isArray(data) ? data : [])
+      .filter(s => s.service?.name?.startsWith("runway-") && s.service?.name !== "age-runway-owner")
+      .map(s => ({
+        id:        s.service.id,
+        name:      s.service.name,
+        company:   s.service.name.replace(/^runway-/, "").replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()),
+        url:       s.service.serviceDetails?.url || "",
+        status:    s.service.suspended === "not_suspended" ? "active" : "suspended",
+        createdAt: s.service.createdAt,
+        dashboardUrl: s.service.dashboardUrl || "",
+      }))
+      .sort((a, b) => a.company.localeCompare(b.company));
+    res.json({ clients });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // --- Who am I? (called by the dashboard on load) ---
 app.get("/api/runway/me", (req, res) => {
   if (!req.session?.user) return res.status(401).json({ error: "Not authenticated" });

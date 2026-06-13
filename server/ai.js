@@ -1,6 +1,14 @@
 import { appendApprovedHook, appendMemorySignal, getConfig } from "./db.js";
 
-const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5-20251001";
+const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5-20251001";
+const GEMINI_MODEL    = process.env.GEMINI_MODEL    || "gemini-1.5-flash";
+
+function activeProvider() {
+  if (process.env.AI_PROVIDER === "gemini" && process.env.GEMINI_API_KEY) return "gemini";
+  if (process.env.ANTHROPIC_API_KEY) return "anthropic";
+  if (process.env.GEMINI_API_KEY)    return "gemini";
+  return null;
+}
 
 function brandContext() {
   const cfg = getConfig();
@@ -26,10 +34,15 @@ ${recentEdits ? `\nRecent edit preferences:\n${recentEdits}` : ""}
 `.trim();
 }
 
+async function callAI(system, user) {
+  const provider = activeProvider();
+  if (provider === "gemini") return geminiGenerate(system, user);
+  if (provider === "anthropic") return anthropicMessages(system, user);
+  return null;
+}
+
 async function anthropicMessages(system, user) {
   const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return null;
-
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -38,27 +51,45 @@ async function anthropicMessages(system, user) {
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: ANTHROPIC_MODEL,
       max_tokens: 2048,
       system,
       messages: [{ role: "user", content: user }],
     }),
   });
-
   if (!res.ok) {
     const err = await res.text();
     throw new Error(`Anthropic HTTP ${res.status}: ${err.slice(0, 200)}`);
   }
-
   const data = await res.json();
   return data.content?.[0]?.text?.trim() || "";
+}
+
+async function geminiGenerate(system, user) {
+  const key = process.env.GEMINI_API_KEY;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: [{ parts: [{ text: user }] }],
+      generationConfig: { maxOutputTokens: 2048, temperature: 0.7 },
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Gemini HTTP ${res.status}: ${err.slice(0, 200)}`);
+  }
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
 }
 
 export async function generateScript({ topic, notes }) {
   const system = `You write short-form social video scripts for B2B operators. Return JSON only with keys: hook, full_script, caption. No markdown fences.\n\n${brandContext()}`;
   const user = `Topic: ${topic}\nNotes: ${notes || "none"}\n\nWrite a 45-60 second script. Hook under 12 words. Caption under 220 chars with hashtags.`;
 
-  const text = await anthropicMessages(system, user);
+  const text = await callAI(system, user);
   if (text) {
     try {
       return JSON.parse(text.replace(/^```json\s*|\s*```$/g, ""));
@@ -84,7 +115,7 @@ export async function rewriteScript({ hook, fullScript, caption, action, customP
   const system = `You edit social video scripts. Return JSON with keys: hook, full_script, caption. No markdown.\n\n${brandContext()}`;
   const user = `Instruction: ${instruction}\n\nCurrent hook: ${hook || ""}\n\nScript:\n${fullScript || ""}\n\nCaption: ${caption || ""}`;
 
-  const text = await anthropicMessages(system, user);
+  const text = await callAI(system, user);
   if (text) {
     try {
       return JSON.parse(text.replace(/^```json\s*|\s*```$/g, ""));
@@ -134,5 +165,9 @@ function fallbackScript(topic) {
 }
 
 export function aiAvailable() {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
+  return Boolean(process.env.ANTHROPIC_API_KEY || process.env.GEMINI_API_KEY);
+}
+
+export function aiProviderName() {
+  return activeProvider() || "none";
 }

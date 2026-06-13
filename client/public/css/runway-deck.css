@@ -2,6 +2,66 @@
 
 .deck-view[hidden] { display: none !important; }
 
+/* ── Mobile bottom nav ───────────────────────────────────────────────────── */
+.mob-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--surface-2, #0f172a);
+  border-top: 1px solid var(--border, rgba(255,255,255,0.08));
+  padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+  justify-content: space-around;
+  align-items: center;
+  z-index: 200;
+}
+.mob-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: var(--text-3, #64748b);
+  font-size: 10px;
+  font-family: var(--font-mono, monospace);
+  letter-spacing: .04em;
+  cursor: pointer;
+  padding: 4px 14px;
+  border-radius: 8px;
+  transition: color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.mob-nav__item svg { width: 20px; height: 20px; }
+.mob-nav__item.is-active { color: var(--amber, #fbbf24); }
+
+@media (max-width: 768px) {
+  .mob-nav { display: flex; }
+  .dashboard-sidebar { display: none !important; }
+  .dashboard-main { padding-bottom: 72px; }
+}
+
+/* ── Clients grid (owner view) ───────────────────────────────────────────── */
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4, 16px);
+  margin-top: var(--space-4, 16px);
+}
+.client-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: var(--space-4) var(--space-5);
+}
+.client-card__name { font-weight: 600; font-size: 1rem; margin: 0 0 4px; }
+.client-card__url  { font-family: var(--font-mono); font-size: .72rem; color: var(--text-2); word-break: break-all; }
+.client-card__meta { display: flex; gap: var(--space-3); margin-top: var(--space-3); align-items: center; }
+.client-card__status { font-size: .7rem; font-family: var(--font-mono); padding: 2px 8px; border-radius: 20px; }
+.client-card__status--active   { background: rgba(34,197,94,.12); color: #22c55e; }
+.client-card__status--suspended { background: rgba(248,113,113,.12); color: #f87171; }
+.client-card__actions { display: flex; gap: 8px; margin-top: var(--space-3); }
+.clients-empty { color: var(--text-2); text-align: center; padding: var(--space-8) 0; font-size: .9rem; }
+
 /* ── Contextual tooltips ─────────────────────────────────────────────────── */
 .deck-tip {
   display: inline-flex;

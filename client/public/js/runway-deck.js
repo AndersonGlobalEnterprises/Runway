@@ -113,6 +113,12 @@
       document.getElementById('onboard-checklist')?.classList.add('onboard-checklist--collapsed');
     }
 
+    // Owner-only elements
+    if (me.isOwner) {
+      $$('.owner-only').forEach(el => { el.hidden = false; });
+      $$('.non-owner-only').forEach(el => { el.hidden = true; });
+    }
+
     // Start guided tour on first login (one-time, keyed by email)
     const tourKey = `runway_tour_done_${me.email}`;
     if (!localStorage.getItem(tourKey)) {
@@ -625,18 +631,67 @@
     } catch (e) { toast(e.message, 'err'); }
   }
 
+  function switchView(v) {
+    state.view = v;
+    if (v === 'brand')    markCheck('brand');
+    if (v === 'strategy') markCheck('plan');
+    if (v === 'clients')  renderClientsView();
+    render();
+    // Sync active state on both nav bars
+    $$('.dashboard-nav__item[data-view], .mob-nav__item[data-view]').forEach(el => {
+      el.classList.toggle('is-active', el.dataset.view === v);
+    });
+  }
+
+  // ── Clients view (owner only) ─────────────────────────────────────────────
+
+  async function renderClientsView() {
+    const root = $('#clients-root');
+    if (!root) return;
+    root.innerHTML = '<p class="instrument-label" style="color:var(--amber)">Loading clients…</p>';
+    try {
+      const { clients } = await fetch('/api/runway/admin/clients', { credentials: 'include' }).then(r => r.json());
+      if (!clients?.length) {
+        root.innerHTML = `
+          <div class="clients-empty">
+            <p>No client services deployed yet.</p>
+            <a href="/runway-intake.html" class="btn btn--primary" style="margin-top:16px;display:inline-block;">Onboard first client</a>
+          </div>`;
+        return;
+      }
+      root.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2);">
+          <h2 style="margin:0;">My Clients <span style="font-size:.9rem;color:var(--text-2);font-weight:400;">(${clients.length})</span></h2>
+          <a href="/runway-intake.html" class="btn btn--primary btn--sm">+ New client</a>
+        </div>
+        <div class="clients-grid">
+          ${clients.map(c => `
+            <div class="client-card cockpit-bezel">
+              <div class="client-card__name">${esc(c.company)}</div>
+              <div class="client-card__url">${esc(c.url)}</div>
+              <div class="client-card__meta">
+                <span class="client-card__status client-card__status--${c.status}">${c.status}</span>
+                <span class="instrument-label">${new Date(c.createdAt).toLocaleDateString()}</span>
+              </div>
+              <div class="client-card__actions">
+                <a href="${esc(c.url)}" target="_blank" rel="noopener" class="btn btn--ghost btn--sm">Open dashboard</a>
+                <a href="${esc(c.dashboardUrl)}" target="_blank" rel="noopener" class="btn btn--ghost btn--sm">Render</a>
+              </div>
+            </div>`).join('')}
+        </div>`;
+    } catch (e) {
+      root.innerHTML = `<p style="color:#f87171">Error loading clients: ${esc(e.message)}</p>`;
+    }
+  }
+
   // ── Event bindings ────────────────────────────────────────────────────────
 
   function bindEvents() {
-    // Nav — mark checklist items on nav clicks
-    $$('.dashboard-nav__item[data-view]').forEach((a) => {
-      a.addEventListener('click', (e) => {
+    // Sidebar nav + mobile bottom nav
+    $$('.dashboard-nav__item[data-view], .mob-nav__item[data-view]').forEach((el) => {
+      el.addEventListener('click', (e) => {
         e.preventDefault();
-        const v = a.dataset.view;
-        state.view = v;
-        if (v === 'brand') markCheck('brand');
-        if (v === 'strategy') markCheck('plan');
-        render();
+        switchView(el.dataset.view);
       });
     });
 
