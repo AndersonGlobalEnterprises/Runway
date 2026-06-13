@@ -1,15 +1,34 @@
 services:
   - type: web
-    name: age-runway
+    name: age-runway-owner
     runtime: node
     plan: free
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /
     envVars:
+      # Auto-set — no action needed
       - key: NODE_ENV
         value: production
       - key: SESSION_SECRET
         generateValue: true
+      - key: ANTHROPIC_MODEL
+        value: claude-haiku-4-5-20251001
+
+      # Owner mode — pre-filled for Omar's own deployment
       - key: DEMO_LOGIN
+        value: "false"
+      - key: OWNER_MODE
         value: "true"
+      - key: OWNER_EMAIL
+        value: omaranderson107@gmail.com
+
+      # Secrets — Render will prompt you to type these in
+      - key: OWNER_PASSWORD
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CREATOMATE_API_KEY
+        sync: false
+      - key: PERPLEXITY_API_KEY
+        sync: false
