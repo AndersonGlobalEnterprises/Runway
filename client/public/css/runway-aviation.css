@@ -228,7 +228,7 @@ body.runway-site > .takeoff-plane-wrap {
 }
 
 .btn--clearance.is-requesting .btn__label::after {
-  content: ' · TAXI';
+  content: ' · taxiing';
   animation: clearance-blink 0.5s step-end infinite;
 }
 

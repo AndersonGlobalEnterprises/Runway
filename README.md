@@ -2,7 +2,7 @@
 
 Done-for-you AI content pipeline. Voice clone, script generation, video rendering, and multi-platform publishing — automated end-to-end.
 
-**Live product:** marketing site, scroll takeoff animation, pricing, cockpit Flight Deck portal (demo auth).
+**Live product:** marketing site, scroll takeoff animation, pricing, client portal (demo auth).
 
 ## What it does
 
@@ -34,7 +34,7 @@ Open http://localhost:3000
 | Marketing home | `/` |
 | Pricing | `/runway-pricing.html` |
 | Portal login | `/runway-login.html` |
-| Flight Deck | `/runway-dashboard.html` (requires login) |
+| Dashboard | `/runway-dashboard.html` (requires login) |
 | Forgot password | `/runway-forgot.html` |
 | Post-checkout | `/runway-success.html` |
 
@@ -74,9 +74,9 @@ render.yaml             One-click deploy to Render
 
 ## Ship checklist
 
-- [x] Marketing home + aviation takeoff scroll
-- [x] Pricing, login, cockpit dashboard
-- [x] Session auth + protected Flight Deck
+- [x] Marketing home + scroll takeoff animation
+- [x] Pricing, login, client dashboard
+- [x] Session auth + protected dashboard
 - [x] Production cookies (`secure` in prod)
 - [ ] Stripe checkout (`POST /api/runway/checkout`) — contact flow live; wire Stripe next
 - [ ] Real auth + client database — replace demo login

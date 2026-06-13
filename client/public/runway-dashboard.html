@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Flight Deck — AGE Runway</title>
+  <title>Dashboard — AGE Runway</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/runway.css" />
   <link rel="stylesheet" href="/css/runway-aviation.css" />
+  <link rel="stylesheet" href="/css/runway-deck.css" />
 </head>
 <body class="cockpit">
 
@@ -24,194 +25,285 @@
         <div class="dashboard-profile__avatar" id="client-avatar">DC</div>
         <div>
           <div class="dashboard-profile__name" id="client-name">Demo Client</div>
-          <div class="dashboard-profile__company">First Flight Roofing</div>
-          <span class="tier-badge">Growth · Crew class</span>
+          <div class="dashboard-profile__company" id="client-company">First Flight Roofing</div>
+          <span class="tier-badge" id="client-tier-badge">Growth plan</span>
+          <span class="tier-badge" id="owner-badge" hidden style="border-color:rgba(251,191,36,0.4);color:#fbbf24;background:rgba(251,191,36,0.08);">Owner</span>
         </div>
       </div>
 
-      <nav class="dashboard-nav" aria-label="Flight Deck">
-        <p class="dashboard-nav__label instrument-label instrument-label--amber">INSTRUMENTS</p>
-        <a href="#" class="dashboard-nav__item is-active"><span class="dashboard-nav__dot"></span>Overview</a>
-        <a href="#" class="dashboard-nav__item"><span class="dashboard-nav__dot"></span>Taxi tracks</a>
-        <a href="#" class="dashboard-nav__item"><span class="dashboard-nav__dot"></span>Voice & brand</a>
-        <a href="#" class="dashboard-nav__item"><span class="dashboard-nav__dot"></span>Manifest</a>
-        <a href="#" class="dashboard-nav__item"><span class="dashboard-nav__dot"></span>Billing</a>
+      <!-- Pre-flight onboarding checklist -->
+      <div class="onboard-checklist cockpit-bezel" id="onboard-checklist">
+        <p class="onboard-checklist__title instrument-label instrument-label--amber">Pre-flight checklist</p>
+        <ul class="onboard-checklist__list">
+          <li data-check="brand"><span class="onboard-dot"></span>Complete brand brief</li>
+          <li data-check="topics"><span class="onboard-dot"></span>Queue first topics</li>
+          <li data-check="script"><span class="onboard-dot"></span>Review first script</li>
+          <li data-check="video"><span class="onboard-dot"></span>Clear first video</li>
+          <li data-check="publish"><span class="onboard-dot"></span>Schedule first departure</li>
+          <li data-check="plan"><span class="onboard-dot"></span>Read weekly flight plan</li>
+        </ul>
+        <button type="button" class="btn btn--ghost onboard-checklist__dismiss" id="onboard-dismiss">Dismiss</button>
+      </div>
+
+      <nav class="dashboard-nav" aria-label="Dashboard">
+        <p class="dashboard-nav__label instrument-label instrument-label--amber">Dashboard</p>
+        <a href="#" class="dashboard-nav__item is-active" data-view="overview"><span class="dashboard-nav__dot"></span>Overview</a>
+        <a href="#" class="dashboard-nav__item" data-view="taxi"><span class="dashboard-nav__dot"></span>Taxi tracks <span class="deck-tip" data-tip="Every video in production. Click one to open and edit.">?</span></a>
+        <a href="#" class="dashboard-nav__item" data-view="brand"><span class="dashboard-nav__dot"></span>Voice & brand</a>
+        <a href="#" class="dashboard-nav__item" data-view="manifest"><span class="dashboard-nav__dot"></span>Manifest</a>
+        <a href="#" class="dashboard-nav__item" data-view="strategy"><span class="dashboard-nav__dot"></span>Flight plan <span class="deck-tip" data-tip="Weekly content suggestions — you approve, it doesn't autopilot.">?</span></a>
+        <a href="/runway-pricing.html" class="dashboard-nav__item"><span class="dashboard-nav__dot"></span>Billing</a>
       </nav>
 
-      <div class="dashboard-sidebar__footer instrument-label">
-        CLEARANCE ACTIVE
-        <strong class="instrument-label--green">REN Apr 12, 2026</strong>
+      <div class="dashboard-sidebar__footer instrument-label" id="sidebar-footer">
+        Clearance active
+        <strong class="instrument-label--green">Renews Apr 12, 2026</strong>
       </div>
     </aside>
 
     <main class="dashboard-main">
       <header class="dashboard-header">
         <div>
-          <p class="instrument-label instrument-label--amber">COCKPIT · RWY-01</p>
-          <h1>FLIGHT DECK</h1>
-          <p>Taxi status and weekly departures at a glance.</p>
+          <p class="instrument-label instrument-label--amber">Flight deck</p>
+          <h1 id="deck-heading">Overview</h1>
+          <p id="deck-subheading">Taxi tracks, manifest, and weekly departures at a glance.</p>
         </div>
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <span class="tag tag--live"><span class="tag__dot tag__dot--pulse"></span>Pipeline online</span>
-          <button type="button" class="btn btn--primary">Request manifest</button>
+          <span class="tag tag--live" id="deck-pipeline-tag"><span class="tag__dot tag__dot--pulse"></span>Pipeline online</span>
+          <button type="button" class="btn btn--ghost" id="btn-help">How it works</button>
+          <button type="button" class="btn btn--ghost" id="btn-refresh-deck">Refresh</button>
+          <button type="button" class="btn btn--primary" id="btn-request-topics">Request topics</button>
         </div>
       </header>
 
-      <div class="cockpit-status-bar" aria-label="ATC status">
-        <span>PHASE: <strong>CRUISE</strong></span>
-        <span>ALT: <strong>10,000 FT</strong></span>
-        <span>TRK: <strong>3 ACTIVE</strong></span>
-        <span>NXT DEP: <strong>MON 0900Z</strong></span>
-        <span>SQUAWK: <strong>RWY-7426</strong></span>
+      <div class="cockpit-status-bar" id="cockpit-status-dynamic" aria-label="Status summary">
+        <span>Clearance: <strong>Active</strong></span>
+        <span>Squawk: <strong>RWY-7426</strong></span>
+        <span>Taxi tracks: <strong>3 running</strong></span>
+        <span>Next departure: <strong>Mon 9:00 AM</strong></span>
       </div>
 
-      <div class="stat-grid">
-        <div class="stat-card cockpit-bezel"><strong id="stat-videos">8</strong><span>MNFST · VID / WK</span></div>
-        <div class="stat-card cockpit-bezel"><strong id="stat-topics">12</strong><span>HOLD · TOPICS</span></div>
-        <div class="stat-card cockpit-bezel"><strong id="stat-platforms">3</strong><span>DEST · LIVE</span></div>
-      </div>
-
-      <div class="panel panel--elevated cockpit-bezel" style="margin-bottom:var(--space-4);">
-        <div class="panel__header">
-          <span class="panel__title">WEEKLY MANIFEST</span>
-          <span class="tag">CAL · 7D</span>
+      <!-- Overview -->
+      <section class="deck-view" data-view="overview">
+        <div class="stat-grid">
+          <div class="stat-card cockpit-bezel"><strong id="stat-videos">0</strong><span>Videos on manifest this week</span></div>
+          <div class="stat-card cockpit-bezel"><strong id="stat-topics">0</strong><span>Topics on hold</span></div>
+          <div class="stat-card cockpit-bezel"><strong id="stat-platforms">0</strong><span>Destinations live</span></div>
         </div>
-        <div class="panel__body">
-          <div class="week-timeline">
-            <div class="week-timeline__day">Mon</div>
-            <div class="week-timeline__day">Tue</div>
-            <div class="week-timeline__day">Wed</div>
-            <div class="week-timeline__day">Thu</div>
-            <div class="week-timeline__day">Fri</div>
-            <div class="week-timeline__day">Sat</div>
-            <div class="week-timeline__day">Sun</div>
-            <div class="week-timeline__slot has-post" title="Roof inspection myths">DEP</div>
-            <div class="week-timeline__slot"></div>
-            <div class="week-timeline__slot has-post" title="Storm damage assessment">DEP</div>
-            <div class="week-timeline__slot"></div>
-            <div class="week-timeline__slot has-post" title="Re-roof vs repair">DEP</div>
-            <div class="week-timeline__slot"></div>
-            <div class="week-timeline__slot"></div>
-          </div>
-        </div>
-      </div>
 
-      <div class="dashboard-grid">
-        <div class="panel panel--elevated cockpit-bezel">
+        <div class="panel panel--elevated cockpit-bezel" style="margin-bottom:var(--space-4);">
           <div class="panel__header">
-            <span class="panel__title">NEXT DEPARTURES</span>
-            <span class="tag">SCHED</span>
+            <span class="panel__title">Weekly manifest</span>
+            <span class="tag">Calendar</span>
           </div>
           <div class="panel__body">
-            <div class="schedule-list">
-              <div class="schedule-item">
-                <span class="schedule-item__time">MON 0900Z</span>
-                <div>
-                  <div class="schedule-item__title">Roof inspection myths homeowners believe</div>
-                  <div class="schedule-item__meta">IG · TT · YT · RDY FOR T/O</div>
-                </div>
-                <span class="tag tag--live"><span class="tag__dot"></span>CLEARED</span>
-              </div>
-              <div class="schedule-item">
-                <span class="schedule-item__time">WED 0900Z</span>
-                <div>
-                  <div class="schedule-item__title">What a proper storm damage assessment looks like</div>
-                  <div class="schedule-item__meta">LI · IG · ROTATION</div>
-                </div>
-                <span class="tag">RENDER</span>
-              </div>
-              <div class="schedule-item">
-                <span class="schedule-item__time">FRI 0900Z</span>
-                <div>
-                  <div class="schedule-item__title">3 signs you need a re-roof, not a repair</div>
-                  <div class="schedule-item__meta">TT · YT · TAXI</div>
-                </div>
-                <span class="tag">SCRIPT</span>
-              </div>
+            <div class="week-timeline">
+              <div class="week-timeline__day">Mon</div>
+              <div class="week-timeline__day">Tue</div>
+              <div class="week-timeline__day">Wed</div>
+              <div class="week-timeline__day">Thu</div>
+              <div class="week-timeline__day">Fri</div>
+              <div class="week-timeline__day">Sat</div>
+              <div class="week-timeline__day">Sun</div>
+              <div id="week-timeline-slots" style="display:contents;"></div>
             </div>
           </div>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:var(--space-4);">
-          <div class="panel cockpit-bezel">
-            <div class="panel__header"><span class="panel__title">TAXI TRACKS</span></div>
-            <div class="panel__body">
-              <div class="track-list">
-                <div class="track-row"><span class="track-row__name">Inspect</span><span class="track-row__status">TRK-01 · 4 on taxi · STABLE</span></div>
-                <div class="track-row"><span class="track-row__name">Talksmith</span><span class="track-row__status is-queue">TRK-02 · ROTATION · 2 active</span></div>
-                <div class="track-row"><span class="track-row__name">Interview Prep</span><span class="track-row__status">TRK-03 · HOLD · awaiting manifest</span></div>
-              </div>
+        <div class="dashboard-grid">
+          <div class="panel panel--elevated cockpit-bezel">
+            <div class="panel__header">
+              <span class="panel__title">Upcoming departures</span>
+              <span class="tag">Scheduled</span>
             </div>
+            <div class="panel__body schedule-list" id="departures-list"></div>
           </div>
 
-          <div class="panel cockpit-bezel">
-            <div class="panel__header"><span class="panel__title">HOLD QUEUE</span></div>
-            <div class="panel__body">
-              <div class="empty-state" id="topics-empty" hidden>
-                <h4>HOLD · Q EMPTY</h4>
-                <p>Send 3–5 seed topics to load the next manifest.</p>
-                <button type="button" class="btn btn--secondary btn--full">Request manifest</button>
-              </div>
-              <div class="schedule-list" id="topics-list">
-                <div class="schedule-item" style="grid-template-columns:1fr auto;">
-                  <div><div class="schedule-item__title">Hail damage vs normal wear</div><div class="schedule-item__meta">HOLD · TRK-01 Inspect</div></div>
-                  <span class="tag">PENDING</span>
-                </div>
-                <div class="schedule-item" style="grid-template-columns:1fr auto;">
-                  <div><div class="schedule-item__title">Insurance claim timeline tips</div><div class="schedule-item__meta">HOLD · TRK-02 Talksmith</div></div>
-                  <span class="tag">PENDING</span>
-                </div>
-              </div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-4);">
+            <div class="panel cockpit-bezel">
+              <div class="panel__header"><span class="panel__title">Taxi tracks</span></div>
+              <div class="panel__body track-list" id="tracks-list"></div>
             </div>
-          </div>
-
-          <div class="panel cockpit-bezel">
-            <div class="panel__header"><span class="panel__title">AIRCRAFT DATA</span></div>
-            <div class="panel__body">
-              <div class="account-summary">
-                <div class="account-row"><span>Class</span><span>Growth · Crew</span></div>
-                <div class="account-row"><span>Renewal</span><span>Apr 12, 2026</span></div>
-                <div class="account-row"><span>Destinations</span><span>IG · TT · YT</span></div>
-              </div>
+            <div class="panel cockpit-bezel">
+              <div class="panel__header"><span class="panel__title">Hold queue</span></div>
+              <div class="panel__body" id="hold-list"></div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="dashboard-grid dashboard-grid--full">
-        <div class="panel cockpit-bezel">
-          <div class="panel__header"><span class="panel__title">SYSTEMS CHECK</span></div>
-          <div class="panel__body">
-            <div class="track-list" style="flex-direction:row;flex-wrap:wrap;gap:8px;">
-              <span class="tag tag--live"><span class="tag__dot tag__dot--pulse"></span>Voice model · GREEN</span>
-              <span class="tag tag--live"><span class="tag__dot"></span>Script engine · STABLE</span>
-              <span class="tag">Video renderer · Q:2</span>
-              <span class="tag tag--live"><span class="tag__dot"></span>Instagram · LINKED</span>
-              <span class="tag tag--live"><span class="tag__dot"></span>TikTok · LINKED</span>
-              <span class="tag tag--live"><span class="tag__dot"></span>YouTube Shorts · LINKED</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Taxi tracks -->
+      <section class="deck-view" data-view="taxi" hidden>
+        <div id="taxi-tracks-root"></div>
+      </section>
+
+      <!-- Voice & brand -->
+      <section class="deck-view" data-view="brand" hidden>
+        <div id="brand-root"></div>
+      </section>
+
+      <!-- Manifest -->
+      <section class="deck-view" data-view="manifest" hidden>
+        <div id="manifest-root"></div>
+      </section>
+      <!-- Flight plan / strategy -->
+      <section class="deck-view" data-view="strategy" hidden>
+        <div id="strategy-root"></div>
+      </section>
     </main>
   </div>
 
-  <script>
-    (async function loadSummary() {
-      try {
-        const res = await fetch('/api/runway/client/summary', { credentials: 'include' });
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data.videos != null) document.getElementById('stat-videos').textContent = data.videos;
-        if (data.topics != null) document.getElementById('stat-topics').textContent = data.topics;
-        if (data.platforms != null) document.getElementById('stat-platforms').textContent = data.platforms;
-        if (data.client) {
-          document.getElementById('client-name').textContent = data.client;
-          const initials = data.client.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-          document.getElementById('client-avatar').textContent = initials;
-        }
-      } catch (_) {}
-    })();
-  </script>
+  <!-- Flight detail drawer -->
+  <div class="deck-drawer" id="flight-drawer" aria-hidden="true">
+    <div class="deck-drawer__backdrop" id="drawer-backdrop"></div>
+    <div class="deck-drawer__panel cockpit-bezel">
+      <div class="deck-drawer__head">
+        <div>
+          <p class="instrument-label instrument-label--amber">Flight detail</p>
+          <h2 id="drawer-title" style="font-size:1.25rem;margin-top:4px;">Topic</h2>
+          <p id="drawer-meta" class="instrument-label" style="margin-top:6px;"></p>
+          <div class="flight-card__pipe" id="drawer-pipe" style="margin-top:12px;max-width:280px;"></div>
+        </div>
+        <button type="button" class="deck-drawer__close" id="drawer-close" aria-label="Close">✕</button>
+      </div>
+
+      <div class="preview-links" id="drawer-previews"></div>
+
+      <div class="drawer-tabs" role="tablist">
+        <button type="button" class="drawer-tab is-active" data-drawer-tab="script">Script</button>
+        <button type="button" class="drawer-tab" data-drawer-tab="video">Video</button>
+        <button type="button" class="drawer-tab" data-drawer-tab="publish">Publish</button>
+      </div>
+
+      <div class="drawer-panel is-active" data-drawer-panel="script">
+        <div class="rewrite-bar">
+          <button type="button" class="btn btn--secondary" data-rewrite="shorter">Shorter</button>
+          <button type="button" class="btn btn--secondary" data-rewrite="direct">More direct</button>
+          <button type="button" class="btn btn--secondary" data-rewrite="local">Local angle</button>
+          <button type="button" class="btn btn--secondary" data-rewrite="cta">Stronger CTA</button>
+          <button type="button" class="btn btn--secondary" data-rewrite="hook">New hook</button>
+          <button type="button" class="btn btn--ghost" id="btn-generate-script">Generate script</button>
+        </div>
+        <div class="script-field"><label for="field-content-type">Content type</label>
+          <select id="field-content-type" class="deck-select deck-select--full"></select></div>
+        <div class="script-field"><label for="field-hook">Hook</label><input id="field-hook" type="text" maxlength="80" /></div>
+        <div class="script-field"><label for="field-script">Full script</label><textarea id="field-script" rows="8" maxlength="1200"></textarea></div>
+        <div class="script-field"><label for="field-caption">Caption</label><textarea id="field-caption" rows="3" maxlength="220"></textarea></div>
+        <div class="script-field"><label for="field-hashtags">Hashtags</label><input id="field-hashtags" type="text" maxlength="120" placeholder="#roofing #stormdamage" /></div>
+        <div class="script-field"><label for="field-cta">Spoken CTA</label><input id="field-cta" type="text" maxlength="100" /></div>
+        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="script-field"><label for="field-tone">Tone</label>
+            <select id="field-tone" class="deck-select deck-select--full"><option value="direct">Direct</option><option value="educational">Educational</option><option value="urgent">Urgent</option></select></div>
+          <div class="script-field"><label for="field-length">Length</label>
+            <select id="field-length" class="deck-select deck-select--full"><option value="30s">30s</option><option value="45s">45s</option><option value="60s">60s</option></select></div>
+        </div>
+      </div>
+
+      <div class="drawer-panel" data-drawer-panel="video" hidden>
+        <p class="empty-copy" id="video-sync-note">On-screen text syncs from Script unless you edit here.</p>
+        <div class="script-field"><label for="field-on-hook">On-screen hook</label><input id="field-on-hook" type="text" /></div>
+        <div class="script-field"><label for="field-on-cta">End card CTA</label><input id="field-on-cta" type="text" /></div>
+        <div class="script-field"><label for="field-color">Brand color</label><input id="field-color" type="color" /></div>
+        <div class="script-field"><label for="field-logo">Logo URL</label><input id="field-logo" type="url" placeholder="https://..." /></div>
+        <div class="script-field"><label for="field-template">Layout</label>
+          <select id="field-template" class="deck-select deck-select--full"></select></div>
+        <div class="rewrite-bar">
+          <button type="button" class="btn btn--secondary" id="btn-render-preview">Preview render</button>
+          <button type="button" class="btn btn--primary" id="btn-render-final">Re-render final</button>
+        </div>
+        <div id="video-preview-wrap" class="video-preview-wrap" hidden>
+          <video id="drawer-video" controls playsinline style="width:100%;border-radius:8px;margin-top:8px;"></video>
+        </div>
+      </div>
+
+      <div class="drawer-panel" data-drawer-panel="publish" hidden>
+        <div id="publish-hints" class="strategy-hints"></div>
+        <div class="script-field"><label>Destinations</label>
+          <div class="chip-input-row" id="field-platforms"></div></div>
+        <div class="script-field"><label for="field-scheduled">Departure time</label><input id="field-scheduled" type="datetime-local" /></div>
+        <div class="script-field"><label for="field-format">Post as</label>
+          <select id="field-format" class="deck-select deck-select--full"><option value="reel">Reel</option><option value="short">Short</option><option value="feed">Feed</option><option value="story">Story</option></select></div>
+      </div>
+
+      <div class="drawer-actions">
+        <button type="button" class="btn btn--primary" id="btn-save-edit">Save changes</button>
+        <button type="button" class="btn btn--secondary" id="btn-approve-script">Clear script</button>
+        <button type="button" class="btn btn--secondary" id="btn-approve-video">Clear video</button>
+        <button type="button" class="btn btn--primary" id="btn-publish-now">Depart now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic queue modal -->
+  <div class="deck-modal" id="topic-modal">
+    <div class="deck-modal__backdrop" id="topic-modal-backdrop"></div>
+    <div class="deck-modal__card panel panel--elevated cockpit-bezel">
+      <div class="panel__header">
+        <span class="panel__title">Request topics</span>
+        <button type="button" class="deck-drawer__close" id="topic-modal-close">✕</button>
+      </div>
+      <div class="panel__body">
+        <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:var(--space-4);">Add one topic per line. Each queues to your n8n pipeline and appears on the hold queue.</p>
+        <form id="topic-form">
+          <div class="form-field">
+            <label for="topic-content-type">Content type</label>
+            <select id="topic-content-type" class="deck-select deck-select--full"></select>
+          </div>
+          <div class="form-field">
+            <label for="topic-batch">Topics</label>
+            <textarea id="topic-batch" rows="6" placeholder="Roof inspection myths homeowners believe&#10;What storm damage actually looks like&#10;3 signs you need a re-roof"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary btn--full">Queue to manifest</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="deck-toast" id="deck-toast" role="status"></div>
+
+  <!-- "How Runway works" help drawer -->
+  <div class="help-drawer" id="help-drawer" aria-hidden="true">
+    <div class="help-drawer__backdrop" id="help-drawer-backdrop"></div>
+    <div class="help-drawer__panel cockpit-bezel">
+      <div class="help-drawer__head">
+        <h2 class="help-drawer__title">How Runway works</h2>
+        <button type="button" class="deck-drawer__close" id="help-drawer-close">✕</button>
+      </div>
+      <div class="help-drawer__body">
+        <div class="help-phase"><span class="help-phase__num">01</span><div><strong>Pre-flight</strong><p>Queue topics (one per line) in "Request topics." Each topic becomes a flight on the manifest.</p></div></div>
+        <div class="help-phase"><span class="help-phase__num">02</span><div><strong>Research & script</strong><p>The pipeline researches the topic and drafts a script in your voice. Open the flight → Script tab to review. Click <em>Clear script</em> to approve — nothing records until you do.</p></div></div>
+        <div class="help-phase"><span class="help-phase__num">03</span><div><strong>Voice & video</strong><p>After script is cleared, ElevenLabs clones your voice and Creatomate renders the branded video. Preview it in the Video tab before clearing.</p></div></div>
+        <div class="help-phase"><span class="help-phase__num">04</span><div><strong>Cruise</strong><p>Set a departure time on the Publish tab and select destinations. Hit <em>Depart now</em> or let the scheduled time trigger it.</p></div></div>
+        <div class="help-phase"><span class="help-phase__num">05</span><div><strong>Weekly rhythm</strong><p>Check Flight plan for AI-generated topic ideas and posting cadence. 10 minutes a week keeps the pipeline full.</p></div></div>
+        <hr style="border-color:var(--border);margin:20px 0;">
+        <h3 style="font-size:0.875rem;margin-bottom:12px;">What you edit vs. what Runway automates</h3>
+        <table class="help-table">
+          <tr><td>You edit</td><td>Hook, script, caption, departure time</td></tr>
+          <tr><td>Runway automates</td><td>Research, voice recording, video rendering, publishing</td></tr>
+        </table>
+        <hr style="border-color:var(--border);margin:20px 0;">
+        <h3 style="font-size:0.875rem;margin-bottom:12px;">FAQ</h3>
+        <details class="help-faq"><summary>Why isn't my video ready yet?</summary><p>Videos take 5–15 minutes after script is cleared. If it's been over 30 minutes, check the pipeline status tag at the top of the dashboard.</p></details>
+        <details class="help-faq"><summary>Can I change the hook after the video renders?</summary><p>Yes — edit the hook in the Script tab and click "Re-render final" in the Video tab. It will re-render with the new text.</p></details>
+        <details class="help-faq"><summary>What does "Hold queue" mean?</summary><p>Topics waiting to enter the pipeline. The pipeline picks them up automatically — nothing to do except wait.</p></details>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guided tour overlay -->
+  <div class="tour-overlay" id="tour-overlay" hidden>
+    <div class="tour-card cockpit-bezel" id="tour-card">
+      <p class="instrument-label instrument-label--amber" id="tour-step-label">Step 1 of 5</p>
+      <h3 id="tour-step-title"></h3>
+      <p id="tour-step-body"></p>
+      <div class="tour-actions">
+        <button type="button" class="btn btn--ghost" id="tour-prev">Back</button>
+        <button type="button" class="btn btn--primary" id="tour-next">Next</button>
+        <button type="button" class="btn btn--ghost" id="tour-skip" style="margin-left:auto;">Skip tour</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/runway-deck.js?v=3"></script>
 </body>
 </html>

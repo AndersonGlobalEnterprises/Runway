@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "express": "^5.0.1",
-    "express-session": "^1.18.1"
+    "express-session": "^1.18.1",
+    "stripe": "^22.2.1"
   }
 }

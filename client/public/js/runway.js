@@ -89,7 +89,7 @@
   const takeoffScene = document.getElementById('takeoff-scene');
   const planeWrap = document.getElementById('takeoff-plane-wrap');
   const hudPhase = document.getElementById('takeoff-phase');
-  const hudAlt = document.getElementById('takeoff-alt');
+  const hudStep = document.getElementById('takeoff-step');
   const storyTrack = document.querySelector('.scroll-story__track');
   let clearanceLaunched = false;
 
@@ -142,8 +142,8 @@
     planeWrap.classList.remove('is-hidden');
     takeoffScene.classList.remove('is-rolling', 'is-cleared', 'is-airborne');
 
-    let phase = 'CLR: STANDBY';
-    let alt = 0;
+    let phase = 'Clearance · Standby';
+    let stepNum = 1;
     let xVw = 8;
     let yVh = 0;
     let rot = 0;
@@ -152,25 +152,26 @@
     let hudOpacity = 0.75;
 
     if (progress < 0.08) {
-      phase = 'CLR: STANDBY';
+      phase = 'Clearance · Standby';
+      stepNum = 1;
       xVw = lerp(6, 10, progress / 0.08);
     } else if (progress < 0.32) {
-      phase = 'TAXI';
+      phase = 'Taxi';
+      stepNum = 2;
       const t = (progress - 0.08) / 0.24;
-      alt = Math.round(lerp(0, 350, t));
       xVw = lerp(10, 42, t);
       takeoffScene.classList.add('is-rolling');
     } else if (progress < 0.48) {
-      phase = 'ROTATION';
+      phase = 'Rotation';
+      stepNum = 3;
       const t = (progress - 0.32) / 0.16;
-      alt = Math.round(lerp(350, 900, t));
       xVw = lerp(42, 50, t);
       rot = lerp(0, 22, t);
       takeoffScene.classList.add('is-rolling', 'is-cleared');
     } else if (progress < 0.68) {
-      phase = 'CLIMB';
+      phase = 'Climb';
+      stepNum = 4;
       const t = (progress - 0.48) / 0.2;
-      alt = Math.round(lerp(900, 4500, t));
       xVw = lerp(50, 68, t);
       yVh = lerp(0, 28, t);
       rot = lerp(22, 28, t);
@@ -179,9 +180,9 @@
       hudOpacity = lerp(0.75, 0.35, t);
       takeoffScene.classList.add('is-cleared', 'is-airborne');
     } else {
-      phase = 'CRUISE';
+      phase = 'Cruise';
+      stepNum = 5;
       const t = (progress - 0.68) / 0.32;
-      alt = Math.round(lerp(4500, 10000, t));
       xVw = lerp(68, 88, t);
       yVh = lerp(28, 65, t);
       rot = lerp(28, 12, t);
@@ -196,7 +197,7 @@
       hudPhase.textContent = phase;
       if (hudPhase.parentElement) hudPhase.parentElement.style.opacity = String(hudOpacity);
     }
-    if (hudAlt) hudAlt.textContent = `ALT ${alt.toLocaleString()} FT`;
+    if (hudStep) hudStep.textContent = `Step ${stepNum} of 5`;
   }
 
   function bindTakeoffScroll(handler) {
@@ -223,15 +224,15 @@
     const copyTitle = document.getElementById('story-title');
     const copyDesc = document.getElementById('story-desc');
     const copyLabel = document.getElementById('story-label');
-    const storyAlt = document.getElementById('story-alt');
+    const storyStep = document.getElementById('story-step');
     const storyPhaseHud = document.getElementById('story-phase-hud');
     const storyHint = document.getElementById('story-hint');
     const storyData = [
-      { label: 'PHASE 01 · PRE-FLIGHT', title: 'Voice locked in.', desc: 'One 5–10 minute sample. Brand voice, tone, and posting destinations configured once.', phase: 'PRE-FLIGHT', alt: 0 },
-      { label: 'PHASE 02 · TAXI', title: 'Topics roll to script.', desc: 'Research-backed drafts in your voice — review or auto-approve. No blank page.', phase: 'TAXI', alt: 400 },
-      { label: 'PHASE 03 · ROTATION', title: 'Clone. Render. Lift off.', desc: 'ElevenLabs voice, Creatomate video, branded templates — zero editing sessions.', phase: 'ROTATION', alt: 1200 },
-      { label: 'PHASE 04 · CLIMB', title: 'Every channel. On schedule.', desc: 'LinkedIn, IG, TikTok, Shorts — cross-posted weekly without you touching a tool.', phase: 'CLIMB', alt: 4500 },
-      { label: 'PHASE 05 · CRUISE', title: 'Flight Deck online.', desc: 'Track output, pipeline health, and next publishes from one cockpit.', phase: 'CRUISE', alt: 10000 },
+      { label: 'Step 01 · Pre-flight', title: 'Voice locked in.', desc: 'One 5–10 minute sample. Brand voice, tone, and posting destinations configured once.', phase: 'Pre-flight', step: 1 },
+      { label: 'Step 02 · Taxi', title: 'Topics roll to script.', desc: 'Research-backed drafts in your voice — review or auto-approve. No blank page.', phase: 'Taxi', step: 2 },
+      { label: 'Step 03 · Rotation', title: 'Clone. Render. Lift off.', desc: 'ElevenLabs voice, Creatomate video, branded templates — zero editing sessions.', phase: 'Rotation', step: 3 },
+      { label: 'Step 04 · Climb', title: 'Every channel. On schedule.', desc: 'LinkedIn, IG, TikTok, Shorts — cross-posted weekly without you touching a tool.', phase: 'Climb', step: 4 },
+      { label: 'Step 05 · Cruise', title: 'Dashboard online.', desc: 'Track your manifest, taxi tracks, and upcoming departures from one portal.', phase: 'Cruise', step: 5 },
     ];
 
     const setStage = (i) => {
@@ -241,7 +242,7 @@
       if (copyTitle) copyTitle.textContent = data.title;
       if (copyDesc) copyDesc.textContent = data.desc;
       if (copyLabel) copyLabel.textContent = data.label;
-      if (storyAlt) storyAlt.textContent = data.alt.toLocaleString();
+      if (storyStep) storyStep.textContent = data.step;
       if (storyPhaseHud) storyPhaseHud.textContent = data.phase;
     };
 
@@ -315,8 +316,8 @@
       });
     }
 
-    if (hudPhase) hudPhase.textContent = 'CLEARED · T/O';
-    if (hudAlt) hudAlt.textContent = 'ALT 1,200 FT';
+    if (hudPhase) hudPhase.textContent = 'Clearance granted';
+    if (hudStep) hudStep.textContent = 'Redirecting to pricing…';
 
     const dest = btn.dataset.clearanceHref || '/runway-pricing.html';
     window.setTimeout(() => {

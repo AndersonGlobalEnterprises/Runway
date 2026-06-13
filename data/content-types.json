@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "product": "Inspect",
+  "company": "First Flight Roofing",
+  "fields": {
+    "script": [
+      { "id": "hook", "label": "Hook", "type": "text", "maxLength": 80, "sheetKey": "hook", "required": true },
+      { "id": "fullScript", "label": "Full script", "type": "textarea", "maxLength": 1200, "sheetKey": "full_script", "required": true },
+      { "id": "caption", "label": "Caption", "type": "textarea", "maxLength": 220, "sheetKey": "caption" },
+      { "id": "hashtags", "label": "Hashtags", "type": "text", "maxLength": 120, "sheetKey": "hashtags" },
+      { "id": "ctaLine", "label": "Spoken CTA", "type": "text", "maxLength": 100, "defaultFrom": "brand.cta" },
+      { "id": "tone", "label": "Tone", "type": "select", "options": ["direct", "educational", "urgent"], "default": "direct" },
+      { "id": "length", "label": "Target length", "type": "select", "options": ["30s", "45s", "60s"], "default": "30s" },
+      { "id": "contentType", "label": "Content type", "type": "select", "optionsFrom": "contentTypes", "required": true }
+    ],
+    "video": [
+      { "id": "onScreenHook", "label": "On-screen hook", "type": "text", "creatomateKey": "Hook-Text", "syncFrom": "hook" },
+      { "id": "onScreenCta", "label": "End card CTA", "type": "text", "creatomateKey": "CTA-Text", "syncFrom": "ctaLine" },
+      { "id": "primaryColor", "label": "Brand color", "type": "color", "creatomateKey": "Primary-Color", "defaultFrom": "brand.primaryColor" },
+      { "id": "logoUrl", "label": "Logo", "type": "url", "creatomateKey": "Logo-Image", "defaultFrom": "brand.logoUrl" },
+      { "id": "templateVariant", "label": "Layout", "type": "select", "optionsFrom": "contentTypes", "mapsTo": "creatomateTemplateId" }
+    ],
+    "publish": [
+      { "id": "platforms", "label": "Destinations", "type": "multiselect", "options": ["Instagram", "TikTok", "YouTube", "LinkedIn"], "sheetKey": "platforms" },
+      { "id": "scheduledAt", "label": "Departure time", "type": "datetime", "sheetKey": "scheduled_at" },
+      { "id": "postFormat", "label": "Post as", "type": "select", "options": ["reel", "short", "feed", "story"], "default": "reel" }
+    ]
+  },
+  "contentTypes": [
+    {
+      "id": "myth-bust",
+      "label": "Myth bust",
+      "description": "Correct a common homeowner misconception with a bold opener.",
+      "creatomateTemplateId": "REPLACE_WITH_REAL_TEMPLATE_ID",
+      "defaultLength": "30s",
+      "defaultTone": "direct",
+      "defaultPostFormat": "reel",
+      "recommendedPlatforms": ["TikTok", "Instagram", "YouTube"],
+      "strategyTags": ["myth-bust", "education", "hook-heavy"],
+      "videoDefaults": {
+        "Bg-Preset": "inspection-generic"
+      }
+    },
+    {
+      "id": "storm-tip",
+      "label": "Storm tip",
+      "description": "Seasonal urgency — storm prep, damage signs, inspection CTA.",
+      "creatomateTemplateId": "REPLACE_WITH_REAL_TEMPLATE_ID",
+      "defaultLength": "45s",
+      "defaultTone": "urgent",
+      "defaultPostFormat": "reel",
+      "recommendedPlatforms": ["Instagram", "TikTok", "LinkedIn"],
+      "strategyTags": ["storm", "seasonal", "cta-forward"],
+      "videoDefaults": {
+        "Bg-Preset": "storm-damage"
+      }
+    }
+  ],
+  "creatomateElementNames": {
+    "Hook-Text": "On-screen hook — max 2 lines",
+    "CTA-Text": "End card call to action",
+    "Primary-Color": "Brand accent hex",
+    "Logo-Image": "Logo URL (PNG/SVG on CDN)",
+    "Voice-Audio": "ElevenLabs audio URL — pipeline only, not client-edited in Core v1",
+    "Bg-Preset": "B-roll preset key — locked per content type in Core v1"
+  },
+  "syncRules": [
+    { "from": "hook", "to": "onScreenHook", "unless": "videoFieldsOverridden" },
+    { "from": "ctaLine", "to": "onScreenCta", "unless": "videoFieldsOverridden" },
+    { "from": "brand.primaryColor", "to": "primaryColor" },
+    { "from": "brand.logoUrl", "to": "logoUrl" },
+    { "from": "contentType", "to": "templateVariant" }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "clientName": "Omar Anderson",
+  "company": "AGE FlowOps",
+  "tier": "owner",
+  "slug": "age-flowops",
+  "squawk": "RWY-0001",
+  "product": "Inspect",
+  "destinations": ["Instagram", "TikTok", "YouTube", "LinkedIn"],
+  "n8n": {
+    "baseUrl": "https://age.app.n8n.cloud",
+    "statusPath": "/webhook/hce-status",
+    "updatePath": "/webhook/hce-update",
+    "queueTopicPath": "/webhook/queue-topic-age-flowops",
+    "triggers": {
+      "Inspect": "/webhook/inspect-publish-run",
+      "Talksmith": "/webhook/talksmith-publish-run",
+      "Interview Prep": "/webhook/interview-publish-run"
+    }
+  },
+  "integrations": {
+    "voiceId": "wZ8EkhKgiJFrE7MfMfUc",
+    "sheetId": "",
+    "creatomateTemplateId": "856453b5-c707-488e-a8ae-0dc7d47a90bc"
+  },
+  "brand": {
+    "audience": "Small business owners using AI automation",
+    "vertical": "AI operations",
+    "tone": "Direct, confident, no fluff",
+    "hookStyle": "Bold claim or common mistake opener",
+    "cta": "Book a free strategy session at ageflowops.com",
+    "primaryColor": "#3b82f6",
+    "logoUrl": "",
+    "phrasesUse": ["automation", "AI systems", "done for you", "operations"],
+    "phrasesAvoid": ["synergy", "hustle", "game-changer", "disrupt"],
+    "autoApproveScript": false,
+    "autoApproveVideo": false,
+    "autoPublishLinkedIn": false
+  },
+  "memory": { "editSignals": [], "approvedHooks": [], "notes": [] },
+  "manifestOverrides": {}
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Flight Deck Login — AGE Runway</title>
+  <title>Sign in — AGE Runway</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,9 +20,9 @@
         <span class="brand__lights"><span></span><span></span><span></span></span>
       </a>
       <div class="auth-aside__headline">
-        <p class="eyebrow instrument-label instrument-label--amber">RWY 01 · FLIGHT DECK ACCESS</p>
-        <h1>Request cockpit entry.</h1>
-        <p>Your mission control — weekly manifest, taxi tracks, and scheduled departures in one instrument panel.</p>
+        <p class="eyebrow instrument-label instrument-label--amber">Client portal</p>
+        <h1>Sign in to your dashboard.</h1>
+        <p>Track your manifest, taxi tracks, and upcoming departures — all in one place.</p>
         <div class="cockpit-runway-mini" aria-hidden="true">
           <div class="cockpit-runway-mini__line"></div>
           <svg class="cockpit-runway-mini__plane" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,41 +31,40 @@
           </svg>
         </div>
         <div class="auth-pipeline" style="margin-top:var(--space-5);">
-          <p class="instrument-label" style="margin-bottom:var(--space-3);">TAXI ROUTE</p>
+          <p class="instrument-label" style="margin-bottom:var(--space-3);">Taxi route</p>
           <div class="flow-line">
-            <div class="flow-node is-active"><div class="flow-node__box">MNFST</div></div>
+            <div class="flow-node is-active"><div class="flow-node__box">Topic</div></div>
             <div class="flow-connector"></div>
-            <div class="flow-node"><div class="flow-node__box">SCR</div></div>
+            <div class="flow-node"><div class="flow-node__box">Script</div></div>
             <div class="flow-connector"></div>
-            <div class="flow-node"><div class="flow-node__box">VOX</div></div>
+            <div class="flow-node"><div class="flow-node__box">Voice</div></div>
             <div class="flow-connector"></div>
-            <div class="flow-node"><div class="flow-node__box">DEP</div></div>
+            <div class="flow-node"><div class="flow-node__box">Publish</div></div>
           </div>
         </div>
       </div>
-      <p class="instrument-label">AGE · SECURE CHANNEL · <span class="instrument-label--green">COCKPIT ONLINE</span></p>
+      <p class="instrument-label">Anderson Global Enterprises · Secure access</p>
     </aside>
 
     <main class="auth-main">
       <div class="auth-card cockpit-bezel cockpit-bezel--amber">
-        <p class="instrument-label instrument-label--amber">SQUAWK: RWY-AUTH</p>
-        <h2>Enter Flight Deck</h2>
-        <p class="auth-card__sub">Use the email linked to your Runway clearance.</p>
+        <h2>Sign in</h2>
+        <p class="auth-card__sub">Use the email and squawk code linked to your Runway clearance.</p>
         <p id="form-notice" hidden class="form-notice"></p>
         <form method="POST" action="/api/runway/login">
           <div class="form-field">
-            <label for="email" class="instrument-label">CALLSIGN · EMAIL</label>
+            <label for="email">Work email</label>
             <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@company.com" />
           </div>
           <div class="form-field">
-            <label for="password" class="instrument-label">ACCESS CODE</label>
+            <label for="password">Squawk code (password)</label>
             <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="Enter your password" />
           </div>
           <div class="form-row">
-            <label><input type="checkbox" name="remember" style="margin-right:6px;" />Remember this terminal</label>
-            <a href="/runway-forgot.html">Lost access code?</a>
+            <label><input type="checkbox" name="remember" style="margin-right:6px;" />Remember me</label>
+            <a href="/runway-forgot.html">Forgot password?</a>
           </div>
-          <button type="submit" class="btn btn--primary btn--full">Clear for entry</button>
+          <button type="submit" class="btn btn--primary btn--full">Sign in</button>
         </form>
         <p class="auth-footer">
           No clearance yet? <a href="/runway-pricing.html">Request clearance</a><br>
@@ -75,6 +74,6 @@
     </main>
   </div>
 
-  <script src="/js/runway.js?v=3"></script>
+  <script src="/js/runway.js?v=8"></script>
 </body>
 </html>
