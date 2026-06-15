@@ -1,0 +1,70 @@
+// HeyGen avatar video engine for Runway.
+// Renders are asynchronous (minutes), so we START a render and reconcile the result
+// on the next flights load / status poll — never block an HTTP request waiting.
+
+const API_BASE = "https://api.heygen.com";
+
+// Sensible defaults (verified working). Override per-instance via config.integrations
+// or env HEYGEN_AVATAR_ID / HEYGEN_VOICE_ID.
+const DEFAULT_AVATAR = "Abigail_standing_office_front";
+const DEFAULT_VOICE = "cef3bc4e0a84424cafcde6f2cf466c97";
+
+export function heygenAvailable() {
+  return Boolean(process.env.HEYGEN_API_KEY);
+}
+
+// Kick off an avatar render. Returns { videoId } immediately (does NOT wait for completion).
+// voice: pass audioUrl to lip-sync to a pre-generated MP3 (e.g. the client's ElevenLabs clone);
+// otherwise it speaks `script` with a HeyGen voice_id.
+export async function startHeyGenRender({ script, avatarId, voiceId, audioUrl, test = false, width = 720, height = 1280 }) {
+  const key = process.env.HEYGEN_API_KEY;
+  if (!key) {
+    return { mock: true, videoId: "", status: "mock", message: "Set HEYGEN_API_KEY for real avatar renders." };
+  }
+  if (!audioUrl && (!script || !script.trim())) {
+    throw new Error("No script to speak — generate the script first.");
+  }
+
+  const voice = audioUrl
+    ? { type: "audio", audio_url: audioUrl }
+    : { type: "text", input_text: script, voice_id: voiceId || process.env.HEYGEN_VOICE_ID || DEFAULT_VOICE };
+
+  const body = {
+    video_inputs: [
+      {
+        character: {
+          type: "avatar",
+          avatar_id: avatarId || process.env.HEYGEN_AVATAR_ID || DEFAULT_AVATAR,
+          avatar_style: "normal",
+        },
+        voice,
+      },
+    ],
+    dimension: { width, height },
+    test: Boolean(test),
+  };
+
+  const res = await fetch(`${API_BASE}/v2/video/generate`, {
+    method: "POST",
+    headers: { "X-Api-Key": key, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.error) {
+    const msg = data.error?.message || data.error || data.message || `HTTP ${res.status}`;
+    throw new Error(`HeyGen generate failed: ${msg}`);
+  }
+  return { videoId: data.data?.video_id || "", status: "rendering" };
+}
+
+// Check a render. Returns { status: "completed"|"processing"|"pending"|"failed"|"unknown", url, error }.
+export async function getHeyGenStatus(videoId) {
+  const key = process.env.HEYGEN_API_KEY;
+  if (!key || !videoId) return { status: "unknown", url: "" };
+  const res = await fetch(`${API_BASE}/v1/video_status.get?video_id=${encodeURIComponent(videoId)}`, {
+    headers: { "X-Api-Key": key },
+  });
+  const data = await res.json().catch(() => ({}));
+  const d = data.data || {};
+  return { status: d.status || "unknown", url: d.video_url || "", error: d.error };
+}

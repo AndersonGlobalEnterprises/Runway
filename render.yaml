@@ -48,3 +48,10 @@ services:
         sync: false
       - key: PERPLEXITY_API_KEY
         sync: false
+      # HeyGen avatar video engine (set HEYGEN_API_KEY value in Render dashboard)
+      - key: HEYGEN_API_KEY
+        sync: false
+      - key: HEYGEN_AVATAR_ID
+        value: Abigail_standing_office_front
+      - key: HEYGEN_VOICE_ID
+        value: cef3bc4e0a84424cafcde6f2cf466c97

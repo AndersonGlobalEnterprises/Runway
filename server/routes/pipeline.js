@@ -23,8 +23,9 @@ import {
   aiAvailable,
 } from "../ai.js";
 import { listContentTypes, buildCreatomateModifications, deliveryIncludesPost, deliveryIncludesVideo, getDefaultDeliveryMode } from "../content-types.js";
-import { buildEditState, applyEditPatch, saveFlightEditMeta, resolveFlightDeliveryMode } from "../edit.js";
+import { buildEditState, applyEditPatch, saveFlightEditMeta, getFlightEditMeta, resolveFlightDeliveryMode } from "../edit.js";
 import { createRender, creatomateAvailable } from "../creatomate.js";
+import { heygenAvailable, startHeyGenRender, getHeyGenStatus } from "../heygen.js";
 import { getWeeklyFlightPlan, getPublishHints, strategyAvailable } from "../strategy.js";
 
 const router = Router();
@@ -37,23 +38,60 @@ function requireSession(req, res, next) {
 router.use(requireSession);
 
 async function loadFlights() {
+  let flights, source, online = true, error;
   try {
     const remote = await fetchQueue();
     if (remote.length) {
       saveLocalFlights(remote);
-      return { flights: remote, source: "n8n", online: true };
+      flights = remote;
+      source = "n8n";
+    } else {
+      flights = getLocalFlights();
+      source = "local";
     }
-    const cached = getLocalFlights();
-    return { flights: cached, source: "local", online: true };
   } catch (err) {
-    const cached = getLocalFlights();
-    return {
-      flights: cached,
-      source: "cache",
-      online: false,
-      error: err.message,
-    };
+    flights = getLocalFlights();
+    source = "cache";
+    online = false;
+    error = err.message;
   }
+  await reconcileRenders(flights);
+  return { flights, source, online, error };
+}
+
+// HeyGen renders are async — when a flight is mid-render, check its status and, once the
+// avatar video is ready, write the URL back (local + sheet via n8n). Runs on every flights
+// load so a dashboard refresh surfaces finished videos. Cheap: only flights flagged
+// "rendering" hit the HeyGen API.
+async function reconcileRenders(flights) {
+  if (!heygenAvailable() || !Array.isArray(flights)) return flights;
+  for (const f of flights) {
+    const meta = getFlightEditMeta(f.id);
+    if (!meta.heygenVideoId || meta.renderStatus !== "rendering") continue;
+    try {
+      const { status, url } = await getHeyGenStatus(meta.heygenVideoId);
+      if (status === "completed" && url) {
+        saveFlightEditMeta(f.id, {
+          renderStatus: "ready",
+          videoUrl: url,
+          previewVideoUrl: meta.heygenPreview ? url : meta.previewVideoUrl,
+        });
+        updateLocalFlight(f.id, { videoUrl: url, status: "Video Ready" });
+        f.videoUrl = url;
+        f.status = "Video Ready";
+        try {
+          await updateFlightStatus({ product: f.product, rowId: f.rowId, status: "Video Ready", videoUrl: url });
+        } catch {
+          /* local ok */
+        }
+      } else if (status === "failed") {
+        saveFlightEditMeta(f.id, { renderStatus: "failed" });
+      }
+    } catch {
+      /* transient — retry next load */
+    }
+  }
+  return flights;
 }
 
 function updateLocalFlight(id, patch) {
@@ -227,9 +265,28 @@ router.post("/flights/:id/render-preview", async (req, res) => {
 
   const state = buildEditState(flight, config);
   const edit = { ...state.edit, ...(req.body?.edit || {}) };
+
+  // Preferred engine: HeyGen avatar video. Async — kick it off, reconcile when ready.
+  if (heygenAvailable()) {
+    const script = edit.fullScript || edit.hook || "";
+    try {
+      const { videoId } = await startHeyGenRender({
+        script,
+        avatarId: config.integrations?.heygenAvatarId,
+        voiceId: config.integrations?.heygenVoiceId,
+        test: true,
+      });
+      saveFlightEditMeta(flight.id, { heygenVideoId: videoId, heygenPreview: true, renderStatus: "rendering" });
+      updateLocalFlight(flight.id, { status: "Rendering" });
+      return res.json({ ok: true, engine: "heygen", status: "rendering", videoId, message: "Avatar preview rendering — refresh in ~1–2 min." });
+    } catch (err) {
+      return res.status(502).json({ ok: false, engine: "heygen", error: err.message });
+    }
+  }
+
+  // Fallback: Creatomate template render.
   const templateId = req.body?.templateId || state.templateId;
   const modifications = buildCreatomateModifications(edit, edit.contentType);
-
   const render = await createRender({ templateId, modifications, preview: true });
   const previewUrl = render.url || "";
 
@@ -259,9 +316,41 @@ router.post("/flights/:id/render-final", async (req, res) => {
 
   const state = buildEditState(flight, config);
   const edit = { ...state.edit, ...(req.body?.edit || {}) };
+
+  // Preferred engine: HeyGen avatar video (final = non-test). Async — reconcile when ready.
+  if (heygenAvailable()) {
+    const script = edit.fullScript || edit.hook || "";
+    try {
+      const { videoId } = await startHeyGenRender({
+        script,
+        avatarId: config.integrations?.heygenAvatarId,
+        voiceId: config.integrations?.heygenVoiceId,
+        test: false,
+      });
+      saveFlightEditMeta(flight.id, { heygenVideoId: videoId, heygenPreview: false, renderStatus: "rendering" });
+      updateLocalFlight(flight.id, { status: "Rendering" });
+      // Persist the script/caption now so they survive even before the video lands.
+      try {
+        await updateFlightStatus({
+          product: flight.product,
+          rowId: flight.rowId,
+          status: "Rendering",
+          hook: edit.hook,
+          fullScript: edit.fullScript,
+          caption: edit.caption,
+        });
+      } catch {
+        /* local ok */
+      }
+      return res.json({ ok: true, engine: "heygen", status: "rendering", videoId, message: "Final avatar video rendering — refresh in ~1–2 min." });
+    } catch (err) {
+      return res.status(502).json({ ok: false, engine: "heygen", error: err.message });
+    }
+  }
+
+  // Fallback: Creatomate template render.
   const templateId = req.body?.templateId || state.templateId;
   const modifications = buildCreatomateModifications(edit, edit.contentType);
-
   const render = await createRender({ templateId, modifications, preview: false });
   const videoUrl = render.url || "";
 
@@ -283,6 +372,31 @@ router.post("/flights/:id/render-final", async (req, res) => {
   }
 
   res.json({ ok: true, render, videoUrl, mock: render.mock || false });
+});
+
+router.get("/flights/:id/render-status", async (req, res) => {
+  const { flights } = await loadFlights();
+  const flight = findFlight(flights, req.params.id);
+  if (!flight) return res.status(404).json({ error: "Flight not found" });
+  const meta = getFlightEditMeta(flight.id);
+  if (!meta.heygenVideoId) {
+    return res.json({ status: flight.status, videoUrl: flight.videoUrl || "" });
+  }
+  if (meta.renderStatus === "ready" && (meta.videoUrl || flight.videoUrl)) {
+    return res.json({ status: "completed", videoUrl: meta.videoUrl || flight.videoUrl });
+  }
+  const { status, url } = await getHeyGenStatus(meta.heygenVideoId);
+  if (status === "completed" && url) {
+    saveFlightEditMeta(flight.id, { renderStatus: "ready", videoUrl: url, previewVideoUrl: meta.heygenPreview ? url : meta.previewVideoUrl });
+    updateLocalFlight(flight.id, { videoUrl: url, status: "Video Ready" });
+    try { await updateFlightStatus({ product: flight.product, rowId: flight.rowId, status: "Video Ready", videoUrl: url }); } catch { /* local ok */ }
+    return res.json({ status: "completed", videoUrl: url });
+  }
+  if (status === "failed") {
+    saveFlightEditMeta(flight.id, { renderStatus: "failed" });
+    return res.json({ status: "failed", error: "render failed" });
+  }
+  return res.json({ status: "rendering" });
 });
 
 router.get("/flights/:id/publish-hints", async (req, res) => {
