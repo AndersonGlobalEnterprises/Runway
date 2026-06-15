@@ -54,7 +54,9 @@ export async function createRender({ templateId, modifications, preview = false 
 
   const data = await res.json();
   const render = Array.isArray(data) ? data[0] : data;
-  if (render.url) return render;
+  // Creatomate returns the eventual URL while status is still "planned" — the file doesn't
+  // exist yet. Only short-circuit when it's actually done; otherwise poll until succeeded.
+  if (render.status === "succeeded" && render.url) return render;
   if (render.id) return waitForRender(render.id);
   return render;
 }

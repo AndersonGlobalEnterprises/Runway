@@ -47,6 +47,15 @@ export function deliveryIncludesPost(mode) {
   return mode === "post" || mode === "hybrid";
 }
 
+// Google Drive share links (/file/d/<id>/view, open?id=) return an HTML viewer page, which
+// Creatomate cannot use as media — it silently falls back to the template's default audio.
+// Convert to the direct-download form so the real MP3/asset is fetched.
+function toDirectDownloadUrl(url) {
+  if (!url) return url;
+  const m = String(url).match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([A-Za-z0-9_-]+)/);
+  return m ? `https://drive.google.com/uc?export=download&id=${m[1]}` : url;
+}
+
 export function buildCreatomateModifications(edit, contentTypeId) {
   const mode = resolveDeliveryMode(contentTypeId, edit.deliveryMode);
   if (!deliveryIncludesVideo(mode)) return {};
@@ -57,8 +66,8 @@ export function buildCreatomateModifications(edit, contentTypeId) {
     "CTA-Text": edit.onScreenCta || edit.ctaLine || "",
     "Primary-Color": edit.primaryColor || "#1e40af",
   };
-  if (edit.logoUrl) mods["Logo-Image"] = edit.logoUrl;
-  if (edit.audioUrl) mods["Voice-Audio"] = edit.audioUrl;
+  if (edit.logoUrl) mods["Logo-Image"] = toDirectDownloadUrl(edit.logoUrl);
+  if (edit.audioUrl) mods["Voice-Audio"] = toDirectDownloadUrl(edit.audioUrl);
   if (ct?.videoDefaults) Object.assign(mods, ct.videoDefaults);
   return mods;
 }
