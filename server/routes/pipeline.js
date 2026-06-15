@@ -74,7 +74,7 @@ async function reconcileRenders(flights) {
         saveFlightEditMeta(f.id, {
           renderStatus: "ready",
           videoUrl: url,
-          previewVideoUrl: meta.heygenPreview ? url : meta.previewVideoUrl,
+          previewVideoUrl: url,
         });
         updateLocalFlight(f.id, { videoUrl: url, status: "Video Ready" });
         f.videoUrl = url;
@@ -387,7 +387,7 @@ router.get("/flights/:id/render-status", async (req, res) => {
   }
   const { status, url } = await getHeyGenStatus(meta.heygenVideoId);
   if (status === "completed" && url) {
-    saveFlightEditMeta(flight.id, { renderStatus: "ready", videoUrl: url, previewVideoUrl: meta.heygenPreview ? url : meta.previewVideoUrl });
+    saveFlightEditMeta(flight.id, { renderStatus: "ready", videoUrl: url, previewVideoUrl: url });
     updateLocalFlight(flight.id, { videoUrl: url, status: "Video Ready" });
     try { await updateFlightStatus({ product: flight.product, rowId: flight.rowId, status: "Video Ready", videoUrl: url }); } catch { /* local ok */ }
     return res.json({ status: "completed", videoUrl: url });

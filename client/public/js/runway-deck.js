@@ -663,19 +663,45 @@
         method: 'POST',
         body: JSON.stringify({ edit: collectEditPayload() }),
       });
-      if (res.mock) toast(res.message || 'Modifications saved — add CREATOMATE_API_KEY for renders', 'ok');
-      else toast(preview ? 'Preview ready' : 'Final render ready', 'ok');
+      if (res.mock) { toast(res.message || 'Add a render API key (HeyGen/Creatomate)', 'ok'); return; }
+      // Instant URL (Creatomate fallback path).
       if (res.previewUrl || res.videoUrl) {
         const url = res.previewUrl || res.videoUrl;
         $('#drawer-video').src = url;
         $('#video-preview-wrap').hidden = false;
+        toast(preview ? 'Preview ready' : 'Final render ready', 'ok');
+        await refreshAll();
+        const u = state.flights.find((x) => x.id === f.id);
+        if (u) state.selectedFlight = u;
+        return;
       }
-      await refreshAll();
-      if (f) {
-        const updated = state.flights.find((x) => x.id === f.id);
-        if (updated) state.selectedFlight = updated;
+      // Async HeyGen avatar render — poll until the finished video lands.
+      if (res.status === 'rendering') {
+        toast('Avatar video rendering — usually ~1–2 min…', 'ok');
+        pollRenderStatus(f.id);
       }
     } catch (e) { toast(e.message, 'err'); }
+  }
+
+  async function pollRenderStatus(flightId, attempt) {
+    attempt = attempt || 0;
+    if (attempt > 40) { toast('Render taking longer than usual — it will appear on refresh', 'err'); return; }
+    try {
+      const r = await api(`/flights/${encodeURIComponent(flightId)}/render-status`);
+      if (r.status === 'completed' && r.videoUrl) {
+        if (state.selectedFlight && state.selectedFlight.id === flightId) {
+          const vid = $('#drawer-video'); if (vid) vid.src = r.videoUrl;
+          const wrap = $('#video-preview-wrap'); if (wrap) wrap.hidden = false;
+        }
+        toast('Video ready', 'ok');
+        await refreshAll();
+        const u = state.flights.find((x) => x.id === flightId);
+        if (u && state.selectedFlight && state.selectedFlight.id === flightId) state.selectedFlight = u;
+        return;
+      }
+      if (r.status === 'failed') { toast('Render failed — try again', 'err'); return; }
+    } catch (e) { /* transient — keep polling */ }
+    setTimeout(() => pollRenderStatus(flightId, attempt + 1), 12000);
   }
 
   function switchView(v) {
