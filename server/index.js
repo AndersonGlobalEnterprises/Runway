@@ -241,6 +241,34 @@ app.post("/api/runway/admin/onboard", async (req, res) => {
       stripePrices,
     });
 
+    // Fire n8n product-onboarding webhook — non-blocking
+    const tierLabels = {
+      starter_founding: "Starter Founding $497/mo", starter: "Starter $497/mo",
+      growth_founding: "Growth Founding $797/mo",   growth:  "Growth $797/mo",
+      scale: "Scale $1,297/mo", agency: "Agency",
+    };
+    const { contentPillars, voiceSampleUrl, sheetId } = req.body || {};
+    fetch("https://age.app.n8n.cloud/webhook/product-onboarding", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        business_name: "Runway",
+        trigger: "deal_won",
+        client_name: clientName || company,
+        client_email: clientEmail,
+        company,
+        product_notes: [
+          `Tier: ${tierLabels[tier] || tier}.`,
+          `Platforms: ${(Array.isArray(destinations) ? destinations : ["Instagram","TikTok","YouTube","LinkedIn"]).join(", ")}.`,
+          `Tone: ${tone || "direct"}.`,
+          contentPillars  ? `Content pillars: ${contentPillars}.`          : "",
+          voiceSampleUrl  ? `Voice sample URL: ${voiceSampleUrl}.`         : "Voice sample: NOT YET PROVIDED — block until received.",
+          sheetId         ? `Google Sheet ID: ${sheetId}.`                 : "Google Sheet ID: NOT YET PROVIDED — block until received.",
+          `Dashboard: ${result.url}. Squawk: ${squawk}.`,
+        ].filter(Boolean).join(" "),
+      }),
+    }).catch(() => {});
+
     res.json({ ok: true, squawk, ...result, loginEmail: clientEmail, loginPassword: clientPassword });
   } catch (err) {
     res.status(500).json({ error: err.message });
