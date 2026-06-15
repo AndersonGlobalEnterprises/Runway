@@ -24,7 +24,7 @@ export function heygenAvailable() {
 // Kick off an avatar render. Returns { videoId } immediately (does NOT wait for completion).
 // voice: pass audioUrl to lip-sync to a pre-generated MP3 (e.g. the client's ElevenLabs clone);
 // otherwise it speaks `script` with a HeyGen voice_id.
-export async function startHeyGenRender({ script, avatarId, voiceId, audioUrl, test = false, width = 720, height = 1280 }) {
+export async function startHeyGenRender({ script, avatarId, talkingPhotoId, voiceId, audioUrl, test = false, width = 720, height = 1280 }) {
   const key = process.env.HEYGEN_API_KEY;
   if (!key) {
     return { mock: true, videoId: "", status: "mock", message: "Set HEYGEN_API_KEY for real avatar renders." };
@@ -38,17 +38,13 @@ export async function startHeyGenRender({ script, avatarId, voiceId, audioUrl, t
     ? { type: "audio", audio_url: audio }
     : { type: "text", input_text: script, voice_id: voiceId || process.env.HEYGEN_VOICE_ID || DEFAULT_VOICE };
 
+  // Per-client custom avatar = a Talking Photo (their selfie). Falls back to a studio avatar.
+  const character = talkingPhotoId
+    ? { type: "talking_photo", talking_photo_id: talkingPhotoId }
+    : { type: "avatar", avatar_id: avatarId || process.env.HEYGEN_AVATAR_ID || DEFAULT_AVATAR, avatar_style: "normal" };
+
   const body = {
-    video_inputs: [
-      {
-        character: {
-          type: "avatar",
-          avatar_id: avatarId || process.env.HEYGEN_AVATAR_ID || DEFAULT_AVATAR,
-          avatar_style: "normal",
-        },
-        voice,
-      },
-    ],
+    video_inputs: [{ character, voice }],
     dimension: { width, height },
     test: Boolean(test),
   };
@@ -76,4 +72,34 @@ export async function getHeyGenStatus(videoId) {
   const data = await res.json().catch(() => ({}));
   const d = data.data || {};
   return { status: d.status || "unknown", url: d.video_url || "", error: d.error };
+}
+
+// Upload a client's selfie as a HeyGen Talking Photo → returns { talkingPhotoId }.
+// Accepts an image URL (fetched server-side) or raw image bytes. The returned id becomes
+// the per-client custom avatar passed to startHeyGenRender({ talkingPhotoId }).
+export async function uploadTalkingPhoto(image) {
+  const key = process.env.HEYGEN_API_KEY;
+  if (!key) return { mock: true, talkingPhotoId: "", message: "Set HEYGEN_API_KEY." };
+
+  let bytes, contentType = "image/jpeg";
+  if (typeof image === "string") {
+    const r = await fetch(toDirectAudioUrl(image)); // also normalizes Drive links for images
+    if (!r.ok) throw new Error(`Could not fetch image (HTTP ${r.status})`);
+    contentType = r.headers.get("content-type") || contentType;
+    bytes = Buffer.from(await r.arrayBuffer());
+  } else {
+    bytes = image;
+  }
+  contentType = /png/i.test(contentType) ? "image/png" : "image/jpeg";
+
+  const res = await fetch("https://upload.heygen.com/v1/talking_photo", {
+    method: "POST",
+    headers: { "X-Api-Key": key, "Content-Type": contentType },
+    body: bytes,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(`Talking Photo upload failed: ${data.message || data.msg || res.status}`);
+  const id = data.data?.talking_photo_id || data.data?.id || "";
+  if (!id) throw new Error("No talking_photo_id returned by HeyGen");
+  return { talkingPhotoId: id };
 }

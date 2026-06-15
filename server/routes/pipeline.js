@@ -25,7 +25,7 @@ import {
 import { listContentTypes, buildCreatomateModifications, deliveryIncludesPost, deliveryIncludesVideo, getDefaultDeliveryMode } from "../content-types.js";
 import { buildEditState, applyEditPatch, saveFlightEditMeta, getFlightEditMeta, resolveFlightDeliveryMode } from "../edit.js";
 import { createRender, creatomateAvailable } from "../creatomate.js";
-import { heygenAvailable, startHeyGenRender, getHeyGenStatus } from "../heygen.js";
+import { heygenAvailable, startHeyGenRender, getHeyGenStatus, uploadTalkingPhoto } from "../heygen.js";
 import { getWeeklyFlightPlan, getPublishHints, strategyAvailable } from "../strategy.js";
 
 const router = Router();
@@ -257,6 +257,23 @@ router.patch("/flights/:id/edit", async (req, res) => {
   res.json({ ok: true, ...buildEditState({ ...flight, ...applied.sheet }, config) });
 });
 
+// Set the per-client custom avatar from a selfie/photo URL → uploads it to HeyGen as a
+// Talking Photo and stores the id so all future renders use the client's own face.
+router.post("/brand/avatar", async (req, res) => {
+  if (!heygenAvailable()) return res.status(503).json({ error: "HeyGen not configured" });
+  const imageUrl = req.body?.imageUrl;
+  if (!imageUrl) return res.status(400).json({ error: "imageUrl required (a clear front-facing photo)" });
+  try {
+    const { talkingPhotoId } = await uploadTalkingPhoto(imageUrl);
+    const config = getConfig();
+    config.integrations = { ...(config.integrations || {}), heygenTalkingPhotoId: talkingPhotoId };
+    saveConfig(config);
+    res.json({ ok: true, talkingPhotoId, message: "Custom avatar set — new videos will use this face." });
+  } catch (err) {
+    res.status(502).json({ error: err.message });
+  }
+});
+
 router.post("/flights/:id/render-preview", async (req, res) => {
   const config = getConfig();
   const { flights } = await loadFlights();
@@ -273,6 +290,7 @@ router.post("/flights/:id/render-preview", async (req, res) => {
       const { videoId } = await startHeyGenRender({
         script,
         audioUrl: edit.audioUrl, // client's ElevenLabs cloned-voice MP3 (falls back to HeyGen voice if absent)
+        talkingPhotoId: config.integrations?.heygenTalkingPhotoId, // client's custom avatar (their face)
         avatarId: config.integrations?.heygenAvatarId,
         voiceId: config.integrations?.heygenVoiceId,
         test: true,
@@ -325,6 +343,7 @@ router.post("/flights/:id/render-final", async (req, res) => {
       const { videoId } = await startHeyGenRender({
         script,
         audioUrl: edit.audioUrl, // client's ElevenLabs cloned-voice MP3 (falls back to HeyGen voice if absent)
+        talkingPhotoId: config.integrations?.heygenTalkingPhotoId, // client's custom avatar (their face)
         avatarId: config.integrations?.heygenAvatarId,
         voiceId: config.integrations?.heygenVoiceId,
         test: false,
