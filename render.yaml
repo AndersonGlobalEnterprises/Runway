@@ -55,3 +55,11 @@ services:
         value: Abigail_standing_office_front
       - key: HEYGEN_VOICE_ID
         value: cef3bc4e0a84424cafcde6f2cf466c97
+      # Shotstack faceless video engine (set SHOTSTACK_API_KEY value in Render dashboard)
+      - key: SHOTSTACK_API_KEY
+        sync: false
+      - key: SHOTSTACK_ENV
+        value: v1
+      # Pexels B-roll for faceless videos (optional — branded gradient bg used when unset)
+      - key: PEXELS_API_KEY
+        sync: false

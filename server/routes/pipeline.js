@@ -26,6 +26,7 @@ import { listContentTypes, buildCreatomateModifications, deliveryIncludesPost, d
 import { buildEditState, applyEditPatch, saveFlightEditMeta, getFlightEditMeta, resolveFlightDeliveryMode } from "../edit.js";
 import { createRender, creatomateAvailable } from "../creatomate.js";
 import { heygenAvailable, startHeyGenRender, getHeyGenStatus, uploadTalkingPhoto } from "../heygen.js";
+import { shotstackAvailable, startFacelessRender, getShotstackStatus } from "../shotstack.js";
 import { getWeeklyFlightPlan, getPublishHints, strategyAvailable } from "../strategy.js";
 
 const router = Router();
@@ -59,17 +60,33 @@ async function loadFlights() {
   return { flights, source, online, error };
 }
 
-// HeyGen renders are async — when a flight is mid-render, check its status and, once the
-// avatar video is ready, write the URL back (local + sheet via n8n). Runs on every flights
-// load so a dashboard refresh surfaces finished videos. Cheap: only flights flagged
-// "rendering" hit the HeyGen API.
+// Video renders (HeyGen avatar OR Shotstack faceless) are async — when a flight is
+// mid-render, check its status and, once the video is ready, write the URL back (local +
+// sheet via n8n). Runs on every flights load so a dashboard refresh surfaces finished
+// videos. Cheap: only flights flagged "rendering" hit a render API.
+async function pollRenderEngine(meta) {
+  if (meta.renderEngine === "shotstack" || meta.shotstackRenderId) {
+    if (!shotstackAvailable() || !meta.shotstackRenderId) return null;
+    return getShotstackStatus(meta.shotstackRenderId);
+  }
+  if (meta.heygenVideoId) {
+    if (!heygenAvailable()) return null;
+    return getHeyGenStatus(meta.heygenVideoId);
+  }
+  return null;
+}
+
 async function reconcileRenders(flights) {
-  if (!heygenAvailable() || !Array.isArray(flights)) return flights;
+  if (!Array.isArray(flights)) return flights;
+  if (!heygenAvailable() && !shotstackAvailable()) return flights;
   for (const f of flights) {
     const meta = getFlightEditMeta(f.id);
-    if (!meta.heygenVideoId || meta.renderStatus !== "rendering") continue;
+    if (meta.renderStatus !== "rendering") continue;
+    if (!meta.heygenVideoId && !meta.shotstackRenderId) continue;
     try {
-      const { status, url } = await getHeyGenStatus(meta.heygenVideoId);
+      const result = await pollRenderEngine(meta);
+      if (!result) continue;
+      const { status, url } = result;
       if (status === "completed" && url) {
         saveFlightEditMeta(f.id, {
           renderStatus: "ready",
@@ -92,6 +109,80 @@ async function reconcileRenders(flights) {
     }
   }
   return flights;
+}
+
+// Per-client video style: "faceless" (Shotstack — the default) or "avatar" (HeyGen).
+function resolveVideoStyle(config) {
+  const s = (config.integrations?.videoStyle || "faceless").toLowerCase();
+  return s === "avatar" ? "avatar" : "faceless";
+}
+
+// Kick off the right render engine for a flight and persist the render handle.
+// Returns the JSON payload to send back to the deck.
+async function startRender(flight, config, edit, { test }) {
+  const style = resolveVideoStyle(config);
+  const script = edit.fullScript || edit.hook || "";
+  const wantFaceless = style === "faceless";
+
+  // Faceless (default): Shotstack composites voiceover + B-roll + captions + logo.
+  // Requires the cloned-voice MP3 — that's what a faceless video is built around.
+  if (wantFaceless && shotstackAvailable() && edit.audioUrl) {
+    const { renderId } = await startFacelessRender({
+      audioUrl: edit.audioUrl,
+      hook: edit.onScreenHook || edit.hook,
+      cta: edit.onScreenCta || edit.ctaLine,
+      logoUrl: edit.logoUrl,
+      primaryColor: edit.primaryColor,
+      keywords: [flight.topic, config.brand?.vertical].filter(Boolean).join(" "),
+    });
+    saveFlightEditMeta(flight.id, {
+      renderEngine: "shotstack",
+      shotstackRenderId: renderId,
+      heygenVideoId: "",
+      heygenPreview: test,
+      renderStatus: "rendering",
+    });
+    updateLocalFlight(flight.id, { status: "Rendering" });
+    return { ok: true, engine: "shotstack", style: "faceless", status: "rendering", videoId: renderId, message: "Faceless video rendering — refresh in ~1–2 min." };
+  }
+
+  // Avatar style (or faceless fallback when Shotstack/voiceover unavailable): HeyGen.
+  if (heygenAvailable()) {
+    const { videoId } = await startHeyGenRender({
+      script,
+      audioUrl: edit.audioUrl, // client's ElevenLabs cloned-voice MP3 (falls back to HeyGen voice if absent)
+      talkingPhotoId: config.integrations?.heygenTalkingPhotoId, // client's custom avatar (their face)
+      avatarId: config.integrations?.heygenAvatarId,
+      voiceId: config.integrations?.heygenVoiceId,
+      test,
+    });
+    saveFlightEditMeta(flight.id, {
+      renderEngine: "heygen",
+      heygenVideoId: videoId,
+      shotstackRenderId: "",
+      heygenPreview: test,
+      renderStatus: "rendering",
+    });
+    updateLocalFlight(flight.id, { status: "Rendering" });
+    return { ok: true, engine: "heygen", style: "avatar", status: "rendering", videoId, message: "Avatar video rendering — refresh in ~1–2 min." };
+  }
+
+  // Last fallback: Shotstack even without a chosen style, if a voiceover exists.
+  if (shotstackAvailable() && edit.audioUrl) {
+    const { renderId } = await startFacelessRender({
+      audioUrl: edit.audioUrl,
+      hook: edit.onScreenHook || edit.hook,
+      cta: edit.onScreenCta || edit.ctaLine,
+      logoUrl: edit.logoUrl,
+      primaryColor: edit.primaryColor,
+      keywords: [flight.topic, config.brand?.vertical].filter(Boolean).join(" "),
+    });
+    saveFlightEditMeta(flight.id, { renderEngine: "shotstack", shotstackRenderId: renderId, renderStatus: "rendering" });
+    updateLocalFlight(flight.id, { status: "Rendering" });
+    return { ok: true, engine: "shotstack", style: "faceless", status: "rendering", videoId: renderId, message: "Faceless video rendering — refresh in ~1–2 min." };
+  }
+
+  return null; // no async engine available → caller uses Creatomate fallback
 }
 
 function updateLocalFlight(id, patch) {
@@ -274,6 +365,29 @@ router.post("/brand/avatar", async (req, res) => {
   }
 });
 
+// Per-client video style toggle: "faceless" (Shotstack — default) or "avatar" (HeyGen).
+router.get("/brand/video-style", (_req, res) => {
+  const config = getConfig();
+  res.json({
+    style: resolveVideoStyle(config),
+    facelessAvailable: shotstackAvailable(),
+    avatarAvailable: heygenAvailable(),
+    hasVoice: Boolean(config.integrations?.voiceId),
+    hasCustomAvatar: Boolean(config.integrations?.heygenTalkingPhotoId),
+  });
+});
+
+router.post("/brand/video-style", (req, res) => {
+  const style = String(req.body?.style || "").toLowerCase();
+  if (!["faceless", "avatar"].includes(style)) {
+    return res.status(400).json({ error: "style must be 'faceless' or 'avatar'" });
+  }
+  const config = getConfig();
+  config.integrations = { ...(config.integrations || {}), videoStyle: style };
+  saveConfig(config);
+  res.json({ ok: true, style, message: style === "faceless" ? "New videos will be faceless (voiceover + B-roll + captions)." : "New videos will use an avatar (talking head)." });
+});
+
 router.post("/flights/:id/render-preview", async (req, res) => {
   const config = getConfig();
   const { flights } = await loadFlights();
@@ -283,23 +397,13 @@ router.post("/flights/:id/render-preview", async (req, res) => {
   const state = buildEditState(flight, config);
   const edit = { ...state.edit, ...(req.body?.edit || {}) };
 
-  // Preferred engine: HeyGen avatar video. Async — kick it off, reconcile when ready.
-  if (heygenAvailable()) {
-    const script = edit.fullScript || edit.hook || "";
+  // Preferred engines (async): faceless Shotstack (default) or HeyGen avatar.
+  if (heygenAvailable() || shotstackAvailable()) {
     try {
-      const { videoId } = await startHeyGenRender({
-        script,
-        audioUrl: edit.audioUrl, // client's ElevenLabs cloned-voice MP3 (falls back to HeyGen voice if absent)
-        talkingPhotoId: config.integrations?.heygenTalkingPhotoId, // client's custom avatar (their face)
-        avatarId: config.integrations?.heygenAvatarId,
-        voiceId: config.integrations?.heygenVoiceId,
-        test: true,
-      });
-      saveFlightEditMeta(flight.id, { heygenVideoId: videoId, heygenPreview: true, renderStatus: "rendering" });
-      updateLocalFlight(flight.id, { status: "Rendering" });
-      return res.json({ ok: true, engine: "heygen", status: "rendering", videoId, message: "Avatar preview rendering — refresh in ~1–2 min." });
+      const payload = await startRender(flight, config, edit, { test: true });
+      if (payload) return res.json(payload);
     } catch (err) {
-      return res.status(502).json({ ok: false, engine: "heygen", error: err.message });
+      return res.status(502).json({ ok: false, error: err.message });
     }
   }
 
@@ -336,36 +440,28 @@ router.post("/flights/:id/render-final", async (req, res) => {
   const state = buildEditState(flight, config);
   const edit = { ...state.edit, ...(req.body?.edit || {}) };
 
-  // Preferred engine: HeyGen avatar video (final = non-test). Async — reconcile when ready.
-  if (heygenAvailable()) {
-    const script = edit.fullScript || edit.hook || "";
+  // Preferred engines (async, final = non-test): faceless Shotstack (default) or HeyGen avatar.
+  if (heygenAvailable() || shotstackAvailable()) {
     try {
-      const { videoId } = await startHeyGenRender({
-        script,
-        audioUrl: edit.audioUrl, // client's ElevenLabs cloned-voice MP3 (falls back to HeyGen voice if absent)
-        talkingPhotoId: config.integrations?.heygenTalkingPhotoId, // client's custom avatar (their face)
-        avatarId: config.integrations?.heygenAvatarId,
-        voiceId: config.integrations?.heygenVoiceId,
-        test: false,
-      });
-      saveFlightEditMeta(flight.id, { heygenVideoId: videoId, heygenPreview: false, renderStatus: "rendering" });
-      updateLocalFlight(flight.id, { status: "Rendering" });
-      // Persist the script/caption now so they survive even before the video lands.
-      try {
-        await updateFlightStatus({
-          product: flight.product,
-          rowId: flight.rowId,
-          status: "Rendering",
-          hook: edit.hook,
-          fullScript: edit.fullScript,
-          caption: edit.caption,
-        });
-      } catch {
-        /* local ok */
+      const payload = await startRender(flight, config, edit, { test: false });
+      if (payload) {
+        // Persist the script/caption now so they survive even before the video lands.
+        try {
+          await updateFlightStatus({
+            product: flight.product,
+            rowId: flight.rowId,
+            status: "Rendering",
+            hook: edit.hook,
+            fullScript: edit.fullScript,
+            caption: edit.caption,
+          });
+        } catch {
+          /* local ok */
+        }
+        return res.json(payload);
       }
-      return res.json({ ok: true, engine: "heygen", status: "rendering", videoId, message: "Final avatar video rendering — refresh in ~1–2 min." });
     } catch (err) {
-      return res.status(502).json({ ok: false, engine: "heygen", error: err.message });
+      return res.status(502).json({ ok: false, error: err.message });
     }
   }
 
@@ -400,13 +496,14 @@ router.get("/flights/:id/render-status", async (req, res) => {
   const flight = findFlight(flights, req.params.id);
   if (!flight) return res.status(404).json({ error: "Flight not found" });
   const meta = getFlightEditMeta(flight.id);
-  if (!meta.heygenVideoId) {
+  if (!meta.heygenVideoId && !meta.shotstackRenderId) {
     return res.json({ status: flight.status, videoUrl: flight.videoUrl || "" });
   }
   if (meta.renderStatus === "ready" && (meta.videoUrl || flight.videoUrl)) {
     return res.json({ status: "completed", videoUrl: meta.videoUrl || flight.videoUrl });
   }
-  const { status, url } = await getHeyGenStatus(meta.heygenVideoId);
+  const result = await pollRenderEngine(meta);
+  const { status, url } = result || { status: "rendering", url: "" };
   if (status === "completed" && url) {
     saveFlightEditMeta(flight.id, { renderStatus: "ready", videoUrl: url, previewVideoUrl: url });
     updateLocalFlight(flight.id, { videoUrl: url, status: "Video Ready" });
@@ -657,6 +754,9 @@ router.get("/health", async (_req, res) => {
     n8n,
     ai: aiAvailable(),
     creatomate: creatomateAvailable(),
+    heygen: heygenAvailable(),
+    shotstack: shotstackAvailable(),
+    videoStyle: resolveVideoStyle(config),
     strategy: strategyAvailable(),
     voice: Boolean(config.integrations?.voiceId),
     sheet: Boolean(config.integrations?.sheetId),

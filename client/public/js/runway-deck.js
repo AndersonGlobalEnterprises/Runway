@@ -375,6 +375,7 @@
     const root = $('#brand-root');
     const b = state.config?.brand || {};
     const mem = state.config?.memory || {};
+    const style = (state.config?.integrations?.videoStyle || 'faceless');
     if (!root) return;
     root.innerHTML = `
       <form id="brand-form" class="brand-grid">
@@ -391,6 +392,13 @@
           </div></div>
         <div class="panel cockpit-bezel"><div class="panel__header"><span class="panel__title">Integrations</span></div>
           <div class="panel__body">
+            <div class="form-field"><label>Video style</label>
+              <select name="videoStyle">
+                <option value="faceless" ${style === 'faceless' ? 'selected' : ''}>Faceless — voiceover + B-roll + captions (default)</option>
+                <option value="avatar" ${style === 'avatar' ? 'selected' : ''}>Avatar — talking head</option>
+              </select>
+              <span class="field-hint">Faceless = Shotstack. Avatar = HeyGen (uses your custom face if set).</span>
+            </div>
             <div class="form-field"><label>Voice ID</label><input name="voiceId" value="${esc(state.config?.integrations?.voiceId)}"></div>
             <div class="form-field"><label>Sheet ID</label><input name="sheetId" value="${esc(state.config?.integrations?.sheetId)}"></div>
             <div class="form-field"><label>Default template ID</label><input name="creatomateTemplateId" value="${esc(state.config?.integrations?.creatomateTemplateId)}"></div>
@@ -921,7 +929,7 @@
               cta: fd.get('cta'), primaryColor: fd.get('primaryColor'), logoUrl: fd.get('logoUrl'),
               phrasesUse: split(fd.get('phrasesUse')), phrasesAvoid: split(fd.get('phrasesAvoid')),
             },
-            integrations: { voiceId: fd.get('voiceId'), sheetId: fd.get('sheetId'), creatomateTemplateId: fd.get('creatomateTemplateId') },
+            integrations: { voiceId: fd.get('voiceId'), sheetId: fd.get('sheetId'), creatomateTemplateId: fd.get('creatomateTemplateId'), videoStyle: fd.get('videoStyle') },
           }),
         });
         toast('Brand saved', 'ok');
