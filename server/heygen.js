@@ -9,6 +9,14 @@ const API_BASE = "https://api.heygen.com";
 const DEFAULT_AVATAR = "Abigail_standing_office_front";
 const DEFAULT_VOICE = "cef3bc4e0a84424cafcde6f2cf466c97";
 
+// Google Drive /view links return an HTML page; convert to direct-download so HeyGen
+// can fetch the raw MP3 (the client's ElevenLabs cloned-voice audio).
+function toDirectAudioUrl(url) {
+  if (!url) return url;
+  const m = String(url).match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([A-Za-z0-9_-]+)/);
+  return m ? `https://drive.google.com/uc?export=download&id=${m[1]}` : url;
+}
+
 export function heygenAvailable() {
   return Boolean(process.env.HEYGEN_API_KEY);
 }
@@ -25,8 +33,9 @@ export async function startHeyGenRender({ script, avatarId, voiceId, audioUrl, t
     throw new Error("No script to speak — generate the script first.");
   }
 
-  const voice = audioUrl
-    ? { type: "audio", audio_url: audioUrl }
+  const audio = audioUrl ? toDirectAudioUrl(audioUrl) : null;
+  const voice = audio
+    ? { type: "audio", audio_url: audio }
     : { type: "text", input_text: script, voice_id: voiceId || process.env.HEYGEN_VOICE_ID || DEFAULT_VOICE };
 
   const body = {

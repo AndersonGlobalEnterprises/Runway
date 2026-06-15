@@ -272,6 +272,7 @@ router.post("/flights/:id/render-preview", async (req, res) => {
     try {
       const { videoId } = await startHeyGenRender({
         script,
+        audioUrl: edit.audioUrl, // client's ElevenLabs cloned-voice MP3 (falls back to HeyGen voice if absent)
         avatarId: config.integrations?.heygenAvatarId,
         voiceId: config.integrations?.heygenVoiceId,
         test: true,
@@ -323,6 +324,7 @@ router.post("/flights/:id/render-final", async (req, res) => {
     try {
       const { videoId } = await startHeyGenRender({
         script,
+        audioUrl: edit.audioUrl, // client's ElevenLabs cloned-voice MP3 (falls back to HeyGen voice if absent)
         avatarId: config.integrations?.heygenAvatarId,
         voiceId: config.integrations?.heygenVoiceId,
         test: false,
