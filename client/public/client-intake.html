@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome Aboard — AGE Runway + Talksmith</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/runway.css" />
+  <link rel="stylesheet" href="/css/runway-aviation.css" />
+  <style>
+    .intake-shell { max-width: 720px; margin: 0 auto; padding: var(--space-8) var(--space-5) var(--space-10); }
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(245,158,11,.12), rgba(245,158,11,.04));
+      border: 1px solid var(--amber); border-radius: 14px;
+      padding: var(--space-6); margin-bottom: var(--space-7); text-align: center;
+    }
+    .welcome-banner .runway-logo { font-family: var(--font-display); font-size: 1.6rem; color: var(--amber); margin: 0 0 var(--space-2); }
+    .welcome-banner h1 { font-family: var(--font-display); font-size: 1.5rem; margin: 0 0 var(--space-2); }
+    .welcome-banner p { color: var(--text-2); font-size: .9rem; margin: 0; }
+    .products-pill { display: flex; justify-content: center; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-4); }
+    .pill { background: var(--surface-2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px; font-size: .78rem; font-family: var(--font-mono); color: var(--amber); }
+    .intake-section {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 12px; padding: var(--space-6); margin-bottom: var(--space-5);
+    }
+    .intake-section__title {
+      font-family: var(--font-mono); font-size: .68rem; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--amber); margin: 0 0 var(--space-5);
+    }
+    .field-grid { display: grid; gap: var(--space-4); }
+    .field-grid--2 { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 600px) { .field-grid--2 { grid-template-columns: 1fr; } }
+    .form-field label {
+      display: block; font-size: .8rem; font-weight: 500;
+      color: var(--text-2); margin-bottom: var(--space-1);
+    }
+    .form-field .req { color: var(--amber); }
+    .form-field input, .form-field select, .form-field textarea {
+      width: 100%; background: var(--surface-1); border: 1px solid var(--border);
+      border-radius: 8px; padding: .65rem .9rem; color: var(--text-1);
+      font-family: var(--font-body); font-size: .9rem; box-sizing: border-box;
+      transition: border-color .15s;
+    }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+      outline: none; border-color: var(--amber);
+    }
+    .form-field textarea { resize: vertical; min-height: 80px; }
+    .hint { font-size: .74rem; color: var(--text-3); margin-top: 4px; line-height: 1.4; }
+    .platforms-grid { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-1); }
+    .plat-check { display: flex; align-items: center; gap: .4rem; font-size: .85rem; cursor: pointer; }
+    .plat-check input { width: auto; accent-color: var(--amber); }
+    .submit-section { text-align: center; margin-top: var(--space-8); }
+    .btn-launch {
+      background: var(--amber); color: #000; font-weight: 700; font-family: var(--font-display);
+      font-size: 1rem; border: none; border-radius: 10px; padding: 14px 40px;
+      cursor: pointer; transition: opacity .15s; letter-spacing: .02em;
+    }
+    .btn-launch:hover { opacity: .88; }
+    .btn-launch:disabled { opacity: .45; cursor: not-allowed; }
+    .spinner {
+      display: none; width: 18px; height: 18px;
+      border: 2px solid rgba(0,0,0,.25); border-top-color: #000;
+      border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-left: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .success-card {
+      display: none; background: var(--surface-2); border: 1px solid var(--amber);
+      border-radius: 14px; padding: var(--space-7); text-align: center; margin-top: var(--space-6);
+    }
+    .success-card h2 { font-family: var(--font-display); color: var(--amber); margin: 0 0 var(--space-3); }
+    .success-card p { color: var(--text-2); font-size: .9rem; line-height: 1.7; margin: 0; }
+    .error-msg { color: #f87171; font-size: .85rem; margin-top: var(--space-3); display: none; }
+  </style>
+</head>
+<body class="runway-site cockpit">
+  <div class="intake-shell">
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+      <p class="runway-logo">AGE Runway ✦</p>
+      <h1>Payment Confirmed. You're In.</h1>
+      <p>Fill out this quick form so we can get your content machine and course builder set up. Takes 5 minutes.</p>
+      <div class="products-pill">
+        <span class="pill">✓ Runway Founding $297/mo</span>
+        <span class="pill">✓ Talksmith Pro $79/mo</span>
+      </div>
+    </div>
+
+    <form id="intake-form">
+
+      <!-- Section 01 — About You -->
+      <div class="intake-section">
+        <p class="intake-section__title">01 / About You</p>
+        <div class="field-grid field-grid--2">
+          <div class="form-field">
+            <label>Full Name <span class="req">*</span></label>
+            <input type="text" name="client_name" required placeholder="Jane Smith" />
+          </div>
+          <div class="form-field">
+            <label>Business / Company Name <span class="req">*</span></label>
+            <input type="text" name="company" required placeholder="Peak Roofing LLC" />
+          </div>
+          <div class="form-field">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" name="client_email" required placeholder="jane@yourcompany.com" />
+          </div>
+          <div class="form-field">
+            <label>Phone</label>
+            <input type="tel" name="phone" placeholder="+1 (555) 000-0000" />
+          </div>
+        </div>
+        <div class="field-grid" style="margin-top:var(--space-4)">
+          <div class="form-field">
+            <label>What does your business do? <span class="req">*</span></label>
+            <textarea name="business_description" required placeholder="We install and repair residential roofs in Brooklyn NY. We also do storm damage inspections and work with insurance adjusters."></textarea>
+            <p class="hint">The more specific, the better. We'll use this to write in your voice.</p>
+          </div>
+          <div class="form-field">
+            <label>Who is your target audience?</label>
+            <input type="text" name="target_audience" placeholder="Homeowners in Brooklyn/Queens, insurance adjusters, property managers" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 02 — Content Strategy (Runway) -->
+      <div class="intake-section">
+        <p class="intake-section__title">02 / Content Strategy — AGE Runway</p>
+        <div class="field-grid">
+          <div class="form-field">
+            <label>Content Pillars <span class="req">*</span></label>
+            <textarea name="content_pillars" required placeholder="1. Storm damage education&#10;2. Behind-the-scenes of our crew&#10;3. Insurance claim tips&#10;4. Before & after transformations&#10;5. Why choose a local roofer"></textarea>
+            <p class="hint">List 3–5 topics you want to be known for. One per line is great.</p>
+          </div>
+          <div class="form-field">
+            <label>Platforms to post on <span class="req">*</span></label>
+            <div class="platforms-grid" id="platforms-grid">
+              <label class="plat-check"><input type="checkbox" name="platforms" value="LinkedIn" /> LinkedIn</label>
+              <label class="plat-check"><input type="checkbox" name="platforms" value="Instagram" /> Instagram</label>
+              <label class="plat-check"><input type="checkbox" name="platforms" value="TikTok" /> TikTok</label>
+              <label class="plat-check"><input type="checkbox" name="platforms" value="YouTube Shorts" /> YouTube Shorts</label>
+              <label class="plat-check"><input type="checkbox" name="platforms" value="Facebook" /> Facebook</label>
+              <label class="plat-check"><input type="checkbox" name="platforms" value="Twitter/X" /> Twitter/X</label>
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Brand Tone / Voice</label>
+            <input type="text" name="brand_tone" placeholder="Professional but relatable. Straight-to-the-point. Educate first, sell second." />
+          </div>
+          <div class="form-field">
+            <label>Voice Sample URL <span class="req">*</span></label>
+            <input type="url" name="voice_sample_url" required placeholder="https://drive.google.com/... or https://www.loom.com/share/..." />
+            <p class="hint">Record 3–5 minutes of yourself talking naturally — tell us about your business, a recent job, anything. Upload to Google Drive or Loom and paste the link here. This is how we clone your voice.</p>
+          </div>
+          <div class="form-field">
+            <label>Google Sheet ID (optional)</label>
+            <input type="text" name="sheet_id" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" />
+            <p class="hint">If you have a content calendar spreadsheet, paste the Sheet ID here. If not, we'll create one for you.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 03 — Talksmith -->
+      <div class="intake-section">
+        <p class="intake-section__title">03 / Course & Content — Talksmith</p>
+        <div class="field-grid">
+          <div class="form-field">
+            <label>What expertise do you want to turn into content or a course?</label>
+            <textarea name="talksmith_expertise" placeholder="I know a lot about storm damage documentation, how to maximize insurance claims, and how to manage a roofing crew during busy season. I'd love to build a course for homeowners on what to do after a storm."></textarea>
+            <p class="hint">Don't overthink it — just tell us what you know that others would pay to learn.</p>
+          </div>
+          <div class="form-field">
+            <label>Do you have any existing recordings? (calls, presentations, videos)</label>
+            <input type="text" name="existing_recordings" placeholder="I have some YouTube videos and Zoom calls I've saved. Also a 30-min webinar from last year." />
+            <p class="hint">Old recordings become course material. Nothing goes to waste.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 04 — Anything Else -->
+      <div class="intake-section">
+        <p class="intake-section__title">04 / Anything Else?</p>
+        <div class="field-grid">
+          <div class="form-field">
+            <label>Goals or expectations for the first 30 days</label>
+            <textarea name="goals_30_days" placeholder="I want to start posting consistently on LinkedIn and Instagram. Main goal is more inbound leads from my content." style="min-height:60px;"></textarea>
+          </div>
+          <div class="form-field">
+            <label>Anything we should know?</label>
+            <textarea name="additional_notes" placeholder="We can't post anything too salesy — our audience hates that. Also we're in a super busy storm season right now so response times might be slow." style="min-height:60px;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-section">
+        <button type="submit" class="btn-launch" id="submit-btn">
+          Launch My Runway
+          <span class="spinner" id="spinner"></span>
+        </button>
+        <p class="error-msg" id="error-msg"></p>
+        <p style="color:var(--text-3);font-size:.8rem;margin-top:var(--space-4);">
+          Omar will reach out within 24 hours to confirm everything looks good.
+        </p>
+      </div>
+    </form>
+
+    <div class="success-card" id="success-card">
+      <h2>You're on the Runway. ✈︎</h2>
+      <p>
+        Your information is in. Omar will review your intake and reach out within 24 hours.<br /><br />
+        In the meantime, record that voice sample if you haven't yet — it's the #1 thing that unlocks everything else.<br /><br />
+        <strong style="color:var(--amber);">Next step: check your email</strong> for your welcome kit and login details.
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    const form = document.getElementById('intake-form');
+    const btn = document.getElementById('submit-btn');
+    const spinner = document.getElementById('spinner');
+    const errorMsg = document.getElementById('error-msg');
+    const successCard = document.getElementById('success-card');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      spinner.style.display = 'inline-block';
+      errorMsg.style.display = 'none';
+
+      const data = new FormData(form);
+      const platforms = [];
+      document.querySelectorAll('input[name="platforms"]:checked').forEach(cb => platforms.push(cb.value));
+
+      const payload = {
+        business_name: 'Runway + Talksmith',
+        trigger: 'deal_won',
+        client_name: data.get('client_name'),
+        client_email: data.get('client_email'),
+        company: data.get('company'),
+        product_notes: [
+          `Phone: ${data.get('phone') || 'not provided'}.`,
+          `Business: ${data.get('business_description')}.`,
+          `Audience: ${data.get('target_audience') || 'not specified'}.`,
+          `Content pillars: ${data.get('content_pillars')}.`,
+          `Platforms: ${platforms.join(', ') || 'not selected'}.`,
+          `Brand tone: ${data.get('brand_tone') || 'not specified'}.`,
+          `Voice sample URL: ${data.get('voice_sample_url') || 'NOT PROVIDED — block until received'}.`,
+          data.get('sheet_id') ? `Google Sheet ID: ${data.get('sheet_id')}.` : 'Google Sheet ID: not provided — create one.',
+          data.get('talksmith_expertise') ? `Talksmith expertise: ${data.get('talksmith_expertise')}.` : '',
+          data.get('existing_recordings') ? `Existing recordings: ${data.get('existing_recordings')}.` : '',
+          data.get('goals_30_days') ? `30-day goals: ${data.get('goals_30_days')}.` : '',
+          data.get('additional_notes') ? `Notes: ${data.get('additional_notes')}.` : '',
+          `Tier: Runway Founding $297/mo + Talksmith Pro $79/mo.`,
+        ].filter(Boolean).join(' '),
+        source: 'client_intake_form',
+      };
+
+      try {
+        const res = await fetch('https://age.app.n8n.cloud/webhook/product-onboarding', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+        form.style.display = 'none';
+        successCard.style.display = 'block';
+        successCard.scrollIntoView({ behavior: 'smooth' });
+      } catch (err) {
+        errorMsg.textContent = 'Something went wrong submitting your form. Please email omaranderson107@gmail.com and we\'ll get you set up manually.';
+        errorMsg.style.display = 'block';
+        btn.disabled = false;
+        spinner.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
