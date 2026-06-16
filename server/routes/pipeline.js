@@ -867,7 +867,7 @@ function normaliseTopics(body) {
 }
 
 function summariseTracks(flights) {
-  const products = ["Inspect", "Talksmith", "Interview Prep"];
+  const products = ["FlowOps", "Inspect", "Talksmith", "Interview Prep"];
   return products.map((name) => {
     const items = flights.filter((f) => f.product === name);
     const active = items.filter((f) => !["Published", "Queued", "Error"].includes(f.status)).length;

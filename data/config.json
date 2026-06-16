@@ -12,6 +12,7 @@
     "updatePath": "/webhook/hce-update",
     "queueTopicPath": "/webhook/queue-topic-age-flowops",
     "triggers": {
+      "FlowOps": "/webhook/flowops-publish-run",
       "Inspect": "/webhook/inspect-publish-run",
       "Talksmith": "/webhook/talksmith-publish-run",
       "Interview Prep": "/webhook/interview-publish-run"
