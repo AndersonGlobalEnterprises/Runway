@@ -96,6 +96,27 @@ router.post("/publish/mark", requirePublishKey, async (req, res) => {
   res.json({ ok: true, id, status: "Published" });
 });
 
+// Portfolio cockpit stats (key-gated) — Central HQ reads this to make Runway a live card.
+router.get("/portfolio-stats", requirePublishKey, async (_req, res) => {
+  const { flights } = await loadFlights();
+  const now = Date.now();
+  const WEEK = 7 * 24 * 60 * 60 * 1000;
+  const byStatus = {};
+  let inPipeline = 0, awaitingApproval = 0, approvedReady = 0, publishedThisWeek = 0;
+  for (const f of flights) {
+    const s = f.status || "Queued";
+    byStatus[s] = (byStatus[s] || 0) + 1;
+    if (s !== "Published") inPipeline += 1;
+    if (s === "Audio Ready" || s === "Video Ready") awaitingApproval += 1;
+    if (s === "Approved") approvedReady += 1;
+    if (s === "Published") {
+      const t = Date.parse(f.publishedAt || f.scheduledAt || "");
+      if (!Number.isNaN(t) && now - t <= WEEK) publishedThisWeek += 1;
+    }
+  }
+  res.json({ total: flights.length, inPipeline, awaitingApproval, approvedReady, publishedThisWeek, byStatus });
+});
+
 router.use(requireSession);
 
 async function loadFlights() {
