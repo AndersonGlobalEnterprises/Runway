@@ -32,6 +32,9 @@ services:
         sync: false
       - key: STRIPE_SECRET_KEY
         sync: false
+      # Stripe webhook signing secret — enables auto-provision on payment (set in Render dashboard)
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
       - key: STRIPE_RUNWAY_PRICE_STARTER_FOUNDING
         sync: false
       - key: STRIPE_RUNWAY_PRICE_STARTER

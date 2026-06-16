@@ -45,6 +45,13 @@ export async function createClientService(opts) {
     { key: "AI_PROVIDER",          value: process.env.AI_PROVIDER        || "anthropic" },
     { key: "STRIPE_SECRET_KEY",    value: process.env.STRIPE_SECRET_KEY  || "" },
     { key: "CREATOMATE_API_KEY",   value: process.env.CREATOMATE_API_KEY || "" },
+    // Video engines — so a provisioned client can actually render (faceless + avatar).
+    { key: "HEYGEN_API_KEY",       value: process.env.HEYGEN_API_KEY     || "" },
+    { key: "HEYGEN_AVATAR_ID",     value: process.env.HEYGEN_AVATAR_ID   || "Abigail_standing_office_front" },
+    { key: "HEYGEN_VOICE_ID",      value: process.env.HEYGEN_VOICE_ID    || "cef3bc4e0a84424cafcde6f2cf466c97" },
+    { key: "SHOTSTACK_API_KEY",    value: process.env.SHOTSTACK_API_KEY  || "" },
+    { key: "SHOTSTACK_ENV",        value: process.env.SHOTSTACK_ENV      || "v1" },
+    { key: "PEXELS_API_KEY",       value: process.env.PEXELS_API_KEY     || "" },
   ];
 
   for (const [k, v] of Object.entries(stripePrices)) {

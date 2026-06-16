@@ -1,6 +1,7 @@
 import express from "express";
 import session from "express-session";
 import path from "path";
+import crypto from "crypto";
 import { fileURLToPath } from "url";
 import Stripe from "stripe";
 import { getConfig } from "./db.js";
@@ -48,6 +49,25 @@ const stripe = process.env.STRIPE_SECRET_KEY
 
 const app = express();
 if (isProd) app.set("trust proxy", 1);
+
+// --- Stripe webhook → AUTO-PROVISION a client dashboard on successful payment ---
+// MUST be registered BEFORE express.json() so the raw body survives for signature verification.
+app.post("/api/runway/stripe/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  if (!stripe) return res.status(503).send("Stripe not configured");
+  const whSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  let event;
+  try {
+    event = whSecret
+      ? stripe.webhooks.constructEvent(req.body, req.headers["stripe-signature"], whSecret)
+      : JSON.parse(req.body.toString("utf8")); // unverified — set STRIPE_WEBHOOK_SECRET in prod
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  res.json({ received: true }); // ack immediately; provisioning runs async so Stripe never times out
+  if (event.type === "checkout.session.completed") {
+    autoProvisionFromSession(event.data.object).catch((e) => console.error("auto-provision failed:", e?.message || e));
+  }
+});
 
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -274,6 +294,91 @@ app.post("/api/runway/admin/onboard", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// --- Auto-provision helpers (used by the Stripe webhook) ---
+const STRIPE_PRICE_KEYS = [
+  "STRIPE_RUNWAY_PRICE_STARTER_FOUNDING", "STRIPE_RUNWAY_PRICE_STARTER",
+  "STRIPE_RUNWAY_PRICE_GROWTH_FOUNDING", "STRIPE_RUNWAY_PRICE_GROWTH",
+  "STRIPE_RUNWAY_PRICE_SCALE", "STRIPE_RUNWAY_PRICE_AGENCY",
+];
+
+function randomPassword() {
+  return crypto.randomBytes(12).toString("base64").replace(/[^a-zA-Z0-9]/g, "").slice(0, 12) + "1!";
+}
+
+// Idempotency: don't double-provision if Stripe redelivers the event.
+async function renderServiceExists(name) {
+  const apiKey = process.env.RENDER_API_KEY;
+  if (!apiKey) return false;
+  try {
+    const r = await fetch(`https://api.render.com/v1/services?name=${encodeURIComponent(name)}&limit=10`, {
+      headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json" },
+    });
+    const data = await r.json();
+    return (Array.isArray(data) ? data : []).some((s) => s.service?.name === name);
+  } catch {
+    return false;
+  }
+}
+
+async function autoProvisionFromSession(session) {
+  const email = (session.customer_details?.email || session.customer_email || "").trim().toLowerCase();
+  if (!email) { console.warn("auto-provision: no customer email on session — skipping"); return; }
+
+  const tier = session.metadata?.tier || "starter";
+  const rawName = (session.customer_details?.name || email.split("@")[0]).trim();
+  const company = rawName;
+  let slug = company.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 28);
+  if (!slug) slug = "client-" + email.replace(/[^a-z0-9]/g, "").slice(0, 12);
+  const serviceName = `runway-${slug}`;
+
+  if (await renderServiceExists(serviceName)) {
+    console.log("auto-provision: service already exists, skipping:", serviceName);
+    return;
+  }
+
+  const clientPassword = randomPassword();
+  const squawk = `RWY-${String(Math.floor(1000 + Math.random() * 9000))}`;
+  const stripePrices = Object.fromEntries(STRIPE_PRICE_KEYS.filter((k) => process.env[k]).map((k) => [k, process.env[k]]));
+
+  const result = await createClientService({
+    name: serviceName, clientEmail: email, clientPassword,
+    tier, company, clientName: rawName,
+    product: "Inspect",
+    destinations: ["Instagram", "TikTok", "YouTube", "LinkedIn"],
+    color: "#1e40af", tone: "direct",
+    templateId: "856453b5-c707-488e-a8ae-0dc7d47a90bc",
+    squawk, stripePrices,
+  });
+  console.log(`auto-provisioned ${serviceName} for ${email} -> ${result.url}`);
+
+  // Welcome the client + notify Omar via the n8n product-onboarding agent (non-blocking).
+  const tierLabels = {
+    starter_founding: "Starter Founding $497/mo", starter: "Starter $497/mo",
+    growth_founding: "Growth Founding $797/mo", growth: "Growth $797/mo",
+    scale: "Scale $1,297/mo", agency: "Agency",
+  };
+  fetch("https://age.app.n8n.cloud/webhook/product-onboarding", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      business_name: "Runway",
+      trigger: "deal_won",
+      client_name: rawName,
+      client_email: email,
+      company,
+      login_email: email,
+      login_password: clientPassword,
+      dashboard_url: result.url,
+      product_notes: [
+        `AUTO-PROVISIONED on payment. Tier: ${tierLabels[tier] || tier}.`,
+        `Dashboard: ${result.url}. Login: ${email} / ${clientPassword}. Squawk: ${squawk}.`,
+        `Ask the client for: a voice sample (ElevenLabs clone) + their Google Sheet ID.`,
+        `Video style defaults to faceless (Shotstack); flip to avatar in Voice & brand for a talking head.`,
+      ].join(" "),
+    }),
+  }).catch(() => {});
+}
 
 // Pipeline routes (must come after /me and /checkout so those aren't swallowed)
 app.use("/api/runway", pipelineRouter);
