@@ -1,6 +1,14 @@
 (() => {
   const STEPS = ['Queued', 'Research Complete', 'Script Ready', 'Audio Ready', 'Video Ready', 'Approved', 'Published'];
   const PLATFORMS = ['Instagram', 'TikTok', 'YouTube', 'LinkedIn', 'Facebook', 'X'];
+  const PRODUCTS = ['All', 'FlowOps', 'Inspect', 'Talksmith', 'Interview Prep', 'Runway'];
+  const PRODUCT_COLORS = {
+    FlowOps: '#3b82f6',
+    Inspect: '#06b6d4',
+    Talksmith: '#8b5cf6',
+    'Interview Prep': '#f59e0b',
+    Runway: '#10b981',
+  };
 
   const state = {
     view: 'overview',
@@ -14,6 +22,7 @@
     drawerTab: 'script',
     platformSelection: [],
     me: null,
+    taxiFilter: '',
   };
 
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -340,20 +349,38 @@
       <span class="status-pill ${statusClass(f.status)}">${esc(f.status)}</span></div>`;
   }
 
+  const BIZ_TABS = [
+    { product: '', label: 'All', color: null },
+    { product: 'FlowOps', label: 'FlowOps', color: '#3b82f6' },
+    { product: 'Inspect', label: 'Inspect', color: '#06b6d4' },
+    { product: 'Talksmith', label: 'Talksmith', color: '#8b5cf6' },
+    { product: 'Interview Prep', label: 'Interview Prep', color: '#f59e0b' },
+    { product: 'Runway', label: 'Runway', color: '#10b981' },
+  ];
+
   function renderTaxiTracks() {
     const root = $('#taxi-tracks-root');
     if (!root) return;
-    let flights = [...state.flights];
+    // Filter BEFORE render so 30s re-polls never wipe the active tab
+    const active = state.taxiFilter || '';
+    const flights = active ? state.flights.filter((f) => f.product === active) : [...state.flights];
+    const tabsHtml = BIZ_TABS.map(({ product, label, color }) => {
+      const isActive = product === active ? ' is-active' : '';
+      const style = color ? ` style="--tab-color:${color}"` : '';
+      return `<button class="biz-tab${isActive}" data-product="${esc(product)}"${style}>${label}</button>`;
+    }).join('');
     root.innerHTML = `
       ${!state.online ? '<div class="offline-banner">Pipeline offline — showing cached queue.</div>' : ''}
       <div class="deck-toolbar">
-        <select class="deck-select" id="taxi-filter"><option value="">All taxi tracks</option><option>Inspect</option><option>Talksmith</option><option>Interview Prep</option></select>
+        <div class="biz-tabs" id="biz-tabs">${tabsHtml}</div>
         <button type="button" class="btn btn--secondary" id="btn-trigger-pipeline">Run publish pipeline</button>
       </div>
-      <div id="flight-cards">${flights.map(flightCard).join('') || '<p class="empty-copy">No flights on taxi tracks. Queue a topic above to launch the pipeline.</p>'}</div>`;
-    root.querySelector('#taxi-filter')?.addEventListener('change', (e) => {
-      const v = e.target.value;
-      $$('#flight-cards .flight-card').forEach((c) => { c.hidden = v && c.dataset.product !== v; });
+      <div id="flight-cards">${flights.map(flightCard).join('') || '<p class="empty-copy">No flights for this business yet. Queue a topic to launch the pipeline.</p>'}</div>`;
+    root.querySelectorAll('.biz-tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        state.taxiFilter = btn.dataset.product;
+        renderTaxiTracks(); // re-render with stored filter — survives future polls
+      });
     });
     root.querySelector('#btn-trigger-pipeline')?.addEventListener('click', async () => {
       try {
@@ -385,6 +412,16 @@
             <div class="form-field"><label>Vertical</label><input name="vertical" value="${esc(b.vertical)}"></div>
             <div class="form-field"><label>Tone</label><textarea name="tone" rows="2">${esc(b.tone)}</textarea></div>
             <div class="form-field"><label>Default CTA</label><input name="cta" value="${esc(b.cta)}"></div>
+            <div class="brand-section" style="margin-top:1.5rem;">
+              <p class="instrument-label instrument-label--amber" style="margin-bottom:.75rem;">Per-business CTAs</p>
+              ${['FlowOps', 'Inspect', 'Talksmith', 'Interview Prep', 'Runway'].map((p) => `
+                <label style="display:block;margin-bottom:.75rem;">
+                  <span style="font-size:.75rem;color:var(--text-secondary);display:block;margin-bottom:.25rem;">${p}</span>
+                  <input class="deck-input" type="text" data-cta-product="${p}"
+                    value="${esc((b.ctas?.[p]) || '')}"
+                    placeholder="CTA for ${p} content..." />
+                </label>`).join('')}
+            </div>
             <div class="form-field"><label>Brand color</label><input name="primaryColor" type="color" value="${esc(b.primaryColor || '#1e40af')}"></div>
             <div class="form-field"><label>Logo URL</label><input name="logoUrl" value="${esc(b.logoUrl)}"></div>
             <div class="form-field"><label>Phrases to use</label><input name="phrasesUse" value="${esc((b.phrasesUse || []).join(', '))}"></div>
@@ -918,8 +955,11 @@
     document.body.addEventListener('submit', async (e) => {
       if (e.target.id !== 'brand-form') return;
       e.preventDefault();
-      const fd = new FormData(e.target);
+      const form = e.target;
+      const fd = new FormData(form);
       const split = (s) => s.split(',').map((x) => x.trim()).filter(Boolean);
+      const ctas = {};
+      $$('[data-cta-product]', form).forEach((el) => { ctas[el.dataset.ctaProduct] = el.value.trim(); });
       try {
         await api('/brand', {
           method: 'PUT',
@@ -928,6 +968,7 @@
               audience: fd.get('audience'), vertical: fd.get('vertical'), tone: fd.get('tone'),
               cta: fd.get('cta'), primaryColor: fd.get('primaryColor'), logoUrl: fd.get('logoUrl'),
               phrasesUse: split(fd.get('phrasesUse')), phrasesAvoid: split(fd.get('phrasesAvoid')),
+              ctas,
             },
             integrations: { voiceId: fd.get('voiceId'), sheetId: fd.get('sheetId'), creatomateTemplateId: fd.get('creatomateTemplateId'), videoStyle: fd.get('videoStyle') },
           }),
