@@ -346,8 +346,16 @@ router.get("/brand", (_req, res) => {
 });
 
 router.put("/brand", (req, res) => {
+  const current = getConfig();
+  const incomingBrand = req.body?.brand || {};
+  const incomingCtas = req.body?.ctas || incomingBrand.ctas;
+  const brand = {
+    ...current.brand,
+    ...incomingBrand,
+    ...(incomingCtas ? { ctas: { ...(current.brand?.ctas || {}), ...incomingCtas } } : {}),
+  };
   const config = saveConfig({
-    brand: req.body?.brand,
+    brand,
     integrations: req.body?.integrations,
   });
   res.json({ brand: config.brand, memory: config.memory, integrations: config.integrations });

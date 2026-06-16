@@ -29,6 +29,13 @@
     "tone": "Direct, confident, no fluff",
     "hookStyle": "Bold claim or common mistake opener",
     "cta": "Book a free strategy session at ageflowops.com",
+    "ctas": {
+      "FlowOps": "Book a free strategy session at age-flowops.net",
+      "Inspect": "Try a free report at portal.andersonglobalenterprises.net/inspect",
+      "Talksmith": "Turn your voice into a course at talksmithaudio.com",
+      "Interview Prep": "Practice your interview at age-interview-prep-production.up.railway.app",
+      "Runway": "Get your content on autopilot — book a call at age-flowops.net"
+    },
     "primaryColor": "#3b82f6",
     "logoUrl": "",
     "phrasesUse": ["automation", "AI systems", "done for you", "operations"],
