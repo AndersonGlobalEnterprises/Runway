@@ -66,3 +66,6 @@ services:
       # Pexels B-roll for faceless videos (optional — branded gradient bg used when unset)
       - key: PEXELS_API_KEY
         sync: false
+      # Shared secret for the n8n auto-poster to pull the approved-video publish queue
+      - key: PUBLISH_KEY
+        sync: false

@@ -36,6 +36,66 @@ function requireSession(req, res, next) {
   next();
 }
 
+// --- Auto-poster endpoints (key-gated, NOT session — n8n calls these server-to-server) ---
+// Registered BEFORE requireSession so they bypass the login gate and use their own key.
+function requirePublishKey(req, res, next) {
+  const key = req.query.key || req.get("X-Publish-Key");
+  if (!process.env.PUBLISH_KEY || key !== process.env.PUBLISH_KEY) {
+    return res.status(401).json({ error: "Invalid publish key" });
+  }
+  next();
+}
+
+// Upload-Post platform slugs are lowercase; the app stores Title-cased destinations.
+function toPlatformSlugs(platforms, config) {
+  let list = [];
+  if (Array.isArray(platforms)) list = platforms;
+  else if (typeof platforms === "string" && platforms.trim()) list = platforms.split(/[·,|]/);
+  if (!list.length) list = config.destinations || [];
+  return list.map((p) => String(p).trim().toLowerCase()).filter(Boolean).join(",");
+}
+
+// The auto-poster (n8n) pulls APPROVED flights that already have a finished (HeyGen/Shotstack)
+// video. videoUrl comes from the persistent edit-meta (survives sheet re-sync); status comes
+// from the sheet (written when Omar approves). No video → skipped (renders+approve first).
+router.get("/publish/queue", requirePublishKey, async (req, res) => {
+  const product = req.query.product;
+  const config = getConfig();
+  const { flights } = await loadFlights();
+  const queue = flights
+    .filter((f) => f.status === "Approved" && (!product || f.product === product))
+    .map((f) => {
+      const meta = getFlightEditMeta(f.id);
+      return {
+        id: f.id,
+        rowId: f.rowId,
+        product: f.product,
+        caption: f.caption || meta.caption || "",
+        script: f.fullScript || "",
+        videoUrl: f.videoUrl || meta.videoUrl || meta.previewVideoUrl || "",
+        platforms: toPlatformSlugs(f.platforms, config),
+      };
+    })
+    .filter((f) => f.videoUrl);
+  res.json({ queue, count: queue.length });
+});
+
+// Mark a flight Published after the auto-poster has posted it.
+router.post("/publish/mark", requirePublishKey, async (req, res) => {
+  const id = req.body?.id;
+  if (!id) return res.status(400).json({ error: "id required" });
+  const { flights } = await loadFlights();
+  const flight = findFlight(flights, id);
+  if (!flight) return res.status(404).json({ error: "Flight not found" });
+  updateLocalFlight(flight.id, { status: "Published" });
+  try {
+    await updateFlightStatus({ product: flight.product, rowId: flight.rowId, status: "Published" });
+  } catch {
+    /* local ok */
+  }
+  res.json({ ok: true, id, status: "Published" });
+});
+
 router.use(requireSession);
 
 async function loadFlights() {
