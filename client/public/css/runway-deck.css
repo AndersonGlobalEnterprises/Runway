@@ -251,7 +251,7 @@
 }
 
 .deck-select {
-  background: rgba(0, 0, 0, 0.35);
+  background: #1a1f2e;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text);
@@ -392,9 +392,10 @@
 }
 
 .script-field textarea,
-.script-field input {
+.script-field input,
+.script-field select {
   width: 100%;
-  background: rgba(0, 0, 0, 0.35);
+  background: #1a1f2e;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text);
@@ -634,3 +635,16 @@
 }
 
 .video-preview-wrap { margin-top: var(--space-3); }
+
+.biz-tabs { display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1rem; }
+.biz-tab {
+  padding:.35rem .85rem; border-radius:999px; border:1px solid var(--border);
+  background:transparent; color:var(--text-secondary); cursor:pointer;
+  font-size:.75rem; font-family:inherit; transition:all .15s;
+}
+.biz-tab:hover { border-color:var(--tab-color, var(--primary)); color:var(--text-primary); }
+.biz-tab.is-active {
+  background:color-mix(in srgb, var(--tab-color, var(--primary)) 15%, transparent);
+  border-color:var(--tab-color, var(--primary));
+  color:var(--tab-color, var(--primary));
+}
