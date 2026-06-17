@@ -20,7 +20,7 @@ const DEMO_USER = {
   name: "Demo Client",
 };
 const DEMO_EMAILS = new Set([DEMO_USER.email, "demo@ageflowops.com"]);
-const demoLoginEnabled = process.env.DEMO_LOGIN !== "false";
+const demoLoginEnabled = process.env.DEMO_LOGIN === "true";
 
 // --- Owner credentials (OWNER_MODE=true → permanent free, no billing) ---
 const ownerModeEnabled = process.env.OWNER_MODE === "true";
@@ -86,7 +86,7 @@ app.use(
 );
 
 function requireAuth(req, res, next) {
-  if (!req.session?.user) return res.redirect("/runway-login.html");
+  if (!req.session?.user) return res.redirect("/runway-pricing.html");
   next();
 }
 
