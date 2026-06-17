@@ -391,11 +391,14 @@
   }
 
   function flightCard(f) {
+    const mode = f.deliveryMode || 'video';
+    const typeLabel = mode === 'post' ? 'POST' : mode === 'hybrid' ? 'HYBRID' : 'VIDEO';
+    const typeClass = mode === 'post' ? 'type-pill--post' : mode === 'hybrid' ? 'type-pill--hybrid' : 'type-pill--video';
     return `<article class="flight-card" data-flight-id="${esc(f.id)}" data-product="${esc(f.product)}" data-status="${esc(f.status)}">
       <div><div class="flight-card__title">${esc(f.topic || 'Untitled')}</div>
       <div class="flight-card__meta">${esc(f.product)} · ${esc(f.status)}</div>
       <div class="flight-card__pipe">${pipeHtml(f.status)}</div></div>
-      <span class="status-pill ${statusClass(f.status)}">${esc(f.status)}</span></article>`;
+      <div class="flight-card__badges"><span class="type-pill ${typeClass}">${typeLabel}</span><span class="status-pill ${statusClass(f.status)}">${esc(f.status)}</span></div></article>`;
   }
 
   function renderBrand() {
@@ -572,6 +575,7 @@
     $('#field-scheduled').value = toDatetimeLocal(e.scheduledAt);
     $('#field-delivery').value = e.deliveryMode || 'video';
     $('#field-format').value = e.postFormat || 'reel';
+    $('#field-image-direction').value = e.imageDirection || '';
     $('#field-linkedin').value = e.linkedInPost || '';
     $('#field-facebook').value = e.facebookPost || '';
     $('#field-x').value = e.xPost || '';
@@ -624,6 +628,7 @@
       linkedInPost: $('#field-linkedin').value.trim(),
       facebookPost: $('#field-facebook').value.trim(),
       xPost: $('#field-x').value.trim(),
+      imageDirection: $('#field-image-direction').value.trim(),
     };
   }
 
