@@ -123,12 +123,17 @@ async function loadFlights() {
   let flights, source, online = true, error;
   try {
     const remote = await fetchQueue();
+    const local = getLocalFlights();
     if (remote.length) {
-      saveLocalFlights(remote);
-      flights = remote;
-      source = "n8n";
+      // Merge: remote updates existing flights (status/audio/video URLs);
+      // flights that only exist in local (e.g. manually authored posts) survive.
+      const remoteKeys = new Set(remote.map(flightKey));
+      const localOnly = local.filter((f) => !remoteKeys.has(flightKey(f)));
+      flights = [...remote, ...localOnly];
+      saveLocalFlights(flights);
+      source = "n8n+local";
     } else {
-      flights = getLocalFlights();
+      flights = local;
       source = "local";
     }
   } catch (err) {
