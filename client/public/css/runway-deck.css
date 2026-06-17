@@ -559,8 +559,9 @@
   transform: translateY(0);
 }
 
-.deck-toast.is-ok { border-color: rgba(34, 197, 94, 0.4); }
-.deck-toast.is-err { border-color: rgba(239, 68, 68, 0.4); }
+.deck-toast.is-ok   { border-color: rgba(34, 197, 94, 0.4); }
+.deck-toast.is-err  { border-color: rgba(239, 68, 68, 0.4); }
+.deck-toast.is-warn { border-color: rgba(251, 191, 36, 0.5); color: #fbbf24; }
 
 .offline-banner {
   padding: 10px 14px;

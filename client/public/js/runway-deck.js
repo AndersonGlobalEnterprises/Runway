@@ -248,7 +248,9 @@
 
   // ── Data refresh ──────────────────────────────────────────────────────────
 
-  async function refreshAll() {
+  async function refreshAll(fromBtn = false) {
+    const btn = $('#btn-refresh-deck');
+    if (fromBtn && btn) { btn.textContent = 'Refreshing…'; btn.disabled = true; }
     try {
       const [summary, flightsPayload, config, typesPayload] = await Promise.all([
         api('/client/summary'),
@@ -263,8 +265,14 @@
       state.contentTypes = typesPayload.contentTypes || [];
       fillContentTypeSelects();
       render();
+      if (fromBtn) {
+        const src = flightsPayload.source || (state.online ? 'online' : 'offline');
+        toast(state.online ? `Refreshed — ${state.flights.length} flights (${src})` : `Pipeline offline — showing ${state.flights.length} cached flights`, state.online ? 'ok' : 'warn');
+      }
     } catch (err) {
       toast(err.message, 'err');
+    } finally {
+      if (btn) { btn.textContent = 'Refresh'; btn.disabled = false; }
     }
   }
 
@@ -638,12 +646,17 @@
     if (!drawer) return;
     drawer.classList.add('is-open');
     drawer.querySelector('#drawer-title').textContent = flight.topic || 'Untitled';
-    drawer.querySelector('#drawer-meta').textContent = `${flight.product} · ${flight.status} · row ${flight.rowId}`;
+    const mode = flight.deliveryMode || 'video';
+    const modeLabel = mode === 'post' ? 'POST · Image + Copy' : mode === 'hybrid' ? 'HYBRID' : 'VIDEO · Script';
+    drawer.querySelector('#drawer-meta').textContent = `${flight.product} · ${flight.status} · ${modeLabel}`;
     drawer.querySelector('#drawer-pipe').innerHTML = pipeHtml(flight.status);
-    setDrawerTab('script');
+    setDrawerTab(mode === 'post' ? 'post' : 'script');
     try {
       const data = await api(`/flights/${encodeURIComponent(flight.id)}/edit`);
       populateDrawerFromEdit(data);
+      const resolvedMode = data.edit?.deliveryMode || mode;
+      if (resolvedMode === 'post') setDrawerTab('post');
+      else if (resolvedMode === 'video') setDrawerTab('script');
     } catch (e) {
       toast(e.message, 'err');
     }
@@ -984,7 +997,7 @@
       } catch (err) { toast(err.message, 'err'); }
     });
 
-    $('#btn-refresh-deck')?.addEventListener('click', refreshAll);
+    $('#btn-refresh-deck')?.addEventListener('click', () => refreshAll(true));
 
     // Help drawer
     $('#btn-help')?.addEventListener('click', openHelpDrawer);
