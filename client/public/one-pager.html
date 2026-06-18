@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AGE Runway — One Pager</title>
+  <meta name="description" content="Done-for-you AI content for B2B operators. Posts, short-form video, voice clone, and publishing — handled every week." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-base: #090a0f;
+      --bg-raised: #101218;
+      --bg-panel: #151820;
+      --bg-panel-hover: #1a1e28;
+      --bg-inset: #0c0d12;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-strong: rgba(255, 255, 255, 0.12);
+      --border-accent: rgba(59, 130, 246, 0.35);
+      --text: #f4f4f5;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --text-faint: #64748b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-soft: rgba(59, 130, 246, 0.12);
+      --accent-teal: #14b8a6;
+      --accent-teal-soft: rgba(20, 184, 166, 0.12);
+      --success: #22c55e;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-display: 'Syne', 'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 48px;
+      --space-8: 64px;
+      --space-9: 96px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 999px;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.45);
+      --max-width: 1120px;
+      --nav-height: 64px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --duration: 0.18s;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-base);
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 100% 48px, 48px 100%;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 15% -10%, rgba(59, 130, 246, 0.12), transparent 55%),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(20, 184, 166, 0.07), transparent 50%);
+    }
+
+    body > * { position: relative; z-index: 1; }
+
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .container {
+      width: min(var(--max-width), calc(100% - 48px));
+      margin-inline: auto;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, #93c5fd 0%, #3b82f6 45%, #14b8a6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-teal);
+      margin-bottom: var(--space-4);
+    }
+
+    .chevron { color: var(--accent); margin-right: 6px; }
+
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+    }
+
+    h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); }
+    h3 { font-size: 1.125rem; }
+
+    .lead {
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 52ch;
+    }
+
+    .section {
+      padding-block: var(--space-8);
+    }
+
+    .section--alt {
+      background: linear-gradient(180deg, var(--bg-raised) 0%, var(--bg-base) 100%);
+      border-block: 1px solid var(--border);
+    }
+
+    /* ── Brand ── */
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .brand__wordmark {
+      font-family: var(--font-display);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      color: var(--text);
+    }
+
+    .brand__a { position: relative; }
+
+    .brand__a::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: -4px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-teal));
+      opacity: 0.85;
+    }
+
+    .brand__lights { display: flex; gap: 4px; }
+
+    .brand__lights span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.55;
+    }
+
+    .brand__lights span:nth-child(2) { opacity: 0.75; }
+    .brand__lights span:nth-child(3) { opacity: 1; }
+
+    .brand--lg .brand__wordmark { font-size: 0.9375rem; }
+
+    /* ── Header ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-inline: max(24px, calc((100% - var(--max-width)) / 2 + 24px));
+      background: rgba(9, 10, 15, 0.88);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+    }
+
+    .site-nav a {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      transition: color var(--duration) var(--ease);
+    }
+
+    .site-nav a:hover { color: var(--text); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--duration) var(--ease), border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+      white-space: nowrap;
+    }
+
+    .btn--primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn--primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+    }
+
+    .btn--secondary {
+      background: transparent;
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    .btn--secondary:hover {
+      background: var(--bg-panel);
+      border-color: var(--border-accent);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--text-muted);
+      padding-inline: 12px;
+    }
+
+    .btn--ghost:hover { color: var(--text); }
+
+    .btn--lg { padding: 14px 24px; font-size: 0.9375rem; }
+    .btn--full { width: 100%; }
+
+    /* ── Hero ── */
+    .hero {
+      padding-block: var(--space-9) var(--space-7);
+      overflow: hidden;
+    }
+
+    .hero__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+      align-items: center;
+    }
+
+    .proof-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: var(--space-5);
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-strong);
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .proof-pill__dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45);
+      animation: live-pulse 2.4s ease-out infinite;
+    }
+
+    @keyframes live-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.45); }
+      70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    .atc-label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent-teal);
+    }
+
+    .hero__line-2 { display: block; margin-top: 0.08em; }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+    }
+
+    .hero__visual {
+      position: relative;
+      min-height: 360px;
+    }
+
+    .deck-preview {
+      position: relative;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xl);
+      background: var(--bg-inset);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .deck-preview::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(59,130,246,0.08) 0%, transparent 45%),
+        linear-gradient(225deg, rgba(20,184,166,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .deck-preview__chrome {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .deck-preview__dots { display: flex; gap: 6px; }
+
+    .deck-preview__dots span {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border-strong);
+    }
+
+    .deck-preview__body { padding: 20px; }
+
+    .deck-preview__stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .deck-preview__stat {
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .deck-preview__stat strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    .deck-preview__stat span {
+      font-size: 0.6875rem;
+      color: var(--text-faint);
+    }
+
+    .deck-preview__queue {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .deck-preview__row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      font-size: 0.6875rem;
+    }
+
+    .deck-preview__row-title {
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .deck-preview__status {
+      font-size: 0.625rem;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      color: var(--accent-teal);
+    }
+
+    .float-chip {
+      position: absolute;
+      z-index: 2;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: rgba(15, 20, 28, 0.92);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-md);
+      font-size: 0.6875rem;
+      color: var(--text-secondary);
+    }
+
+    .float-chip strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 0.9375rem;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .float-chip--1 { top: 8%; right: -4%; }
+    .float-chip--2 { bottom: 18%; left: -6%; }
+
+    /* ── Stat strip ── */
+    .stat-strip {
+      border-block: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding-block: var(--space-5);
+    }
+
+    .stat-strip__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+
+    .stat-strip__item {
+      text-align: center;
+      padding: var(--space-4);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-strip__item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 40%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-teal), transparent);
+      opacity: 0.6;
+    }
+
+    .stat-strip__value {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #93c5fd, var(--accent), var(--accent-teal));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .stat-strip__label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ── Product grid ── */
+    .section-intro {
+      max-width: 640px;
+      margin-bottom: var(--space-7);
+    }
+
+    .section-intro .lead { margin-top: var(--space-4); }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+    }
+
+    .product-card {
+      padding: var(--space-6) var(--space-5);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--duration) var(--ease), transform var(--duration) var(--ease);
+    }
+
+    .product-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+
+    .product-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-teal));
+      opacity: 0;
+      transition: opacity var(--duration) var(--ease);
+    }
+
+    .product-card:hover::after { opacity: 1; }
+
+    .product-card__mark {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-accent);
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--accent-teal);
+      margin-bottom: var(--space-4);
+    }
+
+    .product-card h3 { margin-bottom: var(--space-3); }
+
+    .product-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .product-card--wide {
+      grid-column: span 2;
+    }
+
+    /* ── Pipeline flow ── */
+    .pipeline-section {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: var(--space-7);
+      align-items: center;
+    }
+
+    .pipeline-diagram {
+      padding: var(--space-6);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(59,130,246,0.06), transparent 50%),
+        var(--bg-inset);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pipeline-diagram::before {
+      content: '';
+      position: absolute;
+      bottom: -40%; right: -20%;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(20, 184, 166, 0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    .flow-line {
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .flow-node {
+      flex: 0 0 auto;
+      min-width: 72px;
+      text-align: center;
+    }
+
+    .flow-node__box {
+      height: 40px;
+      margin-inline: auto;
+      width: 60px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.5625rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .flow-node.is-active .flow-node__box {
+      border-color: var(--border-accent);
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    .flow-node.is-done .flow-node__box {
+      border-color: rgba(20, 184, 166, 0.35);
+      background: var(--accent-teal-soft);
+      color: var(--text-secondary);
+    }
+
+    .flow-connector {
+      flex: 1;
+      min-width: 20px;
+      height: 2px;
+      background: var(--border-strong);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .flow-connector::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      width: 30%;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-teal), transparent);
+      animation: flow-pulse 2.2s linear infinite;
+    }
+
+    @keyframes flow-pulse {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(420%); }
+    }
+
+    .pipeline-modes {
+      margin-top: var(--space-5);
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .pipeline-mode {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      font-size: 0.8125rem;
+    }
+
+    .pipeline-mode__tag {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-accent);
+      background: var(--accent-soft);
+      color: #93c5fd;
+      flex-shrink: 0;
+    }
+
+    .pipeline-mode__desc { color: var(--text-muted); }
+
+    /* ── Pricing ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-4);
+      align-items: stretch;
+    }
+
+    .tier-card {
+      padding: var(--space-6) var(--space-5);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--duration) var(--ease);
+    }
+
+    .tier-card:hover { border-color: var(--border-strong); }
+
+    .tier-card--featured {
+      border-color: var(--border-accent);
+      background: linear-gradient(180deg, rgba(59,130,246,0.06) 0%, var(--bg-panel) 40%);
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.1);
+    }
+
+    .tier-card__name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: var(--space-3);
+    }
+
+    .tier-card__price {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 500;
+      margin-bottom: var(--space-2);
+    }
+
+    .tier-card__price span {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .tier-card__desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-5);
+      flex: 1;
+    }
+
+    .tier-card ul {
+      list-style: none;
+      margin-bottom: var(--space-5);
+    }
+
+    .tier-card li {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .tier-card li::before {
+      content: '\2192';
+      color: var(--accent-teal);
+      flex-shrink: 0;
+    }
+
+    /* ── CTA band ── */
+    .cta-band {
+      padding: var(--space-8);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-accent);
+      background:
+        linear-gradient(135deg, rgba(59,130,246,0.08), rgba(20,184,166,0.05)),
+        var(--bg-panel);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-band::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -20%;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-band > * { position: relative; z-index: 1; }
+
+    .cta-band h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .cta-band .lead {
+      margin-top: 8px;
+      font-size: 0.9375rem;
+    }
+
+    .cta-band__contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+      font-size: 0.8125rem;
+    }
+
+    .cta-band__contact a {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .cta-band__contact a:hover { text-decoration: underline; }
+
+    /* ── Footer ── */
+    .site-footer {
+      padding: var(--space-7) 0 var(--space-6);
+      border-top: 1px solid var(--border);
+    }
+
+    .site-footer__grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+
+    .site-footer__meta {
+      font-size: 0.8125rem;
+      color: var(--text-faint);
+      margin-top: var(--space-4);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-5);
+    }
+
+    .footer-links a {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      .hero__grid,
+      .pipeline-section {
+        grid-template-columns: 1fr;
+      }
+
+      .hero__visual { min-height: 280px; }
+      .float-chip { display: none; }
+
+      .stat-strip__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .product-card--wide {
+        grid-column: span 1;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .site-nav .site-nav__link { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .container { width: calc(100% - 32px); }
+      .section { padding-block: var(--space-7); }
+      .stat-strip__grid { grid-template-columns: 1fr; }
+      .deck-preview__stat-row { grid-template-columns: 1fr; }
+      .cta-band { flex-direction: column; align-items: flex-start; }
+      .header-actions .btn--ghost { display: none; }
+    }
+
+    @media print {
+      .site-header { position: static; }
+      body::before { display: none; }
+      .btn { border: 1px solid var(--border-strong); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Header -->
+  <header class="site-header">
+    <a href="/" class="brand" aria-label="AGE Runway home">
+      <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
+      <span class="brand__lights"><span></span><span></span><span></span></span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#product" class="site-nav__link">Product</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="header-actions">
+      <a href="/runway-login.html" class="btn btn--ghost">Sign in</a>
+      <a href="/runway-pricing.html" class="btn btn--primary">Request clearance</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- 2. Hero -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <div class="proof-pill">
+            <span class="proof-pill__dot"></span>
+            <span class="atc-label">LIVE IN 48 HOURS</span>
+            First posts and videos on your manifest
+          </div>
+          <p class="eyebrow">Anderson Global Enterprises</p>
+          <h1>
+            Your brand.
+            <span class="hero__line-2 text-gradient">Cleared for takeoff.</span>
+          </h1>
+          <p class="lead">Record once. We handle production and weekly publishing — your voice on every channel, on autopilot. Posts and short-form video count equally on your manifest.</p>
+          <div class="hero__actions">
+            <a href="/runway-pricing.html" class="btn btn--primary btn--lg">Request clearance</a>
+            <a href="#pipeline" class="btn btn--secondary btn--lg">See the pipeline</a>
+          </div>
+        </div>
+        <div class="hero__visual">
+          <div class="float-chip float-chip--1"><strong>8</strong> on manifest</div>
+          <div class="float-chip float-chip--2"><strong>Mon 9:00 AM</strong> next departure</div>
+          <div class="deck-preview">
+            <div class="deck-preview__chrome">
+              <div class="deck-preview__dots"><span></span><span></span><span></span></div>
+              <span class="atc-label">Flight deck · online</span>
+            </div>
+            <div class="deck-preview__body">
+              <div class="deck-preview__stat-row">
+                <div class="deck-preview__stat"><strong>8</strong><span>Posts + videos</span></div>
+                <div class="deck-preview__stat"><strong>12</strong><span>Topics on hold</span></div>
+                <div class="deck-preview__stat"><strong>6</strong><span>Destinations</span></div>
+              </div>
+              <div class="deck-preview__queue">
+                <div class="deck-preview__row">
+                  <span class="deck-preview__row-title">Roof inspection myths</span>
+                  <span class="deck-preview__status">Ready</span>
+                </div>
+                <div class="deck-preview__row">
+                  <span class="deck-preview__row-title">Storm damage red flags</span>
+                  <span class="deck-preview__status">Rendering</span>
+                </div>
+                <div class="deck-preview__row">
+                  <span class="deck-preview__row-title">Re-roof warning signs</span>
+                  <span class="deck-preview__status">Scripting</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Stat strip -->
+    <section class="stat-strip" aria-label="Key metrics">
+      <div class="container stat-strip__grid">
+        <div class="stat-strip__item">
+          <span class="stat-strip__value">48h</span>
+          <span class="stat-strip__label">Launch to first posts and videos live</span>
+        </div>
+        <div class="stat-strip__item">
+          <span class="stat-strip__value">8+</span>
+          <span class="stat-strip__label">Pieces on manifest per week (Growth tier)</span>
+        </div>
+        <div class="stat-strip__item">
+          <span class="stat-strip__value">6</span>
+          <span class="stat-strip__label">Platforms — IG, TikTok, YT, LI, FB, X</span>
+        </div>
+        <div class="stat-strip__item">
+          <span class="stat-strip__value">0</span>
+          <span class="stat-strip__label">Hours editing per week on your end</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Product grid -->
+    <section class="section" id="product">
+      <div class="container">
+        <div class="section-intro">
+          <p class="eyebrow"><span class="chevron">&rsaquo;</span> Product</p>
+          <h2>Built for businesses that ship.</h2>
+          <p class="lead">Your crew stays in the field. Your brand stays in the feed. One ops team handles voice, scripts, video, posts, and publishing.</p>
+        </div>
+        <div class="product-grid">
+          <article class="product-card product-card--wide">
+            <div class="product-card__mark">VC</div>
+            <h3>Voice clone</h3>
+            <p>One 5–10 minute sample locks your tone. Every script and video sounds like you — because it is you. Brand voice configured once, used everywhere.</p>
+          </article>
+          <article class="product-card">
+            <div class="product-card__mark">AI</div>
+            <h3>AI scripts</h3>
+            <p>Research-backed copy in your voice. LinkedIn posts, Facebook updates, X threads, and video scripts — generated from your topic queue.</p>
+          </article>
+          <article class="product-card">
+            <div class="product-card__mark">VR</div>
+            <h3>Video render</h3>
+            <p>Creatomate renders branded short-form video. Captions, b-roll, and format-ready output for Reels, Shorts, and TikTok.</p>
+          </article>
+          <article class="product-card">
+            <div class="product-card__mark">PV</div>
+            <h3>Post + video parity</h3>
+            <p>Posts and videos count equally on your manifest. Hybrid mode runs both from one topic — thought leadership and short-form from the same flight plan.</p>
+          </article>
+          <article class="product-card">
+            <div class="product-card__mark">AP</div>
+            <h3>Auto-publish</h3>
+            <p>Scheduled departures to Instagram, TikTok, YouTube, LinkedIn, Facebook, and X. You approve in the Flight Deck — nothing posts without clearance.</p>
+          </article>
+          <article class="product-card">
+            <div class="product-card__mark">FD</div>
+            <h3>Flight deck portal</h3>
+            <p>Script, Post, Video, and Publish tabs with equal prominence. Queue topics, review drafts, and monitor taxi tracks from one dashboard.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Pipeline flow -->
+    <section class="section section--alt" id="pipeline">
+      <div class="container pipeline-section">
+        <div>
+          <p class="eyebrow"><span class="chevron">&rsaquo;</span> Pipeline</p>
+          <h2>Topic to published. One taxi track.</h2>
+          <p class="lead">Five stages, fully automated. Your only job: approve or adjust before departure.</p>
+          <div class="pipeline-modes">
+            <div class="pipeline-mode">
+              <span class="pipeline-mode__tag">Post</span>
+              <span class="pipeline-mode__desc">Text to LinkedIn, Facebook, and X — skips voice and video render</span>
+            </div>
+            <div class="pipeline-mode">
+              <span class="pipeline-mode__tag">Video</span>
+              <span class="pipeline-mode__desc">Full voice clone + Creatomate render to IG, TikTok, YT, and LinkedIn</span>
+            </div>
+            <div class="pipeline-mode">
+              <span class="pipeline-mode__tag">Hybrid</span>
+              <span class="pipeline-mode__desc">Same topic, two departures — channel-specific post copy and rendered video</span>
+            </div>
+          </div>
+        </div>
+        <div class="pipeline-diagram">
+          <div class="flow-line" role="list" aria-label="Content pipeline stages">
+            <div class="flow-node is-done" role="listitem">
+              <div class="flow-node__box">Topic</div>
+            </div>
+            <div class="flow-connector"></div>
+            <div class="flow-node is-done" role="listitem">
+              <div class="flow-node__box">Research</div>
+            </div>
+            <div class="flow-connector"></div>
+            <div class="flow-node is-active" role="listitem">
+              <div class="flow-node__box">Script</div>
+            </div>
+            <div class="flow-connector"></div>
+            <div class="flow-node" role="listitem">
+              <div class="flow-node__box">Voice</div>
+            </div>
+            <div class="flow-connector"></div>
+            <div class="flow-node" role="listitem">
+              <div class="flow-node__box">Video</div>
+            </div>
+            <div class="flow-connector"></div>
+            <div class="flow-node" role="listitem">
+              <div class="flow-node__box">Publish</div>
+            </div>
+          </div>
+          <p class="atc-label" style="margin-top: 16px; display: block;">Inspect taxi track · 4 active · stable</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Pricing -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-intro">
+          <p class="eyebrow"><span class="chevron">&rsaquo;</span> Pricing</p>
+          <h2>Clear plans. Predictable output.</h2>
+          <p class="lead">Every tier includes voice clone, AI copy, video rendering, and scheduled departures. Posts and videos count equally toward your monthly manifest.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="tier-card">
+            <p class="tier-card__name">Starter</p>
+            <p class="tier-card__price">$497<span>/mo</span></p>
+            <p class="tier-card__desc">For a single brand getting consistent weekly content live on one primary platform.</p>
+            <ul>
+              <li>4 posts + 4 videos per month</li>
+              <li>1 connected platform</li>
+              <li>Voice clone + brand templates</li>
+              <li>Flight deck portal access</li>
+            </ul>
+            <a href="/runway-pricing.html" class="btn btn--secondary btn--full">Select Starter</a>
+          </article>
+          <article class="tier-card tier-card--featured">
+            <p class="tier-card__name">Growth · Most popular</p>
+            <p class="tier-card__price">$797<span>/mo</span></p>
+            <p class="tier-card__desc">For operators scaling reach across multiple channels with higher output volume.</p>
+            <ul>
+              <li>8 posts + 8 videos per month</li>
+              <li>3 connected platforms</li>
+              <li>Priority topic queue</li>
+              <li>Multi-track pipeline</li>
+            </ul>
+            <a href="/runway-pricing.html" class="btn btn--primary btn--full">Select Growth</a>
+          </article>
+          <article class="tier-card">
+            <p class="tier-card__name">Scale</p>
+            <p class="tier-card__price">$1,297<span>/mo</span></p>
+            <p class="tier-card__desc">For brands treating content as a core acquisition channel across five platforms.</p>
+            <ul>
+              <li>15 posts + 15 videos per month</li>
+              <li>5 connected platforms</li>
+              <li>Dedicated onboarding</li>
+              <li>Custom posting calendar</li>
+            </ul>
+            <a href="/runway-pricing.html" class="btn btn--secondary btn--full">Select Scale</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CTA block -->
+    <section class="section section--tight">
+      <div class="container">
+        <div class="cta-band">
+          <div>
+            <p class="eyebrow"><span class="chevron">&rsaquo;</span> Clearance granted</p>
+            <h2>Ready for takeoff?</h2>
+            <p class="lead">Starter to Scale. Founding rates for early operators. Book a strategy call or request clearance online.</p>
+            <div class="cta-band__contact">
+              <a href="tel:+18777802771">(877) 780-2771</a>
+              <a href="mailto:support@ageflowops.com">support@ageflowops.com</a>
+            </div>
+          </div>
+          <a href="/runway-pricing.html" class="btn btn--primary btn--lg">Request clearance</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 8. Footer -->
+  <footer class="site-footer">
+    <div class="container site-footer__grid">
+      <div>
+        <a href="/" class="brand brand--lg">
+          <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
+          <span class="brand__lights"><span></span><span></span><span></span></span>
+        </a>
+        <p class="site-footer__meta">&copy; Anderson Global Enterprises · AGE Runway</p>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/runway-pricing.html">Pricing</a>
+        <a href="/runway-login.html">Portal</a>
+        <a href="https://age-flowops.net">AGE FlowOps</a>
+        <a href="tel:+18777802771">(877) 780-2771</a>
+        <a href="mailto:support@ageflowops.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compare Plans — AGE FlowOps vs GoHighLevel, JobNimbus, AccuLynx</title>
+  <meta name="description" content="Feature-by-feature comparison: AGE FlowOps vs GoHighLevel, JobNimbus AI, and AccuLynx. Shovel Engine, Storm Ops, AGE Inspect, Xactimate estimates, and more." />
+  <meta property="og:title" content="AGE FlowOps — Competitor Comparison" />
+  <meta property="og:description" content="They sell tools. We are the infrastructure. See how AGE FlowOps compares." />
+  <meta property="og:url" content="https://age-flowops.net/comparison.html" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111;
+      --surface2: #161616;
+      --border: #1f1f1f;
+      --border2: #2a2a2a;
+      --blue: #00b4d8;
+      --blue-dim: #00b4d81a;
+      --cyan: #48cae4;
+      --deep-blue: #0077b6;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --white: #f5f5f5;
+      --muted: #71717a;
+      --dimtext: #a1a1aa;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: Inter, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      padding: 0 40px;
+      background: #0a0a0ae6;
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-brand-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: var(--white);
+    }
+
+    .nav-brand-sub {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--dimtext);
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover { color: var(--white); }
+    .nav-link.is-active { color: var(--white); }
+
+    .nav-cta {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--deep-blue));
+      color: var(--white);
+      font-family: Inter, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 20px #00b4d84d;
+      transition: all 0.2s;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 28px #00b4d880;
+    }
+
+    /* ── Comparison section ── */
+    .competitor {
+      padding: 80px 40px 100px;
+      background: linear-gradient(#0000, #0077b608, #0000);
+    }
+
+    .section-eyebrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      text-align: center;
+    }
+
+    .section-eyebrow::before,
+    .section-eyebrow::after {
+      content: "";
+      width: 40px;
+      height: 1px;
+      background: #00b4d84d;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 14px;
+    }
+
+    .section-sub {
+      max-width: 640px;
+      margin: 0 auto 56px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--dimtext);
+    }
+
+    /* ── Table ── */
+    .comp-table-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow-x: auto;
+    }
+
+    .comp-table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+    }
+
+    .comp-table th {
+      padding: 16px 20px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: left;
+      color: var(--dimtext);
+    }
+
+    .comp-table th.age-col {
+      color: var(--blue);
+      background: #00b4d814;
+      border-left: 2px solid #00b4d866;
+      border-right: 2px solid #00b4d866;
+    }
+
+    .comp-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--dimtext);
+    }
+
+    .comp-table tr:last-child td { border-bottom: none; }
+
+    .comp-table tr:hover td { background: var(--surface2); }
+    .comp-table tr:hover td.age-col { background: #00b4d812; }
+
+    .comp-table td:first-child {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .comp-table td.age-col {
+      background: #00b4d80a;
+      border-left: 2px solid #00b4d866;
+      border-right: 2px solid #00b4d866;
+      color: var(--white);
+    }
+
+    .comp-table tr:last-child td.age-col {
+      border-bottom: 2px solid #00b4d866;
+    }
+
+    .comp-table thead tr th.age-col {
+      border-top: 2px solid #00b4d866;
+    }
+
+    .check {
+      color: var(--green);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .cross {
+      color: var(--red);
+      font-size: 16px;
+    }
+
+    .cell-amber {
+      color: var(--amber);
+      font-size: 13px;
+    }
+
+    .cell-amber-warn {
+      color: var(--amber);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .cell-mono {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+    }
+
+    .cell-price-age {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .comp-note {
+      max-width: 960px;
+      margin: 20px auto 0;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    /* ── Roofr callout ── */
+    .comp-integrate {
+      max-width: 820px;
+      margin: 40px auto 0;
+      padding: 28px 32px;
+      text-align: center;
+      background: rgba(72, 202, 228, 0.07);
+      border: 1px solid rgba(72, 202, 228, 0.35);
+      border-radius: 16px;
+    }
+
+    .comp-integrate__label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+
+    .comp-integrate h3 {
+      margin: 0 0 12px;
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 800;
+      line-height: 1.25;
+      color: var(--white);
+    }
+
+    .comp-integrate h3 span { color: var(--cyan); }
+
+    .comp-integrate p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--dimtext);
+    }
+
+    .comp-integrate p strong { color: var(--white); font-weight: 700; }
+
+    /* ── Footer CTA ── */
+    .page-cta {
+      padding: 60px 40px 80px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .page-cta h2 {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .page-cta p {
+      color: var(--dimtext);
+      margin-bottom: 24px;
+      font-size: 15px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 32px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--deep-blue));
+      color: var(--white);
+      font-family: Inter, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 30px #00b4d859, 0 4px 16px #0006;
+      transition: all 0.25s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 44px #00b4d88c, 0 8px 24px #00000080;
+    }
+
+    .site-footer {
+      padding: 24px 40px 32px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .site-footer a {
+      color: var(--dimtext);
+      margin: 0 12px;
+    }
+
+    .site-footer a:hover { color: var(--white); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links .nav-link { display: none; }
+      .competitor { padding: 60px 20px 80px; }
+      .comp-table-wrap { border-radius: 10px; }
+      .comp-integrate { padding: 24px 20px; }
+      .page-cta { padding: 48px 20px 64px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav aria-label="Primary">
+    <a href="/" class="nav-logo">
+      <div>
+        <div class="nav-brand-name">AGE FlowOps</div>
+        <div class="nav-brand-sub">Roofing Infrastructure</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/comparison.html" class="nav-link is-active">Compare</a>
+      <a href="/#pricing" class="nav-link">Pricing</a>
+    </div>
+    <a href="/#get-started" class="nav-cta">Book a Demo</a>
+  </nav>
+
+  <main>
+    <section class="competitor" id="compare">
+      <div class="section-eyebrow">The Comparison</div>
+      <h1 class="section-title">They sell tools.<br />We are the infrastructure.</h1>
+      <p class="section-sub">Roofr, AccuLynx, and JobNimbus manage jobs you already have. AGE FlowOps generates the jobs — pre-qualified leads, missed-call recovery, AI inspections, and proposal automation — then hands you the signed contract.</p>
+
+      <div class="comp-table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              <th scope="col" class="age-col">AGE FlowOps</th>
+              <th scope="col">GoHighLevel</th>
+              <th scope="col">JobNimbus AI</th>
+              <th scope="col">AccuLynx</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Built specifically for roofing</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="check" aria-label="Yes">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Missed call AI recovery (90 sec)</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Pre-sale lead recovery</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Pre-qualified storm damage leads</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span> Shovel Engine</td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>NYC property violation leads</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span> NYC Engine</td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>NOAA storm tracking + canvassing list</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span> Storm Ops</td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>AI roof inspection report (15 min)</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span> AGE Inspect</td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td class="cell-amber">Manual only</td>
+            </tr>
+            <tr>
+              <td>Xactimate-style estimate generator</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>AI insurance supplement letter</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>AR follow-up + collections automation</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td>Partial</td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>24/7 AI Voice Receptionist</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span> Included</td>
+              <td class="cell-amber">$97/mo add-on</td>
+              <td class="cell-amber">Generic AI add-on</td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>AI follow-up sequences</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td>Partial</td>
+              <td>Partial</td>
+              <td>Partial</td>
+            </tr>
+            <tr>
+              <td>Contractor data stays private</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td>Partial</td>
+              <td>Partial</td>
+              <td class="cell-amber-warn">&#9888; Verisk-owned</td>
+            </tr>
+            <tr>
+              <td>No carrier data conflict</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td class="cell-amber-warn">&#9888; Verisk-owned</td>
+            </tr>
+            <tr>
+              <td>Performance guarantee</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Monthly ROI report in dollars</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Done-for-you setup (48 hrs)</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Weekly revenue report (in $)</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>AI lead quality score (Hot/Warm/Cold)</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Business Health Score (0–100)</td>
+              <td class="age-col"><span class="check" aria-label="Yes">&#10003;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+              <td><span class="cross" aria-label="No">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Starting price</td>
+              <td class="age-col cell-price-age">$997/mo*</td>
+              <td class="cell-mono">$97+/mo</td>
+              <td class="cell-mono">$225–550/mo</td>
+              <td class="cell-mono">Enterprise</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="comp-note">*Founding Client rate — $997/mo locked for 12 months (3 spots only), then $1,500/mo standard Core. Revenue Recovery pilot also available at $997/mo for 60 days — convert to Core or cancel, no penalty. &#9888; AccuLynx was acquired by Verisk — the same company that owns Xactimate and serves insurance carriers.</p>
+
+      <aside class="comp-integrate" aria-labelledby="roofr-heading">
+        <span class="comp-integrate__label">Already using Roofr?</span>
+        <h2 id="roofr-heading">Keep it. We run <span>on top of it.</span></h2>
+        <p>Roofr, JobNimbus, and AccuLynx <strong>store</strong> your leads. AGE FlowOps <strong>works</strong> them — answering every call live, recovering missed ones, and chasing every Roofr lead and proposal until it closes. We plug straight into your Roofr account, so no lead ever slips through it again. <strong>You don't switch software. You finally get the front desk it was missing.</strong></p>
+      </aside>
+    </section>
+
+    <section class="page-cta">
+      <h2>Stop losing jobs to voicemail.</h2>
+      <p>Book a 15-minute demo. We'll show you exactly how many calls you're losing — live, with your numbers.</p>
+      <a href="/#get-started" class="btn-primary">Book Your Free Demo</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; Anderson Global Enterprises · AGE FlowOps</p>
+    <p style="margin-top: 10px;">
+      <a href="/">Home</a>
+      <a href="tel:+18777802771">(877) 780-2771</a>
+      <a href="mailto:anderson.omar@andersonglobalenterprises.net">Contact</a>
+    </p>
+  </footer>
+
+</body>
+</html>
