@@ -1,0 +1,33 @@
+# AGE Runway
+
+> AGE Runway is the done-for-you content marketing and managed growth engine for home-services contractors (roofing, HVAC, plumbing, restoration) and expert operators. The client records about 10 minutes of voice/source once a month; Runway handles content strategy, copywriting, voice cloning, image and video production, human QA review, and weekly publishing across every channel. Every post is reviewed by a human before it goes live, so the client's reputation is never on autopilot. A product of Anderson Global Enterprises (the team behind AGE FlowOps).
+
+## What it is
+
+AGE Runway is a productized managed service (recurring subscription) delivered through the "Flight Deck" client portal. It is built for contractors and experts who know they should be visible online every week but have no time, media team, or marketing skill set. Instead of posting sporadically or hiring a $3k–$8k/mo agency, the owner records once and Runway runs the whole content operation.
+
+Key differentiators:
+- Full content engine, not just posts: strategy, copy, voice clone, video, and publishing under one subscription.
+- Human-reviewed end-to-end — every post reviewed before it publishes.
+- Record-once model: ~10 minutes of input becomes a month of on-brand output.
+- Trade-native: built for contractors first (roofing), with a warm path from the AGE FlowOps ecosystem.
+- Fast launch: first posts live in about 48 hours.
+
+## Key pages
+
+- [Home](https://age-runway-owner.onrender.com/): What Runway is, who it's for, and how the pipeline works.
+- [Pricing](https://age-runway-owner.onrender.com/runway-pricing.html): Plans, inclusions, and plan comparison.
+- [Pricing (machine-readable)](https://age-runway-owner.onrender.com/pricing.md): Structured pricing for AI agents.
+- [Client portal / sign in](https://age-runway-owner.onrender.com/runway-login.html): Flight Deck portal for existing clients.
+
+## Pricing
+
+- Starter — $497/month: 4 posts + 4 videos/month, 1 platform, voice clone + brand templates, Flight Deck portal.
+- Growth (most popular) — $797/month: 8 posts + 8 videos/month, 3 platforms, priority topic queue, multi-track pipeline.
+- Scale — $1,297/month: 15 posts + 15 videos/month, 5 platforms, dedicated onboarding, custom posting calendar.
+
+Founding rates are available for early clients. Contact support@ageflowops.com.
+
+## Contact
+
+- Email: support@ageflowops.com
