@@ -23,6 +23,7 @@ import {
   aiAvailable,
 } from "../ai.js";
 import { listContentTypes, buildCreatomateModifications, deliveryIncludesPost, deliveryIncludesVideo, getDefaultDeliveryMode } from "../content-types.js";
+import { facebookAvailable, instagramAvailable, postToFacebook, postToInstagram } from "../social.js";
 import { buildEditState, applyEditPatch, saveFlightEditMeta, getFlightEditMeta, resolveFlightDeliveryMode } from "../edit.js";
 import { createRender, creatomateAvailable } from "../creatomate.js";
 import { heygenAvailable, startHeyGenRender, getHeyGenStatus, uploadTalkingPhoto } from "../heygen.js";
@@ -891,6 +892,75 @@ function summariseTracks(flights) {
     return { name, count: items.length, active, hold, status };
   });
 }
+
+// --- Social posting (Facebook + Instagram direct, no n8n) ---
+
+router.get("/social/status", (_req, res) => {
+  res.json({
+    facebook: { connected: facebookAvailable(), pageId: process.env.FACEBOOK_PAGE_ID || null },
+    instagram: { connected: instagramAvailable(), userId: process.env.INSTAGRAM_USER_ID || null },
+  });
+});
+
+// POST /api/runway/social/post  { message, imageUrl?, platforms? }
+router.post("/social/post", async (req, res) => {
+  const { message, imageUrl, platforms } = req.body || {};
+  if (!message) return res.status(400).json({ error: "message required" });
+
+  const wantFB = !platforms || platforms.includes("facebook");
+  const wantIG = !platforms || platforms.includes("instagram");
+  const results = {};
+
+  if (wantFB && facebookAvailable()) {
+    try { results.facebook = await postToFacebook({ message, imageUrl }); }
+    catch (err) { results.facebook = { error: err.message }; }
+  } else if (wantFB) {
+    results.facebook = { skipped: "FACEBOOK_PAGE_TOKEN / FACEBOOK_PAGE_ID not set" };
+  }
+
+  if (wantIG && instagramAvailable() && imageUrl) {
+    try { results.instagram = await postToInstagram({ caption: message, imageUrl }); }
+    catch (err) { results.instagram = { error: err.message }; }
+  } else if (wantIG && !imageUrl) {
+    results.instagram = { skipped: "Instagram requires an image URL" };
+  } else if (wantIG) {
+    results.instagram = { skipped: "FACEBOOK_PAGE_TOKEN / INSTAGRAM_USER_ID not set" };
+  }
+
+  res.json({ ok: true, results });
+});
+
+// POST /api/runway/flights/:id/post-social — post a specific flight's caption to social
+router.post("/flights/:id/post-social", async (req, res) => {
+  const { flights } = await loadFlights();
+  const flight = findFlight(flights, req.params.id);
+  if (!flight) return res.status(404).json({ error: "Flight not found" });
+
+  const meta = getFlightEditMeta(flight.id);
+  const message = req.body?.caption || flight.caption || meta.caption || flight.hook || "";
+  const imageUrl = req.body?.imageUrl || flight.videoUrl || meta.videoUrl || meta.previewVideoUrl || "";
+
+  if (!message) return res.status(400).json({ error: "No caption on this flight yet" });
+
+  const results = {};
+  if (facebookAvailable()) {
+    try { results.facebook = await postToFacebook({ message, imageUrl: imageUrl || undefined }); }
+    catch (err) { results.facebook = { error: err.message }; }
+  }
+  if (instagramAvailable() && imageUrl) {
+    try { results.instagram = await postToInstagram({ caption: message, imageUrl }); }
+    catch (err) { results.instagram = { error: err.message }; }
+  }
+
+  if (Object.keys(results).length) {
+    updateLocalFlight(flight.id, { status: "Published" });
+    try {
+      await updateFlightStatus({ product: flight.product, rowId: flight.rowId, status: "Published" });
+    } catch { /* local ok */ }
+  }
+
+  res.json({ ok: true, results });
+});
 
 function pickNextDeparture(flights) {
   const upcoming = flights

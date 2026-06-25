@@ -69,3 +69,10 @@ services:
       # Shared secret for the n8n auto-poster to pull the approved-video publish queue
       - key: PUBLISH_KEY
         sync: false
+      # Facebook + Instagram direct posting (no n8n required)
+      - key: FACEBOOK_PAGE_ID
+        value: "537859312724596"
+      - key: FACEBOOK_PAGE_TOKEN
+        sync: false
+      - key: INSTAGRAM_USER_ID
+        sync: false
