@@ -3,76 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sign in — AGE Runway</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>Sign in — Trimwind</title>
+  <link rel="icon" href="/favicons/trimwind_wordmark_favicon.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/runway.css" />
-  <link rel="stylesheet" href="/css/runway-aviation.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/trimwind.css" />
 </head>
-<body class="runway-site cockpit">
-
-  <div class="auth-page auth-page--cockpit cockpit-shell">
-    <aside class="auth-aside">
-      <a href="/" class="brand brand--lg">
-        <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
-        <span class="brand__lights"><span></span><span></span><span></span></span>
+<body class="tw">
+  <div class="auth">
+    <aside class="auth__aside">
+      <svg class="swoosh" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path d="M-40 520 C 160 340, 360 600, 560 300 S 720 80, 660 -20"/>
+      </svg>
+      <a href="/" class="brand" aria-label="Trimwind home">
+        <svg class="mark" viewBox="19 7.5 22 21" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMinYMid meet"><path fill="#AFCB40" d="m23.1 19.9c3.1-0.1 5.4 0.1 4.9 1.1 1-0.4 2.1-2.5 2.1-4.1-1.1 1.2-3.1 2.2-5.2 2.3 2.2-1.2 5.1-2.7 4.8-4.7-0.2-0.8-0.5-1.6-1.1-2.5-0.3 3.3-2.6 6.3-5.5 7.9z"/></svg>
+        <span>Trimwind</span>
       </a>
-      <div class="auth-aside__headline">
-        <p class="eyebrow instrument-label instrument-label--amber">Client portal</p>
+      <div class="auth__headline">
+        <p class="kicker">Client portal</p>
         <h1>Sign in to your dashboard.</h1>
-        <p>Track your manifest, taxi tracks, and upcoming departures — all in one place.</p>
-        <div class="cockpit-runway-mini" aria-hidden="true">
-          <div class="cockpit-runway-mini__line"></div>
-          <svg class="cockpit-runway-mini__plane" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 22h28l36-2 4 4-36 2H4v-4z" fill="#cbd5e1"/>
-            <path d="M32 20V9l8 11H32z" fill="#94a3b8"/>
-          </svg>
-        </div>
-        <div class="auth-pipeline" style="margin-top:var(--space-5);">
-          <p class="instrument-label" style="margin-bottom:var(--space-3);">Taxi route</p>
-          <div class="flow-line">
-            <div class="flow-node is-active"><div class="flow-node__box">Topic</div></div>
-            <div class="flow-connector"></div>
-            <div class="flow-node"><div class="flow-node__box">Script</div></div>
-            <div class="flow-connector"></div>
-            <div class="flow-node"><div class="flow-node__box">Voice</div></div>
-            <div class="flow-connector"></div>
-            <div class="flow-node"><div class="flow-node__box">Publish</div></div>
-          </div>
+        <p>Track your content, pipelines, and upcoming posts — all in one place.</p>
+        <div class="auth__flow">
+          <span class="node">Topic</span><span class="arr">→</span>
+          <span class="node">Script</span><span class="arr">→</span>
+          <span class="node">Voice</span><span class="arr">→</span>
+          <span class="node">Publish</span>
         </div>
       </div>
-      <p class="instrument-label">Anderson Global Enterprises · Secure access</p>
+      <p class="tw-footer__meta" style="position:relative;z-index:1">Anderson Global Enterprises · Secure access</p>
     </aside>
 
-    <main class="auth-main">
-      <div class="auth-card cockpit-bezel cockpit-bezel--amber">
+    <main class="auth__main">
+      <div class="auth__card">
         <h2>Sign in</h2>
-        <p class="auth-card__sub">Use the email and squawk code linked to your Runway clearance.</p>
-        <p id="form-notice" hidden class="form-notice"></p>
+        <p class="sub">Use the email and password linked to your Trimwind account.</p>
+        <p id="form-notice" hidden class="notice"></p>
         <form method="POST" action="/api/runway/login">
-          <div class="form-field">
+          <div class="field">
             <label for="email">Work email</label>
             <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@company.com" />
           </div>
-          <div class="form-field">
-            <label for="password">Squawk code (password)</label>
+          <div class="field">
+            <label for="password">Password</label>
             <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="Enter your password" />
           </div>
           <div class="form-row">
-            <label><input type="checkbox" name="remember" style="margin-right:6px;" />Remember me</label>
+            <label style="display:flex;align-items:center;gap:7px;color:var(--text-soft)"><input type="checkbox" name="remember" style="width:auto" />Remember me</label>
             <a href="/runway-forgot.html">Forgot password?</a>
           </div>
-          <button type="submit" class="btn btn--primary btn--full">Sign in</button>
+          <button type="submit" class="btn-primary btn-block">Sign in</button>
         </form>
-        <p class="auth-footer">
-          No clearance yet? <a href="/runway-pricing.html">Request clearance</a>
-        </p>
+        <p class="auth__footer">No account yet? <a href="/runway-pricing.html">See plans</a></p>
       </div>
     </main>
   </div>
 
-  <script src="/js/runway.js?v=8"></script>
+  <script>
+    // notice handling preserved (reads ?error=invalid / ?reset=sent)
+    var params = new URLSearchParams(location.search);
+    var notice = document.getElementById('form-notice');
+    if (notice) {
+      if (params.get('error') === 'invalid') {
+        notice.hidden = false; notice.className = 'notice notice--error';
+        notice.textContent = 'That email or password did not match. Try again.';
+      } else if (params.get('reset') === 'sent') {
+        notice.hidden = false; notice.className = 'notice notice--success';
+        notice.textContent = 'If that email is on file, a reset link is on the way.';
+      }
+    }
+  </script>
 </body>
 </html>

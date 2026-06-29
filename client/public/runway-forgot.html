@@ -3,44 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Reset Access — AGE Runway</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>Reset Access — Trimwind</title>
+  <link rel="icon" href="/favicons/trimwind_wordmark_favicon.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/runway.css" />
-  <style>
-    .auth-page--center { grid-template-columns: 1fr; }
-    .auth-page--center .auth-main { min-height: 100vh; }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/trimwind.css" />
 </head>
-<body class="runway-site">
-
-  <div class="auth-page auth-page--center">
-    <main class="auth-main">
-      <div class="auth-card">
-        <a href="/" class="brand" style="margin-bottom:var(--space-6);">
-          <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
-          <span class="brand__lights"><span></span><span></span><span></span></span>
+<body class="tw">
+  <div class="auth" style="grid-template-columns:1fr">
+    <main class="auth__main">
+      <div class="auth__card">
+        <a href="/" class="brand" style="margin-bottom:28px" aria-label="Trimwind home">
+          <svg class="mark" viewBox="19 7.5 22 21" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMinYMid meet"><path fill="#AFCB40" d="m23.1 19.9c3.1-0.1 5.4 0.1 4.9 1.1 1-0.4 2.1-2.5 2.1-4.1-1.1 1.2-3.1 2.2-5.2 2.3 2.2-1.2 5.1-2.7 4.8-4.7-0.2-0.8-0.5-1.6-1.1-2.5-0.3 3.3-2.6 6.3-5.5 7.9z"/></svg>
+          <span>Trimwind</span>
         </a>
         <h2>Reset your access</h2>
-        <p class="auth-card__sub">Enter the email on your Runway subscription. We’ll send a secure reset link.</p>
-
+        <p class="sub">Enter the email on your Trimwind subscription. We’ll send a secure reset link.</p>
         <form method="POST" action="/api/runway/forgot">
-          <div class="form-field">
+          <div class="field">
             <label for="email">Work email</label>
             <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@company.com" />
           </div>
-          <button type="submit" class="btn btn--primary btn--full">Send reset link</button>
+          <button type="submit" class="btn-primary btn-block">Send reset link</button>
         </form>
-
-        <p class="auth-footer">
-          <a href="/runway-login.html">← Back to login</a> ·
-          <a href="mailto:support@ageflowops.com">Contact support</a>
-        </p>
+        <p class="auth__footer"><a href="/runway-login.html">← Back to sign in</a> · <a href="mailto:support@ageflowops.com">Contact support</a></p>
       </div>
     </main>
   </div>
-
 </body>
 </html>

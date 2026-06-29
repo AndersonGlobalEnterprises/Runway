@@ -3,225 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AGE Runway Pricing — Done-For-You Content Plans for Contractors</title>
-  <meta name="description" content="AGE Runway plans: Starter $497/mo, Growth $797/mo, Scale $1,297/mo. Every plan includes voice clone, AI copy, video, human-reviewed weekly publishing, and Flight Deck portal access. Founding rates available." />
-  <link rel="canonical" href="https://age-runway-owner.onrender.com/runway-pricing.html" />
-  <meta property="og:title" content="AGE Runway Pricing — Done-For-You Content Plans" />
+  <title>Trimwind Pricing — Done-For-You Content Plans for Contractors</title>
+  <meta name="description" content="Trimwind plans: Starter $497/mo, Growth $797/mo, Scale $1,297/mo. Every plan includes voice clone, AI copy, video, human-reviewed weekly publishing, and client portal access. Founding rates available." />
+  <link rel="canonical" href="https://trimwind.com/runway-pricing.html" />
+  <meta property="og:title" content="Trimwind Pricing — Done-For-You Content Plans" />
   <meta property="og:description" content="Starter $497 · Growth $797 · Scale $1,297 per month. Voice clone, AI copy, video, and human-reviewed weekly publishing — all handled." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://age-runway-owner.onrender.com/runway-pricing.html" />
-  <meta property="og:site_name" content="AGE Runway" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="AGE Runway Pricing — Done-For-You Content Plans" />
-  <meta name="twitter:description" content="Starter $497 · Growth $797 · Scale $1,297 per month. Voice clone, AI copy, video, and human-reviewed weekly publishing." />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta property="og:url" content="https://trimwind.com/runway-pricing.html" />
+  <meta property="og:site_name" content="Trimwind" />
+  <link rel="icon" href="/favicons/trimwind_wordmark_favicon.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/runway.css" />
-  <link rel="stylesheet" href="/css/runway-flagship.css" />
-  <link rel="stylesheet" href="/css/runway-aviation.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/trimwind.css" />
   <style>
-    .pricing-hero { padding: var(--space-8) 0 var(--space-7); text-align: center; }
-    .pricing-hero .lead { margin-inline: auto; }
-    .checkout-form {
-      margin-top: var(--space-5);
-      padding: var(--space-5);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      background: var(--bg-inset);
-      display: none;
-    }
-    .checkout-form.is-open { display: block; }
-    .checkout-form .form-field { margin-bottom: var(--space-3); }
-    .checkout-msg {
-      margin-top: var(--space-4);
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-      min-height: 1.2em;
-    }
-    .checkout-msg.is-error { color: #fca5a5; }
+    .pricing-hero{text-align:center;padding:clamp(40px,7vh,84px) clamp(24px,6vw,72px) clamp(24px,4vh,48px)}
+    .pricing-hero .lead{margin:16px auto 0;max-width:54ch}
+    .checkout-card{max-width:520px;margin:36px auto 0;display:none}
+    .checkout-card.is-open{display:block}
+    .checkout-card__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .checkout-tag{font-family:'Space Grotesk';font-size:12px;font-weight:600;color:var(--lime);border:1px solid var(--hairline);background:rgba(161,203,64,.07);border-radius:999px;padding:5px 12px}
+    .checkout-msg{margin-top:14px;font-size:13.5px;color:var(--text-muted);min-height:1.2em}
+    .checkout-msg.is-error{color:var(--danger)}
   </style>
 </head>
-<body class="runway-site runway-flagship">
+<body class="tw">
 
-  <header class="site-header">
-    <a href="/" class="brand">
-      <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
-      <span class="brand__lights"><span></span><span></span><span></span></span>
+  <nav class="tw-nav">
+    <a href="/" class="brand" aria-label="Trimwind home">
+      <svg class="mark" viewBox="19 7.5 22 21" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMinYMid meet"><path fill="#AFCB40" d="m23.1 19.9c3.1-0.1 5.4 0.1 4.9 1.1 1-0.4 2.1-2.5 2.1-4.1-1.1 1.2-3.1 2.2-5.2 2.3 2.2-1.2 5.1-2.7 4.8-4.7-0.2-0.8-0.5-1.6-1.1-2.5-0.3 3.3-2.6 6.3-5.5 7.9z"/></svg>
+      <span>Trimwind</span>
     </a>
-    <nav class="site-nav">
-      <a href="/#product">Product</a>
+    <div class="nav-links">
+      <a href="/#what">What we do</a>
       <a href="/runway-pricing.html" class="is-active">Pricing</a>
-    </nav>
-    <div class="header-actions">
-      <a href="/runway-login.html" class="btn btn--ghost">Sign in</a>
-      <a href="#tiers" class="btn btn--primary">Choose a plan</a>
+      <a href="/runway-login.html">Sign in</a>
+      <a href="#tiers" class="nav-cta">Choose a plan</a>
     </div>
-  </header>
+  </nav>
 
   <main>
     <section class="pricing-hero">
-      <div class="container">
-        <p class="eyebrow">Pricing</p>
-        <h1>Clear plans. Predictable output.</h1>
-        <p class="lead">Every plan includes voice clone, AI copy, video rendering, and scheduled departures. Posts and short-form video count equally toward your weekly manifest.</p>
-      </div>
+      <p class="kicker">Pricing</p>
+      <h1 class="display">Clear plans. <span class="accent">Predictable output.</span></h1>
+      <p class="lead">Every plan includes voice clone, AI copy, video rendering, and scheduled posts. Posts and short-form video count equally toward your weekly plan.</p>
     </section>
 
-    <section class="section section--tight" id="tiers">
+    <section class="section" id="tiers" style="padding-top:8px">
       <div class="container">
-        <div class="pricing-grid">
-          <article class="tier-card">
-            <p class="tier-card__name">Starter</p>
-            <p class="tier-card__price">$497<span>/mo</span></p>
-            <p class="tier-card__desc">For a single brand getting consistent weekly content live on one primary platform.</p>
+        <div class="tiers">
+          <article class="tier">
+            <p class="name">Starter</p>
+            <p class="price">$497<span>/mo</span></p>
+            <p class="tier-desc">For a single brand getting consistent weekly content live on one primary platform.</p>
             <ul>
               <li>4 posts + 4 videos per month</li>
               <li>1 connected platform</li>
               <li>Voice clone + brand templates</li>
-              <li>Flight deck portal access</li>
+              <li>Client portal access</li>
             </ul>
-            <button type="button" class="btn btn--secondary btn--full" data-tier="starter">Select Starter</button>
+            <button type="button" class="tier-btn tier-btn--ghost" data-tier="starter">Select Starter</button>
           </article>
 
-          <article class="tier-card tier-card--featured">
-            <p class="tier-card__name">Growth · Most popular</p>
-            <p class="tier-card__price">$797<span>/mo</span></p>
-            <p class="tier-card__desc">For operators scaling reach across multiple channels with higher output volume.</p>
+          <article class="tier tier--featured">
+            <p class="name">Growth</p>
+            <p class="price">$797<span>/mo</span></p>
+            <p class="tier-desc">For operators scaling reach across multiple channels with higher output volume.</p>
             <ul>
               <li>8 posts + 8 videos per month</li>
               <li>3 connected platforms</li>
               <li>Priority topic queue</li>
-              <li>Multi-track pipeline (Inspect, Talksmith, Interview Prep)</li>
+              <li>Multi-pipeline content (Inspect, Talksmith, Interview Prep)</li>
             </ul>
-            <button type="button" class="btn btn--primary btn--full" data-tier="growth">Select Growth</button>
+            <button type="button" class="tier-btn tier-btn--primary" data-tier="growth">Select Growth</button>
           </article>
 
-          <article class="tier-card">
-            <p class="tier-card__name">Scale</p>
-            <p class="tier-card__price">$1,297<span>/mo</span></p>
-            <p class="tier-card__desc">For brands treating content as a core acquisition channel across five platforms.</p>
+          <article class="tier">
+            <p class="name">Scale</p>
+            <p class="price">$1,297<span>/mo</span></p>
+            <p class="tier-desc">For brands treating content as a core acquisition channel across five platforms.</p>
             <ul>
               <li>15 posts + 15 videos per month</li>
               <li>5 connected platforms</li>
               <li>Dedicated onboarding</li>
               <li>Custom posting calendar</li>
             </ul>
-            <button type="button" class="btn btn--secondary btn--full" data-tier="scale">Select Scale</button>
+            <button type="button" class="tier-btn tier-btn--ghost" data-tier="scale">Select Scale</button>
           </article>
         </div>
 
-        <div class="compare-table-wrap reveal">
-          <table class="compare-table">
+        <div class="compare-wrap">
+          <table class="compare">
             <thead>
-              <tr>
-                <th>Compare plans</th>
-                <th>Starter</th>
-                <th class="is-featured">Growth</th>
-                <th>Scale</th>
-              </tr>
+              <tr><th>Compare plans</th><th>Starter</th><th class="is-featured">Growth</th><th>Scale</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Posts / month</td>
-                <td>4</td>
-                <td class="is-featured">8</td>
-                <td>15</td>
-              </tr>
-              <tr>
-                <td>Videos / month</td>
-                <td>4</td>
-                <td class="is-featured">8</td>
-                <td>15</td>
-              </tr>
-              <tr>
-                <td>Platforms</td>
-                <td>1</td>
-                <td class="is-featured">3</td>
-                <td>5</td>
-              </tr>
-              <tr>
-                <td>Pipeline tracks</td>
-                <td>1</td>
-                <td class="is-featured">3</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td>Flight deck portal</td>
-                <td>✓</td>
-                <td class="is-featured">✓</td>
-                <td>✓</td>
-              </tr>
-              <tr>
-                <td>Priority queue</td>
-                <td>—</td>
-                <td class="is-featured">✓</td>
-                <td>✓</td>
-              </tr>
-              <tr>
-                <td>Dedicated onboarding</td>
-                <td>—</td>
-                <td class="is-featured">—</td>
-                <td>✓</td>
-              </tr>
+              <tr><td>Posts / month</td><td>4</td><td class="is-featured">8</td><td>15</td></tr>
+              <tr><td>Videos / month</td><td>4</td><td class="is-featured">8</td><td>15</td></tr>
+              <tr><td>Platforms</td><td>1</td><td class="is-featured">3</td><td>5</td></tr>
+              <tr><td>Pipelines</td><td>1</td><td class="is-featured">3</td><td>3</td></tr>
+              <tr><td>Client portal</td><td>✓</td><td class="is-featured">✓</td><td>✓</td></tr>
+              <tr><td>Priority queue</td><td>—</td><td class="is-featured">✓</td><td>✓</td></tr>
+              <tr><td>Dedicated onboarding</td><td>—</td><td class="is-featured">—</td><td>✓</td></tr>
             </tbody>
           </table>
         </div>
 
-        <div class="checkout-form panel panel--elevated" id="checkout-form">
-          <div class="panel__header">
-            <span class="panel__title">Complete your selection</span>
-            <span class="tag" id="selected-tier-label">Growth</span>
+        <div class="panel checkout-card" id="checkout-card">
+          <div class="checkout-card__head">
+            <h3 style="font-size:18px;font-weight:600;">Complete your selection</h3>
+            <span class="checkout-tag" id="selected-tier-label">Growth</span>
           </div>
-          <div class="panel__body">
-            <form id="checkout">
-              <input type="hidden" name="tier" id="tier-input" value="growth" />
-              <div class="form-field">
-                <label for="name">Full name</label>
-                <input id="name" name="name" type="text" required placeholder="Your name" />
-              </div>
-              <div class="form-field">
-                <label for="email">Work email</label>
-                <input id="email" name="email" type="email" required placeholder="you@company.com" />
-              </div>
-              <div class="form-field">
-                <label for="company">Company (optional)</label>
-                <input id="company" name="company" type="text" placeholder="Your company" />
-              </div>
-              <button type="submit" class="btn btn--primary btn--full">Continue to checkout</button>
-              <p class="checkout-msg" id="checkout-msg"></p>
-            </form>
-          </div>
+          <form id="checkout">
+            <input type="hidden" name="tier" id="tier-input" value="growth" />
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" type="text" required placeholder="Your name" />
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input id="email" name="email" type="email" required placeholder="you@company.com" />
+            </div>
+            <div class="field">
+              <label for="company">Company (optional)</label>
+              <input id="company" name="company" type="text" placeholder="Your company" />
+            </div>
+            <button type="submit" class="btn-primary btn-block">Continue to checkout</button>
+            <p class="checkout-msg" id="checkout-msg"></p>
+          </form>
         </div>
 
-        <p class="text-center mt-6" style="font-size:0.8125rem;color:var(--text-faint);">
-          Founding rates available for early clients. <a href="mailto:support@ageflowops.com" style="color:var(--accent);">Contact us</a> for Agency ($1,997/mo) and custom volume.
+        <p class="text-center mt-6" style="font-size:13.5px;color:var(--text-muted);">
+          Founding rates available for early clients. <a href="mailto:support@ageflowops.com" style="color:var(--lime);">Contact us</a> for Agency ($1,997/mo) and custom volume.
         </p>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container site-footer__grid">
-      <div>
-        <a href="/" class="brand brand--lg">
-          <span class="brand__wordmark">RUNW<span class="brand__a">A</span>Y</span>
-          <span class="brand__lights"><span></span><span></span><span></span></span>
-        </a>
-        <p class="site-footer__meta">© Anderson Global Enterprises</p>
-      </div>
-      <div class="footer-links">
+  <footer class="tw-footer">
+    <div class="tw-footer__grid">
+      <a href="/" class="brand" aria-label="Trimwind home">
+        <svg class="mark" viewBox="19 7.5 22 21" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMinYMid meet"><path fill="#AFCB40" d="m23.1 19.9c3.1-0.1 5.4 0.1 4.9 1.1 1-0.4 2.1-2.5 2.1-4.1-1.1 1.2-3.1 2.2-5.2 2.3 2.2-1.2 5.1-2.7 4.8-4.7-0.2-0.8-0.5-1.6-1.1-2.5-0.3 3.3-2.6 6.3-5.5 7.9z"/></svg>
+      </a>
+      <span class="tw-footer__meta">© Anderson Global Enterprises · Trimwind</span>
+      <div class="tw-footer__links">
         <a href="/">Home</a>
         <a href="/runway-login.html">Sign in</a>
+        <a href="mailto:support@ageflowops.com">Contact</a>
       </div>
     </div>
   </footer>
 
-  <script src="/js/runway.js"></script>
   <script>
+    // —— functional wiring preserved exactly (endpoint, fields, flow unchanged) ——
     const tierLabels = { starter: 'Starter · $497/mo', growth: 'Growth · $797/mo', scale: 'Scale · $1,297/mo' };
-    const formWrap = document.getElementById('checkout-form');
+    const formWrap = document.getElementById('checkout-card');
     const tierInput = document.getElementById('tier-input');
     const tierLabel = document.getElementById('selected-tier-label');
     const msg = document.getElementById('checkout-msg');
@@ -248,10 +184,7 @@
           body: JSON.stringify(Object.fromEntries(fd)),
         });
         const data = await res.json();
-        if (data.url) {
-          location.href = data.url;
-          return;
-        }
+        if (data.url) { location.href = data.url; return; }
         msg.className = 'checkout-msg is-error';
         msg.textContent = data.error || 'Checkout unavailable. Contact support@ageflowops.com to book manually.';
       } catch {
