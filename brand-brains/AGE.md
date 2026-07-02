@@ -18,15 +18,17 @@ Declarative. Calm. Certain. Short lines. White space. The lesson is the post.
 
 ## 3. The lanes (per-product one-idea + CTA + wavelength)
 
-| Lane (`product`) | One ownable idea | CTA (exact) | Wavelength |
-|---|---|---|---|
-| `FlowOps` | A service business should never lose a job to a missed call — the front office should run itself. | `age-flowops.net` (strategy call) | steel `#2B3544/#3D4858` + amber `#FFA70D` |
-| `Talksmith` | Every small business deserves an AI team — not a chatbot, not a $50k contract. | `talksmithaudio.com` (start at $29) | indigo `#3D3778` + warm soundwave `#FE8C71/#EFC07A/#EC6164` |
-| `Interview Prep` | You don't get the job by reading about interviews. You get it by doing 50 reps out loud. | `interprep.andersonglobalenterprises.net` (first interview free) | violet `#A855F7` → magenta `#EC4899` |
-| `Runway` | Be the face of your business without it eating your nights. The machine lifts; you approve. | `age-flowops.net` (book a call) — swap to trimwind domain when live | greens `#29A56C→#124738` + lime `#A1CC46` |
-| `Inspect` | 🔴 **GROUNDED — do not generate, render, approve, or publish.** Standing rule: Inspect stays publicly hidden until Omar files the full patent. Existing Inspect flights stay parked. Only Omar can lift this. | — | navy `#14426E` + teal `#1E9492` |
+**The companies are RENAMED (canonical since 2026-06-30):** FlowOps → **Vantail** · Inspect → **Crestral** · Talksmith → **Neshira** · Runway → **Trimwind** · Sentinel Rx → **Rophiel**. The `product` values in flights/sheets/n8n are legacy keys — plumbing, never brand copy.
 
-**Naming during rebrand (master §7):** public content anchors to what the business *does*, and uses the name that is live on the public surface today (FlowOps / Talksmith / Interview Prep). Never state a mid-rebrand name (Vantail / Neshira / Crestral / Trimwind-as-domain) as final in public copy until Omar confirms it's live.
+| Lane key (`product`) | Brand (canonical) | One ownable idea | CTA (exact, today) | Wavelength + logo (`AGE-Marketing\logos\`) |
+|---|---|---|---|---|
+| `FlowOps` | **Vantail** | A service business should never lose a job to a missed call — the front office should run itself. | `age-flowops.net` (strategy call) — swap when the Vantail marketing site/domain goes live; portal is already Vantail-branded | steel `#2B3544/#3D4858` + amber `#FFA70D` · `vantail.svg` |
+| `Talksmith` | **Neshira** | Every small business deserves an AI team — not a chatbot, not a $50k contract. | `talksmithaudio.com` (start at $29) — public app still says Talksmith until `neshira.ai` launches | indigo `#3D3778` + warm soundwave `#FE8C71/#EFC07A/#EC6164` |
+| `Interview Prep` | **Interview Prep** (unchanged) | You don't get the job by reading about interviews. You get it by doing 50 reps out loud. | `interprep.andersonglobalenterprises.net` (first interview free) | violet `#A855F7` → magenta `#EC4899` · `interview_prep.svg` |
+| `Runway` | **Trimwind** | Be the face of your business without it eating your nights. The machine lifts; you approve. | `trimwind-production.up.railway.app` (book a call) — swap to `trimwind` custom domain when pointed | greens `#29A56C→#124738` + lime `#A1CC46` · `trimwind` pack |
+| `Inspect` | **Crestral** — 🔴 **GROUNDED: do not generate, render, approve, or publish.** Stays publicly dark until Omar files the full patent. Existing flights stay parked. Only Omar lifts this. | — | — | navy `#14426E` + teal `#1E9492` · `crestral.svg` |
+
+**Naming in public copy:** use the NEW name wherever its public surface already carries it (Trimwind's site, Vantail's portal). Where the public surface still shows the legacy name (age-flowops.net, the Talksmith app), anchor to what the business *does* rather than hammering the old name — and NEVER let a post's brand name contradict the page its CTA lands on. Old name stated as the brand going forward = grounded; new name with a CTA landing on old-name branding = flag it in review.
 
 **Aviation/teaching = the spine, not a product.** CFI / Part 107 authority flavors the voice; Pilot Academy is never a CTA.
 
