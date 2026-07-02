@@ -18,7 +18,7 @@ Declarative. Calm. Certain. Short lines. White space. The lesson is the post.
 
 ## 3. The lanes (per-product one-idea + CTA + wavelength)
 
-**The companies are RENAMED (canonical since 2026-06-30):** FlowOps → **Vantail** · Inspect → **Crestral** · Talksmith → **Neshira** · Runway → **Trimwind** · Sentinel Rx → **Rophiel**. The `product` values in flights/sheets/n8n are legacy keys — plumbing, never brand copy.
+**The companies are RENAMED (canonical):** FlowOps → **Vantail** · AGE Inspect → **Vantail Inspect** (a sub-brand of Vantail — NOT "Crestral"; that name stays reserved in the protection files and never appears in content) · Talksmith → **Neshira** · Runway → **Trimwind** · Sentinel Rx → **Rophiel**. The `product` values in flights/sheets/n8n are legacy keys — plumbing, never brand copy.
 
 | Lane key (`product`) | Brand (canonical) | One ownable idea | CTA (exact, today) | Wavelength + logo (`AGE-Marketing\logos\`) |
 |---|---|---|---|---|
@@ -26,7 +26,7 @@ Declarative. Calm. Certain. Short lines. White space. The lesson is the post.
 | `Talksmith` | **Neshira** | Every small business deserves an AI team — not a chatbot, not a $50k contract. | `talksmithaudio.com` (start at $29) — public app still says Talksmith until `neshira.ai` launches | indigo `#3D3778` + warm soundwave `#FE8C71/#EFC07A/#EC6164` |
 | `Interview Prep` | **Interview Prep** (unchanged) | You don't get the job by reading about interviews. You get it by doing 50 reps out loud. | `interprep.andersonglobalenterprises.net` (first interview free) | violet `#A855F7` → magenta `#EC4899` · `interview_prep.svg` |
 | `Runway` | **Trimwind** | Be the face of your business without it eating your nights. The machine lifts; you approve. | `trimwind-production.up.railway.app` (book a call) — swap to `trimwind` custom domain when pointed | greens `#29A56C→#124738` + lime `#A1CC46` · `trimwind` pack |
-| `Inspect` | **Crestral** — 🔴 **GROUNDED: do not generate, render, approve, or publish.** Stays publicly dark until Omar files the full patent. Existing flights stay parked. Only Omar lifts this. | — | — | navy `#14426E` + teal `#1E9492` · `crestral.svg` |
+| `Inspect` | **Vantail Inspect** — 🔴 **GROUNDED: do not generate, render, approve, or publish.** Stays publicly dark until Omar files the full patent. Existing flights stay parked. Only Omar lifts this. | — | — | Vantail family steel `#2B3544/#3D4858` + amber `#FFA70D` |
 
 **Naming in public copy:** use the NEW name wherever its public surface already carries it (Trimwind's site, Vantail's portal). Where the public surface still shows the legacy name (age-flowops.net, the Talksmith app), anchor to what the business *does* rather than hammering the old name — and NEVER let a post's brand name contradict the page its CTA lands on. Old name stated as the brand going forward = grounded; new name with a CTA landing on old-name branding = flag it in review.
 
